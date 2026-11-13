@@ -149,3 +149,19 @@ Proposed trust boundary:
 - Never trust client-calculated balances, ownership, dice results, movement outcomes, Jail/Crown status, or victory state.
 
 This trust boundary is an approved architecture decision. The client is an input and presentation surface, never the authority for gameplay outcomes.
+
+
+## Decision 13 — Standardized Remote Request Contract
+**Status: LOCKED**
+
+Every gameplay request sent by a client must follow a standardized contract:
+
+1. Include a unique `RequestId` to identify the request.
+2. Include only the action type and required payload.
+3. Server validates player identity, current Turn phase, action permission, and latest authoritative Game State.
+4. Server detects duplicate `RequestId` values so one request cannot be executed repeatedly.
+5. Server applies rate limits to protect against request spam.
+6. Invalid requests are rejected without side effects.
+7. The server sends the official result back to the client.
+
+`RequestId` identifies a communication request. `OperationId` identifies a gameplay operation. They are separate identifiers and must not be conflated.
