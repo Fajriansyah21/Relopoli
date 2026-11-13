@@ -275,3 +275,19 @@ This makes mutation order traceable according to the order in which the server a
 - The implementation must include a recovery mechanism for commit-time failures so the game is not left in a partially mutated state.
 
 This separates mutation preparation from execution. The exact recovery mechanism must be designed and tested during implementation; this decision does not assume a built-in Roblox transaction facility.
+
+
+## Decision 22 — Copy-on-Write State Commit
+**Status: LOCKED**
+
+- State Manager reads the latest authoritative Game State.
+- The Mutation Plan produces a candidate state without modifying the active state.
+- Only affected state sections are copied and updated using Copy-on-Write.
+- The candidate state is validated as a whole before commit.
+- If validation fails, the candidate is discarded and the active state remains unchanged.
+- If validation succeeds, State Manager swaps the root Game State reference to the candidate in a short commit without yielding.
+- Other systems must read state through the official State Manager access path and must not retain mutable references to old state.
+
+Implementation must avoid copying the entire Game State for every operation without need. Memory and performance costs must be measured during Roblox implementation.
+
+This decision extends the Staged Mutation Plan. It does not imply that Roblox provides a built-in transaction facility.
