@@ -206,3 +206,16 @@ This separates authoritative gameplay outcomes from client-side visual presentat
 - If cross-server Match Recovery is desired later, it requires a separate design covering snapshots, validation, and duplicate-operation prevention.
 
 This separates persistent player data from the live state of an active match.
+
+
+## Decision 17 — Context Validation for Asynchronous Results
+**Status: LOCKED**
+
+- Each asynchronous process carries the relevant context identifiers: `TurnId`, `ResolutionId`, and `OperationId`.
+- Before an asynchronous result is applied, the server validates whether its process context is still valid.
+- Results from an ended Turn or Resolution must not mutate gameplay state.
+- If Game End occurs, all pending gameplay processes follow the established Game End cancellation rules.
+- Completed operations must not be rolled back or executed again.
+- A still-valid process may resume from its last `PendingStep`.
+
+This decision protects the authoritative state from stale asynchronous results and complements Fresh-State Resume and Request Deduplication.
