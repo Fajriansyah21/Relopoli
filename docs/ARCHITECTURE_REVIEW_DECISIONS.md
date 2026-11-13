@@ -194,3 +194,15 @@ This decision complements Decision 13. `RequestId` deduplication prevents repeat
 - Delayed or failed client animation must not change gameplay outcomes.
 
 This separates authoritative gameplay outcomes from client-side visual presentation.
+
+
+## Decision 16 — Match State Persistence Boundary
+**Status: LOCKED**
+
+- **Live Match State** is held in the match server's memory as the authoritative state while the match is running.
+- **Player Persistent Data**, such as permanent profile and progression, is handled through DataStoreService.
+- DataStoreService is not used for every in-match gameplay mutation.
+- Match recovery after a server crash is not automatically guaranteed by this decision.
+- If cross-server Match Recovery is desired later, it requires a separate design covering snapshots, validation, and duplicate-operation prevention.
+
+This separates persistent player data from the live state of an active match.
