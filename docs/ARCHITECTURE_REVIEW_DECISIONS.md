@@ -247,3 +247,17 @@ This defines dependency direction and responsibility boundaries. It does not req
 - Each operation retains its `OperationId` for traceability and duplicate-execution prevention.
 
 This queue serializes critical state mutations only. It does not require animations, UI, or all gameplay processes to run sequentially.
+
+
+## Decision 20 — FIFO Mutation Ordering
+**Status: LOCKED**
+
+- Operations are processed in the order received by the State Manager (First In, First Out).
+- Each operation receives a unique queue sequence number.
+- An operation may not bypass earlier queued operations merely because it originates from a different system.
+- Validation is still performed immediately before commit.
+- An operation that is no longer valid is rejected, and queue processing continues.
+- If Game End occurs, the hard Game-End gate applies. Gameplay operations that have not committed must not continue mutating state.
+- Completed operations are not rolled back or executed again.
+
+This makes mutation order traceable according to the order in which the server accepted operations.
