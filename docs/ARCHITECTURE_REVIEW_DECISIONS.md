@@ -233,3 +233,17 @@ This decision protects the authoritative state from stale asynchronous results a
 - Victory Controller receives the results of state changes and performs the global checks.
 
 This defines dependency direction and responsibility boundaries. It does not require every gameplay flow to execute in one fixed linear sequence.
+
+
+## Decision 19 — Serialized State Mutation Queue
+**Status: LOCKED**
+
+- All operations that change critical Game State enter through one State Manager execution path.
+- Mutations are processed sequentially rather than overwriting one another.
+- Each operation is revalidated immediately before commit.
+- One operation must finish its commit before the next operation begins its commit.
+- Operations waiting for player input or network activity must not hold the commit queue.
+- Operations that fail validation are rejected without side effects.
+- Each operation retains its `OperationId` for traceability and duplicate-execution prevention.
+
+This queue serializes critical state mutations only. It does not require animations, UI, or all gameplay processes to run sequentially.
