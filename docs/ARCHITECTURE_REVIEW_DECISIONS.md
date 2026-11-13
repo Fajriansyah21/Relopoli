@@ -318,3 +318,16 @@ This version check supplements FIFO mutation ordering and Copy-on-Write by preve
 - State Manager is the sole owner of the root Game State reference.
 
 This protects the mutation pipeline by preventing systems from bypassing validation, commit ordering, and StateVersion checks.
+
+
+## Decision 25 — Version-Bound Read Snapshot
+**Status: LOCKED**
+
+- Every read snapshot carries the StateVersion at which it was created.
+- Snapshots are immutable and cannot mutate the active authoritative Game State.
+- A calculation that produces a Mutation Plan records the source snapshot version as its BaseStateVersion.
+- Before commit, State Manager validates BaseStateVersion against the current active StateVersion.
+- If the version has changed, the stale plan is rejected and the calculation must be rebuilt from the latest state and revalidated.
+- Older snapshots may still be used for UI or historical presentation when the consumer does not require the latest authoritative state.
+
+This aligns controlled read access with Versioned State Commit and prevents calculations based on stale state from being committed.
