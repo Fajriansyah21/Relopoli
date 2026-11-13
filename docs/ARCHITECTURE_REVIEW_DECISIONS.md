@@ -291,3 +291,17 @@ This separates mutation preparation from execution. The exact recovery mechanism
 Implementation must avoid copying the entire Game State for every operation without need. Memory and performance costs must be measured during Roblox implementation.
 
 This decision extends the Staged Mutation Plan. It does not imply that Roblox provides a built-in transaction facility.
+
+
+## Decision 23 — Versioned State Commit
+**Status: LOCKED**
+
+- Authoritative Game State maintains a monotonically increasing `StateVersion`.
+- Each Mutation Plan records the `BaseStateVersion` from which it was prepared.
+- Immediately before commit, State Manager compares the plan's `BaseStateVersion` with the active state's current version.
+- If the versions match, the commit may proceed.
+- If the versions differ, the candidate is stale and must not be committed.
+- The Mutation Plan must be rebuilt from the latest state and validated again.
+- `StateVersion` increments only after a successful commit.
+
+This version check supplements FIFO mutation ordering and Copy-on-Write by preventing a candidate built from stale state from replacing a newer active state.
