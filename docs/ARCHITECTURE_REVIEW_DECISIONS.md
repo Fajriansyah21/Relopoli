@@ -261,3 +261,17 @@ This queue serializes critical state mutations only. It does not require animati
 - Completed operations are not rolled back or executed again.
 
 This makes mutation order traceable according to the order in which the server accepted operations.
+
+
+## Decision 21 — Staged Mutation Plan
+**Status: LOCKED**
+
+- Domain Systems prepare a mutation plan without directly changing authoritative Game State.
+- State Manager validates the complete plan against the latest state.
+- All intended changes are prepared as a Mutation Plan before commit.
+- If validation or preparation fails, no state is changed.
+- Once prepared, State Manager executes the commit without yielding and without invoking asynchronous processes.
+- Only successfully committed operations may trigger derived-state recalculation and Global Victory Check.
+- The implementation must include a recovery mechanism for commit-time failures so the game is not left in a partially mutated state.
+
+This separates mutation preparation from execution. The exact recovery mechanism must be designed and tested during implementation; this decision does not assume a built-in Roblox transaction facility.
