@@ -136,10 +136,8 @@ Roblox implementation constraint: atomicity here does not mean a built-in databa
 
 ---
 
-## Pending Review
-
-### Decision 12 — Server as the Sole Gameplay Authority
-**Status: PROPOSAL — NOT YET APPROVED**
+## Decision 12 — Server as the Sole Gameplay Authority
+**Status: LOCKED**
 
 Proposed trust boundary:
 
@@ -150,4 +148,4 @@ Proposed trust boundary:
 - Server validates the request against current authoritative state, calculates outcomes, commits mutations, and replicates official results.
 - Never trust client-calculated balances, ownership, dice results, movement outcomes, Jail/Crown status, or victory state.
 
-This proposal is awaiting an explicit user decision. It must not be treated as locked until approved.
+This trust boundary is an approved architecture decision. The client is an input and presentation surface, never the authority for gameplay outcomes.
