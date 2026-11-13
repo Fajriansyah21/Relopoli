@@ -344,3 +344,16 @@ This aligns controlled read access with Versioned State Commit and prevents calc
 - Other systems must not observe a partially updated state containing new primary data with stale derived values.
 
 This extends the Copy-on-Write commit flow so the active Game State is published only as a consistent whole.
+
+
+## Decision 27 — Fail-Closed Recalculation
+**Status: LOCKED**
+
+- If recalculation of affected derived values fails, the candidate state is rejected.
+- The active root Game State remains unchanged.
+- StateVersion does not increment for the rejected operation.
+- Victory Check does not run for the failed operation.
+- The operation is marked failed and its failure is recorded for debugging.
+- The system must not silently fall back to stale derived values from the previous state.
+
+This ensures that a recalculation failure cannot publish a partially updated or internally inconsistent Game State.
