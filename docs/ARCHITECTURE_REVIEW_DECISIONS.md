@@ -219,3 +219,17 @@ This separates persistent player data from the live state of an active match.
 - A still-valid process may resume from its last `PendingStep`.
 
 This decision protects the authoritative state from stale asynchronous results and complements Fresh-State Resume and Request Deduplication.
+
+
+## Decision 18 — One-Way Module Dependency
+**Status: LOCKED**
+
+- Turn Controller may coordinate Domain Systems.
+- Domain Systems may use State Manager services through defined contracts.
+- Domain Systems must not take over Turn Controller responsibilities.
+- Domain Systems must not form circular calls with one another.
+- Cross-domain interactions that require multiple systems are coordinated through the Orchestration Layer.
+- Derived Calculators read state and calculate derived values; they do not perform gameplay mutations themselves.
+- Victory Controller receives the results of state changes and performs the global checks.
+
+This defines dependency direction and responsibility boundaries. It does not require every gameplay flow to execute in one fixed linear sequence.
