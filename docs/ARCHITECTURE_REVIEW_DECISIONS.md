@@ -331,3 +331,16 @@ This protects the mutation pipeline by preventing systems from bypassing validat
 - Older snapshots may still be used for UI or historical presentation when the consumer does not require the latest authoritative state.
 
 This aligns controlled read access with Versioned State Commit and prevents calculations based on stale state from being committed.
+
+
+## Decision 26 — Recalculate Before State Swap
+**Status: LOCKED**
+
+- Derived Calculators recalculate all affected derived values against the candidate Game State before it becomes active.
+- Recalculated values are included in the candidate state.
+- The complete candidate state is validated for consistency before commit.
+- State Manager swaps the active root Game State only after recalculation and validation succeed.
+- Victory Check runs after the successful state swap.
+- Other systems must not observe a partially updated state containing new primary data with stale derived values.
+
+This extends the Copy-on-Write commit flow so the active Game State is published only as a consistent whole.
