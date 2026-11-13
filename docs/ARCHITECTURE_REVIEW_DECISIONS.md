@@ -305,3 +305,16 @@ This decision extends the Staged Mutation Plan. It does not imply that Roblox pr
 - `StateVersion` increments only after a successful commit.
 
 This version check supplements FIFO mutation ordering and Copy-on-Write by preventing a candidate built from stale state from replacing a newer active state.
+
+
+## Decision 24 — Controlled State Access API
+**Status: LOCKED**
+
+- State Manager provides the official API for reading authoritative Game State.
+- Other systems receive read-only views or snapshots.
+- Domain Systems must not directly mutate authoritative state tables.
+- All mutations must be submitted through a Mutation Plan.
+- Read access must not expose mutable table references that can alter active state.
+- State Manager is the sole owner of the root Game State reference.
+
+This protects the mutation pipeline by preventing systems from bypassing validation, commit ordering, and StateVersion checks.
