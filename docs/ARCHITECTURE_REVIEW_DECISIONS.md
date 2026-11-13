@@ -180,3 +180,17 @@ The server handles repeated client requests idempotently:
 - Requests that are expired or belong to an old Turn context must be revalidated.
 
 This decision complements Decision 13. `RequestId` deduplication prevents repeated request execution, while `OperationId` continues to identify the underlying gameplay operation.
+
+
+## Decision 15 — Server-Authoritative Dice & Movement
+**Status: LOCKED**
+
+- Server independently generates the official dice result.
+- Server determines the number of movement steps using the dice result and gameplay rules.
+- The server-side Movement Engine manages the official player position and movement.
+- Client only presents movement animation based on the official server result.
+- Client must not submit a final position and have it trusted as authoritative.
+- Landing Resolution is processed only from the official position determined by the server.
+- Delayed or failed client animation must not change gameplay outcomes.
+
+This separates authoritative gameplay outcomes from client-side visual presentation.
