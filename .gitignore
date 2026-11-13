@@ -1,0 +1,12 @@
+# Roblox / Studio local files
+*.rbxl
+*.rbxlx
+*.rbxm
+*.rbxmx
+
+# Local tooling
+node_modules/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
