@@ -357,3 +357,16 @@ This extends the Copy-on-Write commit flow so the active Game State is published
 - The system must not silently fall back to stale derived values from the previous state.
 
 This ensures that a recalculation failure cannot publish a partially updated or internally inconsistent Game State.
+
+
+## Decision 28 — Atomic Root Swap Boundary
+**Status: LOCKED**
+
+- The active root Game State may only be replaced through a dedicated State Manager commit function.
+- Root replacement occurs within one critical section without yielding.
+- All validation and recalculation must finish before this commit function is invoked.
+- If commit preconditions are not satisfied, the previous active root remains in place.
+- Once the root replacement succeeds, the operation is considered committed and must not be executed again.
+- A failure occurring after commit must not trigger automatic re-execution of the operation.
+
+This defines a clear boundary between pre-commit failure and post-commit failure. It does not assume Roblox provides a built-in transaction for Lua tables.
