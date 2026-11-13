@@ -165,3 +165,18 @@ Every gameplay request sent by a client must follow a standardized contract:
 7. The server sends the official result back to the client.
 
 `RequestId` identifies a communication request. `OperationId` identifies a gameplay operation. They are separate identifiers and must not be conflated.
+
+
+## Decision 14 — Idempotent Request Replay
+**Status: LOCKED**
+
+The server handles repeated client requests idempotently:
+
+- Server stores the result of each processed request, keyed by player identity, match identity, and `RequestId`.
+- If an identical request is resent, server returns the previously recorded result without executing the gameplay operation again.
+- If the same `RequestId` is reused with a different payload, server rejects the request.
+- A request that is still being processed must not execute again in parallel.
+- Deduplication records remain available for as long as needed to prevent duplicate execution within the match session.
+- Requests that are expired or belong to an old Turn context must be revalidated.
+
+This decision complements Decision 13. `RequestId` deduplication prevents repeated request execution, while `OperationId` continues to identify the underlying gameplay operation.
