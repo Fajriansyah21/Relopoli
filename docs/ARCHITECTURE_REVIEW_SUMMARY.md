@@ -9,7 +9,7 @@
 The architecture review has covered the game's orchestration model, domain-system boundaries, server authority, state mutation pipeline, post-commit effects, victory handling, recovery, checkpoints, and Roblox Luau feasibility.
 
 **Current recorded outcome:**
-- **55 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
+- **56 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
 - **All eleven consolidation findings (RF-01–RF-11) have been addressed** by Decisions 45–55.
 - **No consolidation findings remain unresolved at the architecture-contract level.**
 - The architecture direction is assessed as sound, but implementation readiness remains **NOT YET**.
@@ -87,7 +87,7 @@ It also records a distinction that still needs a decision: conventional server-a
 
 See sections 4, 6, and 7 of the [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md).
 
-## 3. Decision coverage: Decisions 1–52
+## 3. Decision coverage: Decisions 1–56
 
 The complete wording and status of every decision live only in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md). To avoid duplicated or drifting copies, this summary groups the decision ranges rather than reproducing all decision text:
 
@@ -99,8 +99,9 @@ The complete wording and status of every decision live only in the [Architecture
 | 29–32 | Post-commit effects, effect registry, dependency ordering, victory retry, and progression gate |
 | 33–43 | Recovery executor and lock, recovery completion, verified resume, checkpoint creation, validation, retention, memory, and failure handling |
 | 44–52 | Consolidation review and corrective decisions for candidate-state commit, global victory gating, atomic effect publication, effect idempotency, recovery completion ordering, committed-mutation preservation, separated version domains, and separated victory evaluation from Game-End mutation |
+| 53–56 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, and verified recovery-baseline protection |
 
-Decisions 45–52 specifically close the eight findings described below. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
+Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decision 56 resolves the additional cross-decision consistency finding CI-01. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
 
 ## 4. Consolidation findings status
 
@@ -116,16 +117,15 @@ Decisions 45–52 specifically close the eight findings described below. They re
 | RF-06 | Older checkpoint fallback could rewind committed gameplay | Decision 50: Checkpoint Recovery Must Preserve Committed Mutations |
 | RF-07 | Gameplay StateVersion scope was ambiguous across effect, recovery, and checkpoint metadata | Decision 51: Separated Version Domains |
 | RF-08 | Victory evaluation and the authoritative Game-End mutation had overlapping responsibilities | Decision 52: Separate Victory Evaluation From Game-End Mutation |
+| RF-09 | Checkpoint integrity hash lacked deterministic serialization and threat boundaries | Decision 54: Deterministic Checkpoint Serialization and Integrity Contract |
+| RF-10 | Checkpoint lifecycle responsibilities overlapped | Decision 55: Single Checkpoint Manager Ownership |
+| RF-11 | Roblox server-authority runtime model was unspecified | Decision 53: Conventional Server-Authoritative Runtime Model |
+| CI-01 | Memory-pressure cleanup could delete the only verified recovery baseline | Decision 56: Preserve a Verified Recovery Baseline |
 
-### Still unresolved
+### Remaining findings
 
-| Finding | Open question | Why it matters |
-|---|---|---|
-| RF-09 | What deterministic serialization and integrity-hash contract is feasible, and what threat is it intended to detect? | Prevents reliance on an underspecified hash or treating it as a security boundary |
-| RF-10 | What is the single ownership contract for Checkpoint Manager responsibilities? | Avoids overlapping eligibility, validation, retention, memory, in-use protection, retry, and recovery rules |
-| RF-11 | Which Roblox server-authority model is intended: conventional server-authoritative scripts/remotes or engine Server Authority mode? | Prevents mixing incompatible assumptions about simulation, prediction, rollback, and networking |
+No consolidation findings RF-01–RF-11 or cross-decision consistency finding CI-01 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
 
-Decisions 51, 52, 53, and 54 close RF-07, RF-08, RF-11, and RF-09 respectively. RF-10 remains open; it must not be represented as a LOCKED decision.
 
 ## 5. Source-of-truth boundaries
 
@@ -141,11 +141,10 @@ A review finding is not an approved rule. A proposal is not LOCKED until explici
 
 ## 6. Recommended next work
 
-1. Resolve RF-10, recording the approved decision in the Decision Log before proceeding to broader implementation planning.
-2. Update the relevant architecture contracts and this status summary only after the corresponding decision is approved.
-3. Prototype the shared state pipeline and failure boundaries in Roblox Studio.
-4. Execute the minimum acceptance test matrix in the Consolidation Review, including concurrency, retry, victory gating, recovery, checkpoint, disconnect, and exploit cases.
-5. Update implementation readiness only when test evidence supports it.
+1. Prototype the shared state pipeline and failure boundaries in Roblox Studio, including deterministic checkpoint serialization and digest verification.
+2. Measure checkpoint memory use, retention, retry thresholds, and performance under realistic match conditions, including recovery-baseline protection.
+3. Execute the minimum acceptance test matrix in the Consolidation Review, including concurrency, retry, victory gating, recovery, checkpoint, disconnect, and exploit cases.
+4. Update implementation readiness only when test evidence supports it.
 
 ## 7. Repository hygiene rules
 
