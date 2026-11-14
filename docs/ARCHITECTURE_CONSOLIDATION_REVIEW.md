@@ -282,6 +282,27 @@ CI-04 is closed at the architecture-contract level. Roblox feasibility, trusted-
 
 ---
 
+
+### CI-05 — Operation Journal Growth and Verification Boundaries Need an Explicit Structure
+
+**Status: ADDRESSED by LOCKED Decision 60 — Segmented Operation Journal.**  
+**Related decisions:** 50, 57–60
+
+Decisions 58 and 59 establish immutable append-only records and continuous hash-chain integrity. The architecture also needs an explicit structure for organizing long journal histories and verifying their continuity without resetting the chain at arbitrary boundaries.
+
+**Recorded resolution in Decision 60:**
+1. The journal is organized into ordered segments with stable identities and verifiable sequence ranges.
+2. Each segment links to the preceding segment's terminal record hash. Segment boundaries do not reset the hash chain.
+3. Segment boundary metadata supports verification of contents, ordering, and linkage.
+4. A segment closes only after its records and linkage are verified and its accepted terminal hash is safely bound to authoritative journal metadata.
+5. Recovery verifies segment identity, sequence continuity, record integrity, and inter-segment linkage. Missing or unverifiable required history invokes Decision 57.
+6. Segmentation does not authorize pruning or deletion; Decision 58's evidence-preserving retention rule remains in force.
+7. Segment sizing and closure cadence remain implementation choices subject to Roblox Studio prototype and performance validation.
+
+CI-05 is closed at the architecture-contract level. Bounded verification performance and the atomic persistence mechanism for accepted segment boundaries remain unvalidated.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
