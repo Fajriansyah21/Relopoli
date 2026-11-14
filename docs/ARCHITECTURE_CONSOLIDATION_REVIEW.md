@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–74, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–75, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -601,6 +601,27 @@ Decision 70 defines priority and fairness scheduling, while Decisions 72–73 ma
 8. Repeated restart, clock jumps, duplicate updates, credit rollback, long-waiting versus new work, changed capacity, and aging caps require Roblox Studio prototype tests.
 
 CI-19 is closed at the architecture-contract level. No guarantee of eventual execution under capacity or safety constraints, runtime implementation, or platform-level trusted clock is claimed.
+
+
+
+### CI-20 — Recovery Scheduler Lacks Bounded Operational Observability
+
+**Status: ADDRESSED by LOCKED Decision 75 — Recovery Scheduler Observability.**  
+**Related decisions:** 65–74
+
+Decisions 65 and 72–74 provide audit, durable queue state, queue integrity, and fairness metadata, but they do not by themselves provide a bounded operational view of scheduler health, queue pressure, delay, admission outcomes, or bottlenecks. Without a separate diagnostic surface, developers may be unable to distinguish starvation, capacity pressure, repeated rejection, or a stalled queue.
+
+**Recorded resolution in Decision 75:**
+1. Observability is read-only and cannot control queue or Recovery lifecycle. Authorized intervention remains governed by Decision 68.
+2. Bounded metrics cover queue lifecycle counts, admission/defer/reject reasons, wait/dispatch latency, outcomes, capacity utilization, retry/circuit state, and fairness indicators.
+3. Versioned diagnostic snapshots use safe identifiers and reason categories, include capture generation/freshness, and disclose sampling limitations. They are not authoritative or transactionally consistent state.
+4. Collection and publication are asynchronous, sampled, and bounded. They cannot hold locks, block admission/dispatch, or yield in critical mutation sections.
+5. Observability failure is isolated and cannot stop, retry, reject, or mutate Recovery. Buffers and low-priority samples may be coalesced/dropped under explicit limits.
+6. Access control, privacy filtering, metric cardinality, snapshot size, sampling/export rate, and retention are bounded. Observability does not duplicate the queue or Audit Trail.
+7. Decision 65 remains the integrity-relevant Audit Trail; Decisions 72–74 remain queue/fairness authority. Observability only summarizes or references them.
+8. High-volume, multi-match, stale snapshot, buffer saturation, export outage, unauthorized access, privacy, and performance-overhead scenarios require Roblox Studio prototype tests.
+
+CI-20 is closed at the architecture-contract level. No zero-overhead, perfect real-time consistency, durable metric history, or runtime implementation is claimed.
 
 
 
