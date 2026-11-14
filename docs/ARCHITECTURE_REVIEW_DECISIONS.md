@@ -1000,3 +1000,22 @@ When Recovery cannot safely continue automatically, the system must create a str
 12. **Feasibility and acceptance gate:** Roblox Studio prototyping must validate server-side authorization, escalation persistence/reconstruction, concurrent administrator actions, audit coverage, filtered diagnostics, intervention validation, Circuit Breaker coordination, and the inability to resume gameplay without successful Recovery verification.
 
 This decision defines the human-review path for Recovery cases that cannot safely proceed automatically. It does not claim that an administrative console, escalation service, or intervention workflow has already been implemented or tested.
+
+## Decision 69 — Recovery Isolation Boundary
+**Status: LOCKED**
+
+Recovery execution and its supporting coordination state must be isolated by match so that a fault, stalled process, or escalation in one match does not directly block or mutate unrelated matches hosted by the same server.
+
+1. **Canonical scope:** Every Recovery execution is bound to an explicit `MatchId` and `RecoveryId`. All Recovery-owned locks, executor state, mutation work, fault counters, Circuit Breaker state, escalation records, and progress evidence must be associated with that scope.
+2. **Per-match serialization:** Gameplay mutation ordering and Recovery serialization must be scoped to the relevant match. A Recovery operation for one match must not acquire a global gameplay mutation lock or occupy another match's queue.
+3. **Lock isolation:** Recovery Lock ownership and lifecycle are match-scoped and RecoveryId-bound. A lock conflict or stale lock for one match must not invalidate or release another match's lock.
+4. **State and evidence isolation:** Checkpoints, Operation Journal segments, Recovery Manifest, Progress Attestations, Audit Trail streams, fault classifications, Circuit Breaker state, and escalation records must be bound to the correct match/recovery context. References crossing those boundaries must be rejected unless an explicit authorized cross-match coordination contract exists.
+5. **Failure containment:** A Recovery failure, OPEN Circuit Breaker, or pending escalation in one match must not change another match's Recovery status, gameplay state, mutation queue, lock, or completion gate.
+6. **Explicit cross-match coordination:** Any operation that intentionally spans multiple matches must declare its complete match scope and use a dedicated coordination mechanism with deterministic ordering, validation, and failure handling. It must not emerge implicitly from shared global mutable state.
+7. **Global resource protection:** Match isolation does not remove server-wide resource limits. The server may enforce bounded aggregate concurrency, memory, CPU/work budgets, and storage usage across all active Recoveries. Global admission control must defer or reject new Recovery work safely without corrupting or changing the state of already-running matches.
+8. **Fair scheduling:** Global resource admission and scheduling must prevent one match from monopolizing Recovery capacity indefinitely. Per-match limits and bounded work slices should preserve progress opportunities for independent matches without weakening Decision 63's replay budget or Decision 67's Circuit Breaker.
+9. **Identity and context validation:** Every asynchronous callback, queued mutation, persisted artifact, and administrative escalation/intervention must validate its MatchId and RecoveryId against the intended scope before applying effects. Stale or cross-match context fails closed for the affected operation.
+10. **Observability:** Recovery scheduling, admission/defer/reject outcomes, isolation violations, and cross-match coordination must be recorded with safe match/recovery references in the relevant Audit Trail. Audit failure remains non-authoritative under Decision 65.
+11. **Feasibility and acceptance gate:** Roblox Studio prototypes must validate concurrent matches, simultaneous Recoveries, per-match queue independence, global resource exhaustion, fair scheduling, stale callback rejection, cross-match reference rejection, and failure containment under server interruption.
+
+This decision defines match-scoped Recovery isolation with bounded server-wide resource coordination. It does not require unlimited simultaneous Recoveries, claim that all Roblox server resources can be perfectly isolated, or assert that the isolation scheduler has already been implemented or tested.
