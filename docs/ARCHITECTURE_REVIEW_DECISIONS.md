@@ -657,3 +657,19 @@ Post-commit effects use stable identities and explicit completion semantics to p
 6. For external or presentation effects, exactly-once execution is not guaranteed when the destination system does not support deduplication. Where supported, pass the stable `EffectId` as the destination's idempotency key.
 
 The target guarantee is effectively-once gameplay state transition, not a universal exactly-once guarantee for every Roblox-side or external effect.
+
+
+## Decision 49 — Recovery Completion Gate Before Gameplay Resume
+**Status: LOCKED**
+
+Recovery may restore gameplay progression only after all recovery completion conditions have been verified against authoritative state.
+
+1. Recovery may enter `COMPLETED` only after every required effect is completed or authoritatively verified as already completed.
+2. Authoritative gameplay state and all required derived state must be consistent.
+3. Victory Check must have successfully completed against the latest applicable StateVersion.
+4. The Turn/Resolution context, including the applicable `PendingStep`, must be valid and resumable.
+5. No other recovery may be active, and no mutation or effect may remain in an ambiguous in-flight state.
+6. Gameplay Resume is permitted only after all conditions above are satisfied and Recovery has reached `COMPLETED`.
+7. If any condition cannot be verified, Recovery must remain locked and the system must enter or remain in `RECOVERY_REQUIRED`. Gameplay must not resume based on guessed or incomplete state.
+
+`Recovery Completed` is the sole authorization boundary for restoring gameplay progression.
