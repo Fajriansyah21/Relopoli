@@ -768,3 +768,17 @@ A single Checkpoint Manager owns the checkpoint policy and lifecycle coordinatio
 8. **Preservation rules:** Checkpoint selection and cleanup must preserve the committed-mutation recovery requirements in Decision 50. A checkpoint must not be deleted or selected in a way that could cause committed mutations to be lost.
 
 This decision centralizes checkpoint policy and lifecycle ownership while preserving the existing State Manager and Recovery Executor authority boundaries. Numeric retention limits, memory budgets, and retry thresholds remain subject to profiling and validation in Roblox Studio.
+
+## Decision 56 — Preserve a Verified Recovery Baseline
+**Status: LOCKED**
+
+Checkpoint retention and memory-budget enforcement must preserve the match's minimum verified recovery capability.
+
+1. **Recovery baseline:** Checkpoint Manager must identify and protect at least one verified checkpoint as the recovery baseline whenever one exists.
+2. **Replacement before removal:** The current recovery baseline must not be deleted or replaced until a newer checkpoint has been successfully created, validated, and accepted as a verified replacement.
+3. **Retention cleanup:** Other older checkpoints may be removed to satisfy retention or memory limits only when they are not protected by an active Recovery process and their removal does not violate the recovery-baseline requirement.
+4. **Insufficient memory:** If a new checkpoint cannot be stored without deleting the only verified recovery baseline, Checkpoint Manager must reject the new checkpoint creation and retain the existing baseline.
+5. **Gameplay continuity:** Failure to create a replacement checkpoint does not cancel or roll back an already committed gameplay mutation. Gameplay may continue only under the normal conditions established by Decision 43.
+6. **No fabricated capability:** If no verified checkpoint exists, the system must report limited or unavailable recovery capability as applicable. It must not label an unverified checkpoint as a recovery baseline.
+
+This decision refines Decisions 40, 41, and 43 by establishing a minimum recovery-baseline protection rule. It does not guarantee recovery after server failure or replace the committed-operation preservation requirements in Decision 50.
