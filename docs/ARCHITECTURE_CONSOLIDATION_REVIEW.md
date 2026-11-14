@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–77, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–78, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -659,6 +659,23 @@ CI-21 is closed at the architecture-contract level. Graceful shutdown is not gua
 8. Prototype tests must inject delayed old executors, concurrent takeover, duplicated grants, generation rollback/reuse, cross-scope tokens, stale tokens at every mutation sink, validation/commit races, ambiguous outcomes, and coordinator outages.
 
 CI-22 is closed at the architecture-contract level. The required atomic ownership and fencing primitives remain an implementation feasibility gate; no safe cross-server takeover or Roblox platform guarantee is claimed until prototypes prove the mechanism.
+
+
+### CI-23 — Fencing Authority Generation History Lacks an Integrity and Recovery Contract
+
+**Related decisions:** 35, 57–68, 69, 72–78  
+**Concern:** Decision 77 requires authoritative, monotonically increasing fencing generations, but the integrity and recovery behavior of the generation authority itself was not fully specified. If its trusted history is missing, corrupt, rolled back, forked, or ambiguous, reconstructing a counter from queue/checkpoint data or resetting it could revalidate an old executor. A hash without a protected trusted head also does not prevent rollback.
+
+**Recorded resolution in Decision 78:**
+1. The trusted generation authority is logically independent of queue, checkpoint, handoff, server-memory, and diagnostic records. Those records are references only, never current ownership authority.
+2. Every grant verifies trusted history integrity, scope, schema, continuity, latest committed generation, and owner/grant identity before issuance.
+3. Generation advancement, owner binding, and durable publication form one serialized, non-duplicating operation. Lost acknowledgements are reconciled by stable grant identity rather than issuing a duplicate grant.
+4. Missing, corrupt, truncated, rolled-back, forked, duplicated, or ambiguous history blocks new grants and competing Recovery execution. No reset, inferred counter, timestamp, lease, or local-lock fallback is allowed.
+5. Administrative restoration is separately authorized and audited, must prove a generation higher than every potentially valid prior grant, and must verify fencing at every authoritative mutation sink before execution resumes. Otherwise the affected Recovery remains blocked.
+6. The actual integrity, monotonic-anchor, atomic-grant, and mutation-enforcement primitives must be identified and tested. No unverified Roblox DataStore transaction, compare-and-swap, rollback resistance, or cross-server linearizability guarantee may be assumed.
+7. Prototype tests cover loss, corruption, rollback, fork, duplicate/reordered requests, crash/publication ambiguity, concurrent startup, backup restoration, administrative recovery, and sink outages. They must prove no generation reset/reuse, duplicate grant, stale side effect, or competing execution under uncertainty.
+
+CI-23 is closed at the architecture-contract level. The actual trusted monotonic anchor and atomic cross-server primitive remain implementation feasibility gates; if they cannot be proven, competing Recovery takeover remains blocked.
 
 
 ---
