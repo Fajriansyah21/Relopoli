@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–44, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–56, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -18,7 +18,7 @@ The architecture has a coherent core direction:
 - Game End is a hard gameplay stop.
 - Client UI and animation are presentation/input surfaces, not gameplay authority.
 
-The 44 decisions strengthen this design with explicit mutation plans, version checks, copy-on-write, post-commit processing, and in-session recovery.
+The architecture decisions strengthen this design with explicit mutation plans, version checks, copy-on-write, post-commit processing, and in-session recovery.
 
 **Overall assessment:** The architecture is a viable design direction for Roblox Luau, but it is not yet implementation-ready. Several ordering and recovery semantics must be clarified first. The highest-risk gaps are the post-commit effect lifecycle, Victory Check gating, and checkpoint restoration semantics.
 
@@ -201,6 +201,26 @@ The project uses “server authoritative” as a trust-boundary principle: the s
 These are related but not interchangeable concepts. The current Relopoli design, where clients present server-confirmed movement and gameplay outcomes, does not by itself establish that the experience intends to enable Roblox's engine Server Authority mode.
 
 **Resolution:** Relopoli uses the conventional server-authoritative model built around server-side gameplay logic and validated client-server requests. It does not currently adopt Roblox's engine Server Authority simulation model. Any future adoption requires a separate architecture review and explicit decision. The existing server trust boundary and client presentation responsibilities remain unchanged.
+
+
+### CI-01 — Checkpoint Retention Could Delete the Only Verified Recovery Baseline
+
+**Status: ADDRESSED by LOCKED Decision 56 — Preserve a Verified Recovery Baseline.**  
+**Related decisions:** 38, 39, 40, 41, 43, 50, 54, 55, 56
+
+Decision 40 requires retaining a previous verified checkpoint until its replacement is successfully verified. Decision 41 also permits deleting the oldest checkpoint that is not currently in use when the memory budget is insufficient. Read together, these rules did not explicitly protect the only remaining verified checkpoint from memory-pressure cleanup.
+
+**Recorded resolution in Decision 56:**
+1. Checkpoint Manager identifies and protects at least one verified checkpoint as the recovery baseline whenever one exists.
+2. The baseline cannot be deleted or replaced until a newer checkpoint has been created, validated, and accepted as its verified replacement.
+3. Other older checkpoints may be removed only if they are not in active Recovery use and their removal preserves the baseline.
+4. If memory is insufficient without deleting the sole baseline, creation of the new checkpoint is rejected and the existing baseline is retained.
+5. A failed checkpoint creation does not cancel an already committed gameplay mutation; normal gameplay may continue under Decision 43's conditions.
+6. The system must report limited or unavailable recovery capability honestly when no verified checkpoint exists.
+
+CI-01 is closed at the architecture-contract level. This does not guarantee recovery after server failure or replace Decision 50's committed-operation preservation requirements.
+
+---
 
 ## 4. ROBLOX LUAU FEASIBILITY
 
