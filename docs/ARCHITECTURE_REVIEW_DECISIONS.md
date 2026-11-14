@@ -827,3 +827,19 @@ The authoritative append-only Operation Journal must use a verifiable hash chain
 7. **Feasibility gate:** Canonical record serialization, SHA-256 availability, chain verification, trusted-head persistence, and their performance/recovery behavior must be prototyped and validated in Roblox Studio before the mechanism is relied upon in implementation.
 
 This decision extends the integrity contract to the Operation Journal. It does not replace Decision 58's append-only rule, Decision 57's fail-closed recovery behavior, or Decision 50's committed-mutation preservation requirements. It does not claim that Roblox runtime feasibility or implementation has already been demonstrated.
+
+## Decision 60 — Segmented Operation Journal
+**Status: LOCKED**
+
+The authoritative append-only Operation Journal must be organized into ordered, verifiable segments while preserving one continuous integrity history.
+
+1. **Ordered segment identity:** Each segment must have a stable identity and an explicitly verifiable sequence range. Record ordering must remain unambiguous across segment boundaries.
+2. **Continuous chain linkage:** Each segment must identify the integrity hash of its preceding segment's terminal record. The first segment uses the defined genesis boundary. Segment boundaries must not reset or weaken the hash chain established by Decision 59.
+3. **Segment integrity metadata:** Each segment must preserve verifiable boundary information, including its starting and ending sequence identities and the integrity hashes needed to validate its contents and linkage to adjacent segments.
+4. **Safe closure:** A segment may be marked closed only after its records, ordering, and integrity linkage have been verified and its accepted terminal hash has been safely bound to authoritative journal metadata. The exact atomic persistence mechanism must be established and tested during implementation.
+5. **Active segment:** The current segment may remain open while new records are appended. Recovery must verify the available records and metadata in that segment and must not treat an incomplete or unverifiable segment as a successfully closed segment.
+6. **Recovery continuity:** Recovery must validate segment identity, sequence continuity, record integrity, and inter-segment linkage before replay. Any missing, overlapping, reordered, broken, or unverifiable required segment invokes Decision 57 and leaves the match RECOVERY_REQUIRED.
+7. **No implicit deletion:** Segmentation does not authorize deleting, pruning, or discarding journal history. Archival or removal from active storage remains governed by Decision 58 and must preserve verifiable recovery evidence for every committed mutation still needed.
+8. **Implementation-defined sizing:** Segment size, closure cadence, and storage layout must be selected through Roblox Studio prototypes and measured performance/memory behavior. No fixed segment size or cadence is mandated by this decision.
+
+This decision structures the journal for bounded verification and management without weakening append-only history, hash-chain continuity, or committed-mutation preservation. It does not claim that segmented storage or its performance has already been implemented or validated.
