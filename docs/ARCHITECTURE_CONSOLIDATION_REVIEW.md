@@ -455,6 +455,28 @@ CI-12 is closed at the architecture-contract level. No runtime Circuit Breaker i
 
 ---
 
+
+### CI-13 — Recovery Requires a Controlled Human-Escalation Path
+
+**Status: ADDRESSED by LOCKED Decision 68 — Recovery Escalation Protocol.**  
+**Related decisions:** 33–39, 49–57, 63–67
+
+When automatic Recovery cannot safely proceed, the system needs an explicit operational path for authorized review. Without one, a match may remain blocked without a defined way to investigate or record a final disposition. Human intervention must not become a bypass around Recovery integrity or completion requirements.
+
+**Recorded resolution in Decision 68:**
+1. Explicit conditions trigger escalation, including persistent Circuit Breaker OPEN conditions, no-automatic-retry faults, and evidence that cannot be safely verified or restored automatically.
+2. The match remains RECOVERY_REQUIRED. Escalation cannot release the Recovery Lock, complete Recovery, or resume gameplay.
+3. A durable/reconstructible EscalationId-bound record tracks Recovery context, fault, stage, safe evidence references, and validated lifecycle transitions.
+4. Protected diagnostics and every administrative action require server-side authorization. Player-facing diagnostics remain filtered.
+5. Interventions are typed, reasoned, scoped, validated, and audited. They cannot rewrite committed journal history, fabricate evidence, replace trusted integrity heads, or roll back committed gameplay.
+6. Any intervention that continues Recovery returns to the normal pipeline and must pass the applicable integrity/context checks and existing Recovery Completion Gate.
+7. Escalation does not implicitly reset the Circuit Breaker or override Decision 66 retry dispositions.
+8. Persistence/reconstruction, audit coverage, authorization, concurrency, and no-bypass behavior require Roblox Studio prototype testing.
+
+CI-13 is closed at the architecture-contract level. No administrative console, escalation service, or intervention workflow is claimed as implemented or validated.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
