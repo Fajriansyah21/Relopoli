@@ -410,3 +410,16 @@ This provides traceability between committed mutations and their outstanding pos
 - The dependency graph must not contain circular dependencies.
 
 This preserves required gameplay ordering without forcing unrelated presentation effects to execute serially.
+
+
+## Decision 32 — Victory Check Retry and Game Progression Gate
+**Status: LOCKED**
+
+- A failed Victory Check remains in FAILED status.
+- The system retries the check according to an explicit retry policy.
+- Gameplay Continuation remains blocked until Victory Check completes successfully.
+- If the retry limit is reached, the match enters SYSTEM_ERROR or RECOVERY_REQUIRED.
+- This condition pauses gameplay and does not automatically end the match or declare a winner.
+- Recovery must use an explicit server-side mechanism.
+
+This prevents gameplay from advancing while the authoritative victory outcome is unknown, without treating a system failure as a gameplay result.
