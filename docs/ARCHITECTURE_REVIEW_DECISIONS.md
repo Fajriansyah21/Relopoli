@@ -1019,3 +1019,27 @@ Recovery execution and its supporting coordination state must be isolated by mat
 11. **Feasibility and acceptance gate:** Roblox Studio prototypes must validate concurrent matches, simultaneous Recoveries, per-match queue independence, global resource exhaustion, fair scheduling, stale callback rejection, cross-match reference rejection, and failure containment under server interruption.
 
 This decision defines match-scoped Recovery isolation with bounded server-wide resource coordination. It does not require unlimited simultaneous Recoveries, claim that all Roblox server resources can be perfectly isolated, or assert that the isolation scheduler has already been implemented or tested.
+
+## Decision 70 — Priority-Based Recovery Scheduling with Fairness Guarantee
+**Status: LOCKED**
+
+When multiple matches require Recovery work concurrently, the server must schedule admitted Recovery work using deterministic priority rules while preserving per-match isolation and preventing starvation.
+
+1. **Scheduling scope:** Scheduling decisions operate across eligible Recovery tasks from multiple matches, while all execution state, locks, mutation ordering, and Recovery evidence remain scoped by MatchId and RecoveryId under Decision 69.
+2. **Priority classes:** The scheduler must distinguish at least:
+   - `ACTIVE_CONTINUATION`: a Recovery already in progress that has safely yielded at a defined batch boundary and is eligible to continue.
+   - `NEW_VALIDATED`: a newly initiated Recovery that has passed required admission and initial validation.
+   - `RESOURCE_WAITING`: a Recovery that is valid but deferred because current server-wide capacity is unavailable.
+   - `RESOURCE_DEFERRED`: a Recovery deferred by a prior resource-limit decision and awaiting a later admission opportunity.
+   These classes express scheduling preference only. They do not establish Recovery correctness or permit skipping validation.
+3. **Deterministic ordering:** Within each priority class, ordering must use explicit stable scheduling metadata, such as enqueue sequence and bounded wait age. Wall-clock timestamps alone must not be the ordering authority. Tie-breaking must be deterministic and scoped to the scheduler instance.
+4. **Fairness and starvation prevention:** Priority preference must not allow ACTIVE_CONTINUATION tasks to monopolize capacity indefinitely. The scheduler must apply bounded work slices, per-match concurrency/usage limits, and a documented aging or fair-rotation policy so eligible waiting matches eventually receive service when capacity becomes available.
+5. **Continuation handling:** An ACTIVE_CONTINUATION task may receive preference to avoid unnecessary restart overhead, but after its bounded replay/work slice it must yield at a safe boundary and re-enter scheduling. It must not retain a global server resource reservation indefinitely.
+6. **Admission and resource limits:** Server-wide limits for concurrent Recovery tasks, CPU/work budget, memory, and storage remain authoritative. The scheduler may defer or reject new work safely when limits are reached. It must not corrupt, partially publish, or silently alter the Recovery state of tasks that are already running or waiting.
+7. **Per-match fairness:** One match must not exceed its configured share or concurrency limit in a way that starves other eligible matches. Multiple Recovery tasks for one match must obey that match's serialization and lock constraints; they cannot execute conflicting mutations concurrently.
+8. **Priority cannot override safety:** No scheduling priority may bypass MatchId/RecoveryId context validation, Recovery Lock ownership, Decision 63 replay budgets, Decision 66 retry dispositions, Decision 67 Circuit Breaker state, Decision 68 escalation restrictions, or the Recovery Completion Gate. OPEN Circuit Breaker and escalated cases remain blocked from automatic execution unless their authoritative policies explicitly permit a validated action.
+9. **Queue lifecycle and stale work:** Before dispatch, the scheduler must revalidate that the task is still eligible, its context is current, and its Recovery has not completed, been cancelled, escalated, or otherwise become ineligible. Stale queue entries must be discarded safely without applying gameplay mutations.
+10. **Observability:** Enqueue, dispatch, yield, defer, reject, aging/rotation, and starvation-prevention outcomes must be recorded with safe MatchId/RecoveryId references in the relevant Audit Trail. Audit recording remains non-authoritative under Decision 65.
+11. **Feasibility and acceptance gate:** Roblox Studio prototypes must test deterministic ordering, concurrent matches, continuation preference, fairness under sustained arrivals, per-match quotas, aggregate resource exhaustion, stale queue entries, lock conflicts, Circuit Breaker/escalation interaction, and server restart behavior.
+
+This decision defines deterministic priority scheduling with bounded fairness and server-wide resource admission. It does not promise unlimited Recovery throughput, guarantee progress when capacity never becomes available, or claim that the scheduler has already been implemented or tested.
