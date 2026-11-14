@@ -1198,3 +1198,22 @@ The authority that issues Recovery fencing generations is itself a critical trus
 10. **Acceptance gate:** Roblox Studio prototypes must inject trusted-record loss, corruption, truncation, rollback, forked histories, duplicated/reordered grant requests, crashes before and after durable publication, lost acknowledgements, concurrent server startup, backup restoration, administrative recovery, and fencing-sink outages. Assert no generation reset/reuse, no duplicate grant, no takeover without verified continuity, no stale executor side effect, and no competing execution when authority is uncertain.
 
 This decision defines an integrity and recovery contract for the fencing authority. It does not claim Roblox supplies the required atomic, rollback-resistant, cross-server primitive or that the mechanism has been implemented. If trustworthy monotonic generation cannot be proven, new competing Recovery ownership remains unavailable.
+
+
+
+## Decision 79 — Recovery Authority Outage and Safe Re-Entry Protocol
+**Status: LOCKED**
+
+The Recovery system must remain safe when the trusted fencing authority or its coordination path becomes unavailable. An outage may pause Recovery, but it must never create competing owners, duplicate authoritative effects, or infer ownership from stale local evidence.
+
+1. **Fail-closed during authority outage:** If the current generation, grant, or required fencing decision cannot be verified, servers must not acquire new Recovery ownership, advance a generation, or perform authoritative Recovery mutations that require an unverifiable fence.
+2. **No local fallback authority:** Cached tokens, server memory, queue entries, checkpoints, handoff payloads, timestamps, timeouts, lease expiry, and local locks cannot elect a new owner, advance the generation, or substitute for the trusted authority defined by Decision 78.
+3. **Protect in-flight work:** An executor may finish only work that can still satisfy the authoritative fencing contract at the actual mutation sink. If a sink cannot verify/enforce the current generation, block the mutation. Never interrupt an atomic no-yield commit midway; stop at a safe boundary. Ambiguous outcomes must be reconciled from stable operation/grant identities and authoritative journal evidence after service restoration.
+4. **Preserve durable pending work:** Do not acknowledge, discard, or mark Recovery queue work complete unless the corresponding durable transition is confirmed. Pending work remains pending or quarantined for reconciliation; outage alone does not imply success, failure, rollback, or completion.
+5. **Verified re-entry:** Before Recovery resumes, restore and verify the trusted generation history and continuity, serialized grant publication, owner/grant identity, and fencing enforcement at every authoritative mutation sink. Any partial, forked, stale, or ambiguous restoration remains fail-closed.
+6. **Fresh ownership after restoration:** A returning or restarted server must obtain a fresh valid generation through the trusted authority and pass normal Recovery admission and validation. Pre-outage executors do not automatically regain ownership. Lower generations remain fenced at all mutation sinks.
+7. **No outage-based gameplay mutation:** Authority outage or restoration must not itself change gameplay state, declare Recovery complete, roll back committed operations, advance a Turn, or bypass the existing Game-End and Recovery completion gates.
+8. **Administrative intervention:** Any exceptional restoration remains separately authorized and audited under Decision 78. An operator action cannot bypass proof of monotonic generation continuity or mutation-sink fencing.
+9. **Acceptance gate:** Roblox Studio prototypes must cover total authority outage, partial network partition, isolated live executors, simultaneous restarts, stale cached tokens, unavailable mutation sinks, lost acknowledgements, partial/out-of-order storage restoration, ambiguous grants, and queue persistence failures. Assert no duplicate grants, no stale-executor side effects, no lost acknowledged queue transitions, no false completion, and no competing authoritative execution.
+
+This decision defines outage and re-entry behavior; it does not claim Roblox provides the required cross-server coordination, atomic storage, or fencing primitives. If authority continuity or sink enforcement cannot be proven, Recovery takeover and affected authoritative mutations remain blocked.
