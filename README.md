@@ -1,27 +1,86 @@
 # RELOPOLI
 
-Repository dokumentasi resmi rancangan game Relopoli.
+Repository utama rancangan dan pengembangan game multiplayer board-game 3D **Relopoli**.
 
 ## Mulai di sini
 
-- [Dokumentasi Index](docs/ARCHITECTURE_INDEX.md): peta seluruh dokumen dan aturan pemeliharaannya.
-- [Master Source of Truth](docs/MASTER_SOURCE_OF_TRUTH.md): aturan gameplay dan arsitektur sistem yang menjadi sumber utama.
-- [Architecture Review Summary](docs/ARCHITECTURE_REVIEW_SUMMARY.md): ringkasan hasil review, keputusan LOCKED, dan temuan yang masih terbuka.
+Kalau baru membuka repository ini, ikuti urutan berikut:
 
-## Struktur
+1. [Game Design](docs/GAME_DESIGN.md) untuk memahami konsep dan gameplay loop.
+2. [Game Systems](docs/GAME_SYSTEMS.md) untuk menemukan spesifikasi setiap sistem.
+3. [Map Design](docs/MAP_DESIGN.md) untuk memahami board, distrik, dan visual kota.
+4. [Development Log](docs/DEVELOPMENT_LOG.md) untuk melihat progres dan status pekerjaan.
+5. [Architecture Index](docs/ARCHITECTURE_INDEX.md) untuk keputusan teknis, validasi, dan aturan dokumentasi.
 
-- `docs/MASTER_SOURCE_OF_TRUTH.md`: aturan utama yang dikonsolidasikan.
-- `docs/ARCHITECTURE_REVIEW_DECISIONS.md`: satu-satunya log lengkap keputusan arsitektur yang disetujui.
-- `docs/ARCHITECTURE_CONSOLIDATION_REVIEW.md`: analisis konsolidasi, RF-01–RF-11, kelayakan Luau, urutan implementasi, dan acceptance test.
-- `docs/ARCHITECTURE_REVIEW_SUMMARY.md`: ringkasan review tanpa menggandakan isi keputusan.
-- `docs/REVIEW_BACKLOG.md`: backlog validasi sistem, ekonomi, teknis, dan UX.
-- `docs/progress/`: master flow dan dokumentasi progres.
-- `docs/systems/`: spesifikasi mekanik dan sistem.
-- `docs/audit/`: edge case dan exploit audit.
-- `docs/ui/`: spesifikasi UI.
-- `docs/visual/`: arah visual.
-- `design/`: referensi katalog properti.
+**Sumber aturan gameplay utama:** [Master Source of Truth](docs/MASTER_SOURCE_OF_TRUTH.md).
 
-## Status
+## Struktur repository
 
-Dokumentasi desain. Keputusan arsitektur yang tercatat belum menjadi bukti implementasi atau pengujian di Roblox Studio.
+```text
+RELOPOLI/
+│
+├── docs/
+│   ├── GAME_DESIGN.md
+│   ├── GAME_SYSTEMS.md
+│   ├── MAP_DESIGN.md
+│   ├── DEVELOPMENT_LOG.md
+│   ├── MASTER_SOURCE_OF_TRUTH.md
+│   ├── ARCHITECTURE_INDEX.md
+│   ├── ARCHITECTURE_REVIEW_DECISIONS.md
+│   ├── ARCHITECTURE_CONSOLIDATION_REVIEW.md
+│   ├── ARCHITECTURE_REVIEW_SUMMARY.md
+│   ├── systems/
+│   ├── progress/
+│   ├── ui/
+│   ├── visual/
+│   └── audit/
+│
+├── src/
+│   ├── ReplicatedStorage/
+│   │   ├── Modules/
+│   │   ├── Configs/
+│   │   └── Remotes/
+│   ├── ServerScriptService/
+│   │   ├── Services/
+│   │   └── Systems/
+│   ├── StarterPlayer/
+│   │   └── StarterPlayerScripts/
+│   └── StarterGui/
+│       └── UI/
+│
+├── assets/
+│   ├── Models/
+│   ├── Textures/
+│   ├── Icons/
+│   └── References/
+│
+├── design/
+└── README.md
+```
+
+## Fungsi tiap folder
+
+| Folder | Isi |
+|---|---|
+| `docs/` | Rancangan game, aturan, spesifikasi sistem, UI, visual, audit, dan development log |
+| `src/ReplicatedStorage/` | Modul dan konfigurasi shared serta kontrak Remote |
+| `src/ServerScriptService/` | Service dan sistem gameplay yang berjalan di server |
+| `src/StarterPlayer/` | Input dan presentasi sisi client |
+| `src/StarterGui/` | UI client |
+| `assets/` | Model, texture, icon, dan referensi visual |
+| `design/` | Referensi desain terstruktur seperti katalog Property |
+
+Folder `src/` dan `assets/` saat ini adalah **scaffold**, bukan klaim bahwa implementasi atau asset final sudah tersedia. README kecil di setiap subfolder menjelaskan batas tanggung jawabnya.
+
+## Aturan source of truth
+
+- Gameplay rules mengikuti [Master Source of Truth](docs/MASTER_SOURCE_OF_TRUTH.md) dan dokumen detail sistem yang dirujuknya.
+- Turn integration mengikuti [Progress 19 — Master Flow](docs/progress/PROGRESS_19_MASTER_FLOW.md).
+- Edge case dan exploit mengikuti [Progress 20 — Audit](docs/audit/PROGRESS_20_EDGE_CASE_EXPLOIT_AUDIT.md).
+- Kontrak teknis mengikuti [Architecture Decision Log](docs/ARCHITECTURE_REVIEW_DECISIONS.md).
+- Dokumen progress lama dipertahankan sebagai sejarah, bukan otomatis menjadi aturan terbaru.
+- Jika ada konflik, ikuti source hierarchy pada Master Source of Truth dan keputusan eksplisit terbaru yang sudah LOCKED.
+
+## Status proyek
+
+**Design consolidation / implementation preparation.** Architecture Decisions 1–79 sudah LOCKED pada tingkat dokumentasi. Roblox Studio prototypes, acceptance tests, failure-injection, dan performance validation masih harus dilakukan. Implementation readiness tetap **NOT YET**.
