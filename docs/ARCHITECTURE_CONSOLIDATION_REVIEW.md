@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–76, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–77, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -641,6 +641,24 @@ CI-20 is closed at the architecture-contract level. No zero-overhead, perfect re
 8. Prototype tests must cover shutdown at every lifecycle boundary, crash/deadline interruption, duplicate handoff, interrupted commits, stale locks, concurrent startup, ambiguous persistence, and absence of duplicate mutation or lost pending work.
 
 CI-21 is closed at the architecture-contract level. Graceful shutdown is not guaranteed by Roblox, and implementation readiness remains subject to Roblox Studio prototypes and acceptance tests.
+
+
+### CI-22 — Recovery Lock Ownership Does Not Fence a Delayed Prior Executor
+
+**Related decisions:** 35–38, 57–68, 69–76  
+**Concern:** Recovery Lock lifecycle and shutdown handoff prevent ordinary duplicate execution, but they do not fully address a prior server that remains alive or resumes after a newer server begins takeover. A timeout, shutdown signal, or local lock state cannot by itself prevent that stale executor from reaching an authoritative mutation sink. A local token preflight check would also leave a race between validation and commit.
+
+**Recorded resolution in Decision 77:**
+1. Every Recovery ownership grant receives a unique fencing token scoped to MatchId and RecoveryId, with a monotonically increasing generation and unambiguous owner/grant identity.
+2. Generation issuance must be authoritative, serialized, non-duplicating, and protected against rollback/reuse. If a unique durable grant cannot be proven, a competing owner is not granted.
+3. Every authoritative Recovery mutation and durable side effect must enforce the current token at its actual commit/write boundary or at the side-effect resource. A separated local check is insufficient.
+4. A higher generation fences all lower-generation executors. Stale executors may clean up or emit bounded diagnostics only; they cannot publish progress, append authoritative journal transitions, mutate gameplay, or complete Recovery.
+5. The design must name and prototype the actual storage/coordination primitive. No unverified Roblox DataStore transaction, compare-and-swap, or cross-server linearizability guarantee may be assumed. If a sink cannot enforce fencing atomically, competing execution at that sink remains blocked.
+6. Fencing supplements Decisions 35, 69, and 76; it does not replace Recovery Lock lifecycle, match isolation, handoff, OperationId idempotency, Operation Journal reconciliation, or completion gates. Lease expiry alone is not takeover authority.
+7. Historical token references may be retained for diagnostics, but checkpoints, queue entries, and handoff records cannot restore an old token as current ownership. Restart requires a fresh generation and full revalidation.
+8. Prototype tests must inject delayed old executors, concurrent takeover, duplicated grants, generation rollback/reuse, cross-scope tokens, stale tokens at every mutation sink, validation/commit races, ambiguous outcomes, and coordinator outages.
+
+CI-22 is closed at the architecture-contract level. The required atomic ownership and fencing primitives remain an implementation feasibility gate; no safe cross-server takeover or Roblox platform guarantee is claimed until prototypes prove the mechanism.
 
 
 ---
