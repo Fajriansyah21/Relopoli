@@ -346,6 +346,27 @@ CI-07 is closed at the architecture-contract level. No implementation or perform
 
 ---
 
+
+### CI-08 — Large Journal Replay Needs a Bounded and Resumable Work Contract
+
+**Status: ADDRESSED by LOCKED Decision 63 — Bounded Recovery Replay Budget.**  
+**Related decisions:** 14, 19–27, 33–39, 48–51, 57, 60–63
+
+A long committed-operation history may make a single Recovery execution excessively large. Replay therefore needs bounded work slices and a safe continuation boundary without weakening atomic mutations, lock ownership, or the Recovery Completion Gate.
+
+**Recorded resolution in Decision 63:**
+1. Recovery replay runs in bounded batches with measurable limits selected through Roblox Studio profiling; no arbitrary numeric budget is fixed by the architecture.
+2. Progress advances only after a complete batch and its state, ordering, integrity evidence, and journal position are verified. The cursor binds to the last fully accepted committed sequence and segment/hash.
+3. Budget exhaustion is a controlled yield, not completion. The match remains RECOVERY_REQUIRED and gameplay stays blocked.
+4. Continuation requires valid RecoveryId/lock ownership and revalidation of StateVersion, manifest generation, journal boundary, and cursor. If ownership is relinquished, lock release and reacquisition must follow Decision 35.
+5. A batch boundary cannot split an individual mutation or create an ambiguous commit. Resume must neither skip nor replay an accepted mutation as a new operation.
+6. The Recovery Completion Gate remains mandatory. Any uncertain progress or inconsistent evidence invokes existing fail-closed recovery behavior.
+7. Batch sizing, timing, yield/resume, lock behavior, and performance require Roblox Studio prototype and interruption testing.
+
+CI-08 is closed at the architecture-contract level. No runtime performance or implementation result is claimed.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
