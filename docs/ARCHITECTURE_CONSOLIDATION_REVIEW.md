@@ -145,17 +145,22 @@ RF-07 is therefore closed at the architecture-contract level. Implementation det
 
 ### RF-08 — Victory Check Is Both a Rule Evaluation and a State-Changing Outcome
 
-**Related decisions:** 5, 26, 29, 31, 32  
-The source flow says Victory Detection is followed by Victory Validation, Game State = ENDED, Winner Set, Turn Controller STOP, and Gameplay STOP.
+**Status: ADDRESSED by LOCKED Decision 52 — Separate Victory Evaluation From Game-End Mutation.**  
+**Related decisions:** 5, 26, 29, 31, 32, 46, 52
 
-The architecture treats Victory Check as a post-commit effect, but the winning outcome itself changes authoritative state.
+The source flow says Victory Detection is followed by Victory Validation, Game State = ENDED, Winner Set, Turn Controller STOP, and Gameplay STOP. The architecture must distinguish the read-only evaluation of victory rules from the authoritative state change that applies Game End.
 
-**Required clarification:** Separate:
-1. Read-only victory evaluation against a specific committed StateVersion.
-2. A validated Game-End mutation submitted through State Manager, if a victory condition is met.
-3. The terminal gate that prevents any later gameplay mutation.
+**Recorded resolution in Decision 52:**
+1. Victory Evaluator reads an authoritative snapshot and evaluates it against a specific StateVersion. It cannot mutate Match State or directly set the winner.
+2. The evaluation result carries EvaluatedStateVersion.
+3. State Manager validates that version against the current StateVersion. A stale result is rejected and reevaluated against the latest snapshot.
+4. If no victory is found, the Victory Check completes and the Global Victory Gate may be released only while its triggering context remains current.
+5. If victory is found, Game-End is submitted as a dedicated mutation through State Manager's canonical candidate-state commit pipeline.
+6. The Global Victory Gate stays locked throughout evaluation and Game-End application. After Game End commits, the gate is terminal and no later gameplay mutation or continuation is admitted.
+7. Evaluators and post-commit workers cannot directly mutate authoritative gameplay state.
+8. Failures leave the gate locked and are handled through the established retry/recovery rules.
 
-This avoids allowing a post-commit worker to mutate Game State outside the State Manager.
+RF-08 is closed at the architecture-contract level. The source-defined victory conditions remain unchanged; implementation and failure-path behavior still require Roblox validation and testing.
 
 ### RF-09 — Checkpoint Integrity Hash Needs a Defined, Feasible Contract
 
