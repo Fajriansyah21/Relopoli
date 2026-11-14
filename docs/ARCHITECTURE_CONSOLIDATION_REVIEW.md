@@ -477,6 +477,27 @@ CI-13 is closed at the architecture-contract level. No administrative console, e
 
 ---
 
+
+### CI-14 — Recovery Coordination Needs Match-Scoped Isolation
+
+**Status: ADDRESSED by LOCKED Decision 69 — Recovery Isolation Boundary.**  
+**Related decisions:** 12, 18–20, 33–39, 45–57, 60–68
+
+When a server hosts multiple matches, a stalled or failed Recovery must not implicitly occupy shared mutation coordination or alter another match's Recovery state. At the same time, independent Recovery workloads still need bounded aggregate resource governance.
+
+**Recorded resolution in Decision 69:**
+1. Every Recovery is bound to MatchId and RecoveryId. Recovery-owned locks, queues, evidence, fault counters, Circuit Breaker state, and escalation records are scoped accordingly.
+2. Mutation ordering and Recovery serialization are per-match. A match's Recovery cannot acquire a global gameplay mutation lock or occupy another match's queue.
+3. Checkpoints, journal segments, manifests, attestations, audit streams, and administrative actions validate their match/recovery scope. Cross-match references are rejected unless covered by an explicit coordination contract.
+4. Recovery failure, OPEN Circuit Breaker, or pending escalation in one match cannot mutate another match's gameplay, Recovery status, lock, queue, or completion gate.
+5. Explicit cross-match operations must declare their full scope and use deterministic coordination, validation, and failure handling.
+6. Server-wide admission control may bound aggregate CPU/work, memory, concurrency, and storage. It must safely defer/reject new work without corrupting active matches.
+7. Fair scheduling, stale callback rejection, and cross-match isolation require Roblox Studio prototype tests under concurrency and resource exhaustion.
+
+CI-14 is closed at the architecture-contract level. No multi-match isolation scheduler or runtime resource governor is claimed as implemented or validated.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
