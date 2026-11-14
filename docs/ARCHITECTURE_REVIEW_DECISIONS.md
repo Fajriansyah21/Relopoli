@@ -541,3 +541,17 @@ This makes checkpoint integrity and provenance verifiable before recovery uses t
 - This retention policy applies within the lifetime of the match server session.
 
 This balances fallback availability with bounded memory usage and does not imply persistence across server crashes.
+
+
+## Decision 41 — Checkpoint Memory Budget
+**Status: LOCKED**
+
+- Checkpoint Manager has a dedicated memory budget.
+- Each checkpoint estimates its memory usage when created.
+- Before storing a new checkpoint, the system checks the available budget.
+- If the budget is insufficient, the oldest checkpoint that is not currently in use may be removed.
+- If the budget remains insufficient, the new checkpoint is not created and the previous verified checkpoint is retained.
+- Checkpoint creation failure is recorded for debugging.
+- Gameplay stability must not be sacrificed merely to preserve additional recovery checkpoints.
+
+This keeps checkpoint retention bounded and prevents recovery history from consuming memory needed for stable match execution.
