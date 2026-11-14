@@ -164,12 +164,14 @@ RF-08 is closed at the architecture-contract level. The source-defined victory c
 
 ### RF-09 — Checkpoint Integrity Hash Needs a Defined, Feasible Contract
 
-**Related decisions:** 39, 40, 41, 43  
+<sup>Addressed by Decision 54 — Deterministic Checkpoint Serialization and Integrity Contract.</sup>
+
+**Related decisions:** 39, 40, 41, 43, 50, 54  
 A hash requires a deterministic representation of the checkpoint: stable key ordering, supported value types, treatment of references, and a defined algorithm. The current decision does not specify these.
 
 An integrity hash can help detect accidental data changes, but it is not a substitute for server authority or validation. The design should not assume that a hash alone makes in-memory state secure.
 
-**Required clarification:** Specify the threat being addressed and prototype deterministic serialization, hash calculation, and verification before relying on this mechanism.
+**Resolution:** Decision 54 defines deterministic serialization, supported value/reference boundaries, a SHA-256 digest through a vetted or verified capability, format/canonicalization versioning, creation-time calculation and pre-recovery verification, and the limited threat boundary. Roblox Studio prototyping remains a required feasibility gate; this documentation decision is not implementation or test evidence.
 
 ### RF-10 — Checkpoint Policy Has Overlapping Responsibilities
 
