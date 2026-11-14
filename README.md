@@ -4,6 +4,10 @@ Repository utama rancangan dan pengembangan game multiplayer board-game 3D **Rel
 
 ## Mulai di sini
 
+Workflow standar proyek: [Development Workflow v1.0](docs/WORKFLOW.md).
+
+Ikuti enam tahap: Planning → Specification → Review & Approval → Documentation → Implementation → Testing & Validation.
+
 Kalau baru membuka repository ini, ikuti urutan berikut:
 
 1. [Game Design](docs/GAME_DESIGN.md) untuk memahami konsep dan gameplay loop.
