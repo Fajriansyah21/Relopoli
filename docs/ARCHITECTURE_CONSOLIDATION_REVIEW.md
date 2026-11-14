@@ -125,19 +125,23 @@ Until that is designed, do not implement fallback by simply assigning an older c
 
 ### RF-07 — StateVersion Scope Is Ambiguous Once Effect Registry Is Match State
 
-**Related decisions:** 23, 25, 30, 34, 36, 39  
-Decision 30 places the Effect Registry in authoritative Match State. Decisions 23 and 25 use StateVersion to validate gameplay snapshots and Mutation Plans.
+**Status: ADDRESSED by LOCKED Decision 51 — Separated Version Domains.**  
+**Related decisions:** 23, 25, 30, 34, 36, 39, 47, 51
 
-It is unclear whether changes to effect status, recovery locks, checkpoint metadata, or diagnostic state increment the same StateVersion used by gameplay Mutation Plans.
+Decision 30 places the Effect Registry in authoritative Match State, while Decisions 23 and 25 use StateVersion to validate gameplay snapshots and Mutation Plans. Without explicit boundaries, routine effect-status, recovery-lock, or checkpoint-catalog updates could invalidate gameplay plans or leave metadata consistency unprotected.
 
-If they do, routine effect-status updates can make gameplay plans stale. If they do not, the architecture needs to define which version protects which data.
+**Recorded resolution in Decision 51:**
+- `StateVersion` protects Gameplay State and Derived State and increments only after a successful gameplay-state commit.
+- `EffectRegistryVersion` protects Effect Registry records and status changes.
+- `RecoveryVersion` protects recovery status and recovery-lock lifecycle metadata.
+- `CheckpointCatalogVersion` protects checkpoint catalog metadata.
+- Gameplay snapshots and Mutation Plans validate only `StateVersion`; independent metadata changes do not make them stale.
+- Recovery validates the relevant metadata versions and the latest applicable gameplay StateVersion.
+- Checkpoints record their represented StateVersion without incrementing it.
+- Diagnostics use identifiers and timestamps rather than gameplay StateVersion.
+- Decision 47's atomic publication requirement remains in force: gameplay changes and required Effect Registry records publish together, with the registry version advancing as part of that publication.
 
-**Required clarification:** Define version boundaries, for example:
-- Gameplay StateVersion for gameplay mutations and derived state.
-- EffectRegistryVersion for post-commit processing metadata.
-- Recovery/checkpoint metadata version, if it is independently mutable.
-
-Alternatively, define a single version with explicit rules for every metadata mutation. Do not leave this implicit.
+RF-07 is therefore closed at the architecture-contract level. Implementation details and concurrency behavior still require validation during Roblox implementation and testing.
 
 ### RF-08 — Victory Check Is Both a Rule Evaluation and a State-Changing Outcome
 
