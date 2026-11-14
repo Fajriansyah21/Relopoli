@@ -9,9 +9,9 @@
 The architecture review has covered the game's orchestration model, domain-system boundaries, server authority, state mutation pipeline, post-commit effects, victory handling, recovery, checkpoints, and Roblox Luau feasibility.
 
 **Current recorded outcome:**
-- **52 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
-- **Eight consolidation findings (RF-01–RF-08) have been addressed** by Decisions 45–52.
-- **Three findings (RF-09–RF-11) remain unresolved** and still require explicit design decisions.
+- **55 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
+- **All eleven consolidation findings (RF-01–RF-11) have been addressed** by Decisions 45–55.
+- **No consolidation findings remain unresolved at the architecture-contract level.**
 - The architecture direction is assessed as sound, but implementation readiness remains **NOT YET**.
 - The repository is a documentation repository. These records do not prove that the systems have been implemented or tested in Roblox Studio.
 
@@ -77,7 +77,7 @@ The review covered:
 - The rule that completed gameplay operations must not be rolled back.
 - The danger of restoring an older checkpoint without a committed-operation journal/replay mechanism.
 
-Decisions 33–43 and 49–50 record approved architecture constraints. RF-09 and RF-10 remain open for integrity and checkpoint-manager contracts.
+Decisions 33–43 and 49–50 record the core recovery and checkpoint constraints. Decision 54 defines deterministic checkpoint serialization and integrity validation; Decision 55 centralizes checkpoint policy and lifecycle ownership in one Checkpoint Manager. Decision 53 confirms the conventional server-authoritative runtime model.
 
 ### F. Roblox Luau feasibility and implementation preparation
 
