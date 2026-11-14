@@ -9,6 +9,7 @@ All notable documentation changes are recorded here.
 - Preserved historical progress documents as source records; they do not override newer locked decisions.
 
 ## 2026-11-14
+- Locked Decision 64 (Verified Recovery Progress Attestation) and recorded cross-decision consistency finding CI-09 as addressed. Updated the consolidation review, summary, and index. Attestation persistence, crash-safe publication, fallback, and verification costs remain subject to Roblox Studio prototype validation.
 - Locked Decision 63 (Bounded Recovery Replay Budget) and recorded cross-decision consistency finding CI-08 as addressed. Updated the consolidation review, summary, and index. Batch sizing, safe yield/resume, lock behavior, and replay performance remain subject to Roblox Studio prototype validation.
 - Locked Decision 62 (Intermediate Journal Replay Checkpoints) and recorded cross-decision consistency finding CI-07 as addressed. Updated the consolidation review, summary, and index. Replay-checkpoint cadence, crash safety, fallback correctness, and performance remain subject to Roblox Studio prototype validation.
 - Locked Decision 61 (Authoritative Journal Recovery Manifest) and recorded cross-decision consistency finding CI-06 as addressed. Updated the consolidation review, summary, and index. Crash-safe manifest publication and consistency with checkpoint/journal commits remain subject to Roblox Studio prototype validation.
