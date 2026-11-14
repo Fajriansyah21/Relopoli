@@ -498,6 +498,27 @@ CI-14 is closed at the architecture-contract level. No multi-match isolation sch
 
 ---
 
+
+### CI-15 — Concurrent Recovery Work Needs Deterministic Priority and Fair Scheduling
+
+**Status: ADDRESSED by LOCKED Decision 70 — Priority-Based Recovery Scheduling with Fairness Guarantee.**  
+**Related decisions:** 33–39, 63, 67, 69
+
+With multiple matches requiring Recovery, server-wide resource limits need an explicit dispatch policy. Continuations may benefit from reduced restart overhead, but unbounded continuation preference could starve newly waiting matches.
+
+**Recorded resolution in Decision 70:**
+1. The scheduler distinguishes ACTIVE_CONTINUATION, NEW_VALIDATED, RESOURCE_WAITING, and RESOURCE_DEFERRED tasks.
+2. Ordering within classes uses stable scheduling metadata and deterministic tie-breaking, not wall-clock timestamps alone.
+3. Continuation preference is bounded by safe work slices and requeueing. Aging or fair rotation, per-match limits, and concurrency controls prevent indefinite monopolization.
+4. Global resource admission remains bounded and may safely defer/reject work without mutating waiting or active Recovery state.
+5. Before dispatch, task eligibility, MatchId/RecoveryId context, lock ownership, and terminal/cancelled/escalated state are revalidated.
+6. Scheduling priority cannot bypass replay budgets, retry dispositions, Circuit Breaker, escalation restrictions, isolation, or Recovery Completion Gate.
+7. Deterministic ordering, fairness under sustained arrivals, quotas, resource exhaustion, stale queue entries, and restart behavior require Roblox Studio prototype tests.
+
+CI-15 is closed at the architecture-contract level. No runtime scheduler or fairness guarantee is claimed as implemented or validated.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
