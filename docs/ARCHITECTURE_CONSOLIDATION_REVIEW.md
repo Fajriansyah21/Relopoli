@@ -325,6 +325,27 @@ CI-06 is closed at the architecture-contract level. No claim is made that Roblox
 
 ---
 
+
+### CI-07 — Long Journal Replay Needs a Safe Intermediate Recovery Acceleration
+
+**Status: ADDRESSED by LOCKED Decision 62 — Intermediate Journal Replay Checkpoints.**  
+**Related decisions:** 38–43, 50, 54–57, 60–62
+
+The accepted checkpoint baseline and verified Operation Journal provide the authoritative recovery path, but replaying a long committed journal history from the baseline may become increasingly expensive. An intermediate replay checkpoint can accelerate Recovery, provided it cannot weaken baseline protection or committed-mutation preservation.
+
+**Recorded resolution in Decision 62:**
+1. Intermediate replay checkpoints are derived recovery accelerators, not replacements for the protected verified baseline.
+2. They may be created only at stable committed boundaries and must bind to the source baseline, Journal identity, manifest generation, sequence, segment, and terminal record hash.
+3. They require deterministic serialization and integrity validation under Decision 54, plus safe acceptance/publication through the Recovery Manifest under Decision 61.
+4. If an intermediate replay checkpoint is invalid, Recovery may ignore it and replay the complete required committed journal suffix from the still-verified accepted baseline, but only when all required evidence is valid.
+5. If the baseline or required journal/manifest evidence is unverifiable, Decision 57 applies. No committed mutation may be discarded, duplicated, or inferred.
+6. Intermediate checkpoint retention cannot violate Decision 56's protected-baseline rule or remove evidence required for Recovery.
+7. Cadence, cost, crash behavior, fallback correctness, and performance require Roblox Studio prototype validation.
+
+CI-07 is closed at the architecture-contract level. No implementation or performance result is claimed.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
