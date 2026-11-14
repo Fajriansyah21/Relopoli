@@ -410,6 +410,28 @@ CI-10 is closed at the architecture-contract level. No audit storage, tamper-res
 
 ---
 
+
+### CI-11 — Recovery Fault Reporting and Retry Semantics Need a Shared Contract
+
+**Status: ADDRESSED by LOCKED Decision 66 — Structured Recovery Fault Classification.**  
+**Related decisions:** 14, 33–39, 48–57, 63–65
+
+Recovery failures and controlled continuation outcomes need consistent machine-readable classifications so the Recovery Executor, Audit Trail, and authorized diagnostics do not assign conflicting meanings to the same event. Retry behavior must also remain subordinate to operation idempotency and fail-closed recovery rules.
+
+**Recorded resolution in Decision 66:**
+1. Faults use stable machine-readable codes, categories, severity, phase/stage, RecoveryId, and safe references to affected recovery objects.
+2. Initial categories cover integrity, manifest, checkpoint, lock, replay, attestation, persistence, and execution-context failures. The registry can be extended through a documented compatible process.
+3. Expected bounded-budget exhaustion under Decision 63 is a controlled yield, not automatically a fault or replay failure.
+4. Each fault declares a retry disposition: RETRY_SAFE, RETRY_AFTER_REVALIDATION, or NO_AUTOMATIC_RETRY. These labels cannot bypass lock ownership, idempotency, commit, or fail-closed requirements.
+5. Retry safety must follow the fault's defined semantics and existing authoritative contracts; a generic transient label is not proof that replay is safe.
+6. Classified faults integrate with Decision 65's non-authoritative Audit Trail, while client-facing diagnostics remain filtered.
+7. Fault classification does not grant gameplay resume; the existing Recovery Completion Gate remains mandatory.
+8. Registry coverage, retry handling, audit integration, and diagnostic filtering require Roblox Studio prototype and failure-injection testing.
+
+CI-11 is closed at the architecture-contract level. No runtime fault registry or retry behavior is claimed as implemented or validated.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
