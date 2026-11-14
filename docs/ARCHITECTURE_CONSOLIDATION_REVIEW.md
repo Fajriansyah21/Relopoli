@@ -242,6 +242,26 @@ CI-02 is closed at the architecture-contract level. Decision 57 does not define 
 
 ---
 
+
+### CI-03 — Operation Journal Mutability and Retention Need an Explicit Contract
+
+**Status: ADDRESSED by LOCKED Decision 58 — Append-Only Operation Journal.**  
+**Related decisions:** 12, 14, 16–17, 33–38, 48–50, 57–58
+
+Decisions 50 and 57 depend on authoritative committed-operation records to reconstruct state and to prevent replay or inference when history is uncertain. The architecture needed an explicit rule preventing committed records from being silently changed or removed, while allowing corrections and safe retention.
+
+**Recorded resolution in Decision 58:**
+1. Committed journal records are immutable and cannot be edited, overwritten, or silently removed.
+2. Corrections and compensating actions are new records referencing prior records, with distinct OperationIds.
+3. Journal ordering and integrity information must be sufficient for Recovery to verify committed history.
+4. Archival or removal from active storage is permitted only when verifiable recovery evidence for every still-needed committed mutation is preserved. Otherwise, records remain retained.
+5. Only the server-authoritative runtime may append authoritative records; clients cannot directly mutate the journal.
+6. Recovery consumes only records whose identity, integrity, ordering, and committed status are verifiable.
+
+CI-03 is closed at the architecture-contract level. Decision 58 does not prescribe a storage engine, hash-chain format, archive implementation, or repair procedure.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
