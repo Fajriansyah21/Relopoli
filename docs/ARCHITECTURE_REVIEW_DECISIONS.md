@@ -383,3 +383,17 @@ This defines a clear boundary between pre-commit failure and post-commit failure
 - Gameplay-critical effects, including Victory Check, require a stronger recovery mechanism than presentation-only effects such as UI notifications or animations.
 
 This separates authoritative state mutation from subsequent work and prevents post-commit failures from duplicating committed gameplay operations.
+
+
+## Decision 30 — Post-Commit Effect Registry
+**Status: LOCKED**
+
+- Each successful commit produces a registry of its required post-commit effects.
+- Each effect records an EffectId, OperationId, effect type, and execution status.
+- Effect statuses are PENDING, PROCESSING, COMPLETED, and FAILED.
+- The registry is part of the authoritative Match State.
+- PENDING or FAILED effects may be processed again under an explicit retry policy.
+- COMPLETED effects must not be executed again.
+- The registry is scoped to the lifetime of the match server session and does not guarantee recovery after a server crash.
+
+This provides traceability between committed mutations and their outstanding post-commit work without implying cross-server durability.
