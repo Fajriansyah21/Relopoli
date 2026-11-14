@@ -555,3 +555,14 @@ This balances fallback availability with bounded memory usage and does not imply
 - Gameplay stability must not be sacrificed merely to preserve additional recovery checkpoints.
 
 This keeps checkpoint retention bounded and prevents recovery history from consuming memory needed for stable match execution.
+
+
+## Decision 42 — Event-Driven Checkpoint Creation
+**Status: LOCKED**
+
+- Checkpoints are created in response to important events rather than on a fixed time interval.
+- Eligible events include reaching a stable boundary, completing an important operation that changes match state, and successfully completing recovery.
+- A checkpoint must not be created while a mutation, required effect, or Victory Check remains incomplete.
+- When multiple eligible events occur close together, checkpoint creation may be coalesced into one checkpoint at the next stable boundary.
+
+This avoids excessive checkpoint creation while preserving important in-session recovery points.
