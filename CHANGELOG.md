@@ -9,6 +9,7 @@ All notable documentation changes are recorded here.
 - Preserved historical progress documents as source records; they do not override newer locked decisions.
 
 ## 2026-11-14
+- Locked Decision 57 (Fail-Closed Recovery on Operation Journal Integrity Failure) and recorded cross-decision consistency finding CI-02 as addressed. Updated the consolidation review, summary, and index; all RF-01–RF-11 and CI-01–CI-02 are addressed at the architecture-contract level, while implementation validation remains outstanding.
 - Locked Decision 56 (Preserve a Verified Recovery Baseline) to resolve cross-decision consistency finding CI-01 across checkpoint retention and memory-budget rules. Updated the consolidation review, summary, and index; all RF-01–RF-11 and CI-01 are addressed at the architecture-contract level, while Roblox Studio validation remains outstanding.
 - Locked Decision 55 (Single Checkpoint Manager Ownership) and recorded RF-10 as addressed. All RF-01–RF-11 architecture findings are now addressed at the documentation-contract level; Roblox Studio prototypes and acceptance tests remain outstanding.
 - Locked Decision 54 (Deterministic Checkpoint Serialization and Integrity Contract) and recorded RF-09 as addressed. Updated the consolidation review, summary, and index; RF-10 remains unresolved.
