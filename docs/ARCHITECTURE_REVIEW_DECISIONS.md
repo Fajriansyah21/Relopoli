@@ -397,3 +397,16 @@ This separates authoritative state mutation from subsequent work and prevents po
 - The registry is scoped to the lifetime of the match server session and does not guarantee recovery after a server crash.
 
 This provides traceability between committed mutations and their outstanding post-commit work without implying cross-server durability.
+
+
+## Decision 31 — Effect Dependency Ordering
+**Status: LOCKED**
+
+- A post-commit effect may declare dependencies on other effects.
+- Gameplay-continuation effects must wait until Victory Check has completed.
+- Presentation-only effects, such as UI updates, may run independently when they do not affect gameplay progression.
+- The Effect Registry may execute an effect only after all its declared dependencies are COMPLETED.
+- If a dependency fails, dependent effects remain blocked until the dependency completes.
+- The dependency graph must not contain circular dependencies.
+
+This preserves required gameplay ordering without forcing unrelated presentation effects to execute serially.
