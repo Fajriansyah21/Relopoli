@@ -931,3 +931,30 @@ The server-authoritative recovery system must maintain a separate, append-only R
 9. **Feasibility gate:** Event volume, storage cost, hash-chain verification, trusted-head persistence, failure handling, retention, and client diagnostic filtering must be prototyped and tested in Roblox Studio before the Audit Trail is relied upon in implementation.
 
 This decision establishes an independently verifiable diagnostic history for Recovery. It does not make the Audit Trail authoritative for gameplay, guarantee that every audit event can always be persisted, or claim that the mechanism has already been implemented or validated.
+
+## Decision 66 — Structured Recovery Fault Classification
+**Status: LOCKED**
+
+The Recovery system must classify Recovery faults using stable, structured fault codes and consistent diagnostic fields so the Recovery Executor, Recovery Integrity Audit Trail, and authorized diagnostic surfaces interpret failures consistently.
+
+1. **Stable fault identity:** Every classified fault must use a stable machine-readable fault code and category. Display text may evolve independently and must not be used as the programmatic identity of a fault.
+2. **Required diagnostic context:** A fault record must identify the Recovery phase/stage, fault category and code, severity, relevant RecoveryId, and safe references to the affected manifest, checkpoint, journal/segment/sequence, lock, replay batch, or progress attestation when available. Missing references must be represented explicitly rather than invented.
+3. **Initial fault categories:** The initial category set includes:
+   - `INTEGRITY_FAILURE`: required integrity digest, hash-chain link, or verification evidence does not match or cannot be verified.
+   - `MANIFEST_FAILURE`: Recovery Manifest is missing, corrupt, stale, unsupported, or inconsistent with authoritative evidence.
+   - `CHECKPOINT_FAILURE`: required baseline or replay checkpoint is missing, corrupt, unsupported, or fails validation.
+   - `LOCK_FAILURE`: Recovery Lock ownership, lifecycle, or exclusivity cannot be verified.
+   - `REPLAY_FAILURE`: a replay operation or batch fails, or its completion boundary cannot be established.
+   - `ATTESTATION_FAILURE`: Recovery progress attestation is missing, corrupt, stale, or inconsistent with its referenced state and journal boundary.
+   - `PERSISTENCE_FAILURE`: required authoritative recovery metadata or progress cannot be safely persisted or published.
+   - `CONTEXT_FAILURE`: RecoveryId, StateVersion/version domain, manifest generation, or other required execution context is stale or contradictory.
+   Additional codes may be introduced through a compatible, documented extension process without silently changing the meaning of existing codes.
+4. **Budget exhaustion is not automatically a fault:** Reaching the bounded replay budget under Decision 63 is a controlled yield/continuation outcome, not inherently a `REPLAY_FAILURE` or `RESOURCE_LIMIT` fault. A genuine resource or execution failure must be classified separately from an expected budget boundary.
+5. **Severity and retry disposition:** Each fault must carry a severity and an explicit retry disposition, such as `RETRY_SAFE`, `RETRY_AFTER_REVALIDATION`, or `NO_AUTOMATIC_RETRY`. These fields describe permitted handling; they do not authorize bypassing the Recovery Lock lifecycle, fail-closed rules, or Recovery Completion Gate. If required evidence is ambiguous or unverifiable, automatic retry must not proceed until the relevant context/evidence is restored and revalidated.
+6. **No inferred safety:** Retry safety must be determined by the fault's defined semantics and the existing idempotency, commit, journal, and recovery contracts. A generic transient-error label must not be treated as proof that replaying an operation is safe.
+7. **Audit integration:** Classified Recovery faults must be referenced by the Recovery Integrity Audit Trail under Decision 65, including stable code, stage, severity, retry disposition, and safe object references. Audit recording remains non-authoritative: audit failure does not change the fault's underlying Recovery semantics.
+8. **Safe diagnostic exposure:** Client-facing or player-facing messages must use filtered, non-sensitive descriptions. Internal identifiers, storage details, integrity material, private player data, and server-only diagnostic context must not be exposed unless explicitly authorized for a protected administrative surface.
+9. **Fail-closed precedence:** Fault classification does not itself decide whether gameplay may resume. Decisions 33–39, 49–57, and 64 remain authoritative. Any fault that prevents verification of required recovery evidence keeps the match RECOVERY_REQUIRED until the relevant completion conditions are proven.
+10. **Feasibility and coverage gate:** The fault-code registry, retry dispositions, audit integration, diagnostic filtering, and handling for each category must be prototyped and tested in Roblox Studio, including interruption, duplicate requests, stale context, lock loss, persistence failure, and ambiguous replay outcomes.
+
+This decision standardizes Recovery fault reporting and handling metadata. It does not guarantee that a fault is recoverable, authorize automatic retries by default, or claim that the classification registry has already been implemented or tested.
