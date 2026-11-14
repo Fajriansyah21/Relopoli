@@ -9,7 +9,7 @@
 The architecture review has covered the game's orchestration model, domain-system boundaries, server authority, state mutation pipeline, post-commit effects, victory handling, recovery, checkpoints, and Roblox Luau feasibility.
 
 **Current recorded outcome:**
-- **65 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
+- **66 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
 - **All eleven consolidation findings (RF-01–RF-11) have been addressed** by Decisions 45–55.
 - **No consolidation findings remain unresolved at the architecture-contract level.**
 - The architecture direction is assessed as sound, but implementation readiness remains **NOT YET**.
@@ -87,7 +87,7 @@ It also records a distinction that still needs a decision: conventional server-a
 
 See sections 4, 6, and 7 of the [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md).
 
-## 3. Decision coverage: Decisions 1–65
+## 3. Decision coverage: Decisions 1–66
 
 The complete wording and status of every decision live only in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md). To avoid duplicated or drifting copies, this summary groups the decision ranges rather than reproducing all decision text:
 
@@ -99,9 +99,9 @@ The complete wording and status of every decision live only in the [Architecture
 | 29–32 | Post-commit effects, effect registry, dependency ordering, victory retry, and progression gate |
 | 33–43 | Recovery executor and lock, recovery completion, verified resume, checkpoint creation, validation, retention, memory, and failure handling |
 | 44–52 | Consolidation review and corrective decisions for candidate-state commit, global victory gating, atomic effect publication, effect idempotency, recovery completion ordering, committed-mutation preservation, separated version domains, and separated victory evaluation from Game-End mutation |
-| 53–65 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, verified recovery-baseline protection, fail-closed recovery on operation-journal integrity failure, append-only Operation Journal, hash-chain integrity, segmented Operation Journal, authoritative Journal Recovery Manifest, intermediate Journal replay checkpoints, bounded Recovery replay budget, verified Recovery progress attestation, and Recovery Integrity Audit Trail |
+| 53–66 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, verified recovery-baseline protection, fail-closed recovery on operation-journal integrity failure, append-only Operation Journal, hash-chain integrity, segmented Operation Journal, authoritative Journal Recovery Manifest, intermediate Journal replay checkpoints, bounded Recovery replay budget, verified Recovery progress attestation, Recovery Integrity Audit Trail, and structured Recovery fault classification |
 
-Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decisions 56–65 resolve cross-decision consistency findings CI-01–CI-10. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
+Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decisions 56–66 resolve cross-decision consistency findings CI-01–CI-11. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
 
 ## 4. Consolidation findings status
 
@@ -130,10 +130,11 @@ Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decision
 | CI-08 | Large journal replay lacked bounded, resumable work slices | Decision 63: Bounded Recovery Replay Budget |
 | CI-09 | Resumable Recovery progress lacked verifiable evidence bound to resulting state | Decision 64: Verified Recovery Progress Attestation |
 | CI-10 | Recovery diagnostics lacked an independent integrity-protected audit trail | Decision 65: Recovery Integrity Audit Trail |
+| CI-11 | Recovery fault reporting and retry semantics lacked a shared contract | Decision 66: Structured Recovery Fault Classification |
 
 ### Remaining findings
 
-No consolidation findings RF-01–RF-11 or cross-decision consistency findings CI-01–CI-10 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
+No consolidation findings RF-01–RF-11 or cross-decision consistency findings CI-01–CI-11 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
 
 
 ## 5. Source-of-truth boundaries
