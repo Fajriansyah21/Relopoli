@@ -140,7 +140,8 @@ Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decision
 | CI-18 | Durable Recovery queue history lacked independent tamper evidence and trusted-head rollback detection | Decision 73: Tamper-Evident Recovery Queue Records |
 | CI-19 | Recovery fairness metadata could reset or lose waiting priority after interruption | Decision 74: Persistent Recovery Fairness Metadata |
 | CI-20 | Recovery Scheduler lacked bounded operational visibility into queue health, delays, and bottlenecks | Decision 75: Recovery Scheduler Observability |
-| CI-21 | Recovery Scheduler shutdown and handoff lacked an explicit drain, safe-boundary, and restart-reconciliation protocol | Decision 76: Recovery Scheduler Shutdown and Handoff Protocol |\n| CI-22 | Recovery Lock ownership did not fence delayed or resumed prior executors at authoritative mutation boundaries | Decision 77: Recovery Lock Fencing and Stale Executor Protection |
+| CI-21 | Recovery Scheduler shutdown and handoff lacked an explicit drain, safe-boundary, and restart-reconciliation protocol | Decision 76: Recovery Scheduler Shutdown and Handoff Protocol |
+| CI-22 | Recovery Lock ownership did not fence delayed or resumed prior executors at authoritative mutation boundaries | Decision 77: Recovery Lock Fencing and Stale Executor Protection |
 
 ### Remaining findings
 
