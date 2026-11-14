@@ -843,3 +843,21 @@ The authoritative append-only Operation Journal must be organized into ordered, 
 8. **Implementation-defined sizing:** Segment size, closure cadence, and storage layout must be selected through Roblox Studio prototypes and measured performance/memory behavior. No fixed segment size or cadence is mandated by this decision.
 
 This decision structures the journal for bounded verification and management without weakening append-only history, hash-chain continuity, or committed-mutation preservation. It does not claim that segmented storage or its performance has already been implemented or validated.
+
+## Decision 61 — Authoritative Journal Recovery Manifest
+**Status: LOCKED**
+
+The recovery system must maintain an authoritative, versioned Recovery Manifest that identifies the accepted checkpoint baseline and the exact verified Operation Journal boundary required to reconstruct committed gameplay state.
+
+1. **Manifest identity and format:** The manifest must identify the Journal, its manifest/schema format version, and the relevant canonicalization/integrity format versions needed to interpret its references.
+2. **Checkpoint baseline reference:** The manifest must identify the accepted checkpoint baseline, including the checkpoint identity and the state/version boundary from which journal replay is required. Baseline acceptance and retention remain governed by Decisions 38–43, 50, and 56.
+3. **Journal boundary reference:** The manifest must identify the latest accepted segment boundary and, where an active segment exists, its identity and verified boundary metadata. It must record the last committed sequence identity and the corresponding trusted terminal record hash.
+4. **State binding:** The manifest must record the authoritative StateVersion or equivalent version-domain references needed to establish that the checkpoint baseline, committed-operation history, and recovered state belong to a consistent recovery history. Version domains remain distinct as required by Decision 51.
+5. **Consistent publication:** Manifest advancement must be coordinated with the authoritative journal/commit process so that Recovery cannot accept a manifest that points beyond committed, integrity-verified records or a journal boundary that the manifest does not cover. The implementation must use a crash-safe publication protocol and validate its behavior under interruption; the exact storage transaction or prepare/commit mechanism is implementation-defined.
+6. **Monotonic versioning:** Each accepted manifest update must have a monotonically advancing manifest version or generation, with enough identity/integrity information to detect stale, duplicated, or inconsistent publication.
+7. **Recovery validation:** Before replay, Recovery must validate manifest integrity and format support, checkpoint identity and baseline compatibility, Journal identity, segment and sequence continuity, terminal hash linkage, and StateVersion consistency against the actual stored evidence.
+8. **Fail-closed mismatch:** If the manifest is missing, corrupt, stale, contradictory, unsupported, or cannot be reconciled with the checkpoint and journal evidence, Recovery must not guess, silently select another boundary, or replay uncertain records. It must follow Decision 57 and remain RECOVERY_REQUIRED until the required authoritative history can be verified.
+9. **No authority by digest alone:** A manifest digest or hash does not independently prove authenticity. The manifest's trusted status depends on server-authoritative control and a persistence/publication mechanism that protects its accepted version and reference from unauthorized alteration, within the threat boundary stated in Decision 59.
+10. **Feasibility gate:** Manifest persistence, crash-safe publication, consistency with journal append/segment closure and checkpoint acceptance, and recovery validation must be prototyped and tested in Roblox Studio before the mechanism is relied upon in implementation.
+
+This decision establishes the authoritative recovery reference without prescribing a specific storage engine or claiming that atomic persistence is already available or implemented in Roblox.
