@@ -367,6 +367,28 @@ CI-08 is closed at the architecture-contract level. No runtime performance or im
 
 ---
 
+
+### CI-09 — Resumable Recovery Progress Needs Verifiable Evidence
+
+**Status: ADDRESSED by LOCKED Decision 64 — Verified Recovery Progress Attestation.**  
+**Related decisions:** 23–27, 33–39, 49–57, 60–64
+
+Decision 63 permits Recovery to yield between bounded replay batches, but a saved cursor alone is insufficient evidence that the preceding batch was fully and correctly accepted. Recovery needs a verifiable record binding the accepted progress boundary to the resulting state and authoritative recovery context.
+
+**Recorded resolution in Decision 64:**
+1. Each completed batch must produce an attestation identifying RecoveryId, manifest generation, Journal, source checkpoint, and executor context.
+2. The attestation binds the exact last accepted committed sequence, segment, terminal hash, resulting StateVersion/version domains, and deterministic canonical state integrity digest under Decision 54.
+3. It records validation evidence proving ordered application without omission or duplicate application. Failed or incomplete batches cannot be accepted progress.
+4. Publication must be crash-safe and coordinated with authoritative Recovery metadata so accepted progress cannot exist without its corresponding state boundary.
+5. Resume validates the attestation and all referenced authoritative evidence. Stale or mismatched attestations cannot be used as cursors.
+6. If the newest attestation is invalid, Recovery may use an earlier independently verified boundary or reconstruct from the still-verified baseline and complete required journal range. If no safe path exists, Decision 57 applies.
+7. An attestation proves only intermediate progress. It does not satisfy the Recovery Completion Gate or permit gameplay resume.
+8. Persistence, crash interruption, fallback, lock reacquisition, and verification costs require Roblox Studio prototype validation.
+
+CI-09 is closed at the architecture-contract level. No runtime implementation or crash-safety result is claimed.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
