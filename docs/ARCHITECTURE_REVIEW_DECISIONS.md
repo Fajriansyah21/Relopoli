@@ -723,3 +723,16 @@ Victory determination and the authoritative Game-End state change are separate r
 8. If evaluation, version validation, or Game-End mutation fails, the gate remains locked and the existing retry/recovery rules apply. The system must not release gameplay progression based on an unknown or uncommitted outcome.
 
 This decision makes Victory Evaluation a version-bound read operation and Game End a separately validated authoritative mutation. It refines Decision 46 without changing the victory rules or winner conditions defined by the gameplay sources.
+
+## Decision 53 — Conventional Server-Authoritative Runtime Model
+**Status: LOCKED**
+
+Relopoli will use the conventional Roblox server-authoritative model built around server-side gameplay logic and validated client-server requests. It will not adopt Roblox's engine Server Authority simulation model as part of the current architecture.
+
+1. Authoritative gameplay logic and Match State remain owned by server-side scripts and systems, consistent with Decision 12.
+2. Clients communicate player intent through the established request contract. The server validates requests, determines gameplay outcomes, commits authoritative mutations, and publishes official results, consistent with Decisions 13 and 15.
+3. Client-side movement, animation, prediction, and presentation do not determine or override authoritative gameplay outcomes.
+4. The architecture does not assume or require the engine Server Authority runtime configuration, Input Action System integration, simulation rollback, or resimulation behavior.
+5. Any future adoption of Roblox's engine Server Authority model requires a separate architecture review and explicit approved decision. It must not be mixed into the conventional model implicitly.
+
+This decision clarifies the intended runtime model. It does not change the existing server trust boundary, gameplay rules, or client presentation responsibilities.
