@@ -139,7 +139,8 @@ Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decision
 | CI-17 | Recovery queue state could be lost or unsafely replayed after server interruption | Decision 72: Durable Recovery Queue State |
 | CI-18 | Durable Recovery queue history lacked independent tamper evidence and trusted-head rollback detection | Decision 73: Tamper-Evident Recovery Queue Records |
 | CI-19 | Recovery fairness metadata could reset or lose waiting priority after interruption | Decision 74: Persistent Recovery Fairness Metadata |
-| CI-20 | Recovery Scheduler lacked bounded operational visibility into queue health, delays, and bottlenecks | Decision 75: Recovery Scheduler Observability |\n| CI-21 | Recovery Scheduler shutdown and handoff lacked an explicit drain, safe-boundary, and restart-reconciliation protocol | Decision 76: Recovery Scheduler Shutdown and Handoff Protocol |
+| CI-20 | Recovery Scheduler lacked bounded operational visibility into queue health, delays, and bottlenecks | Decision 75: Recovery Scheduler Observability |
+| CI-21 | Recovery Scheduler shutdown and handoff lacked an explicit drain, safe-boundary, and restart-reconciliation protocol | Decision 76: Recovery Scheduler Shutdown and Handoff Protocol |
 
 ### Remaining findings
 
