@@ -432,6 +432,29 @@ CI-11 is closed at the architecture-contract level. No runtime fault registry or
 
 ---
 
+
+### CI-12 — Repeated Recovery Attempts Need a Bounded Circuit-Breaking Policy
+
+**Status: ADDRESSED by LOCKED Decision 67 — Recovery Circuit Breaker.**  
+**Related decisions:** 33–39, 48–57, 63–66
+
+Repeated automatic Recovery attempts against a persistent fault or unavailable dependency can waste bounded resources and repeat unsafe work. The architecture therefore needs an explicit policy for blocking attempts and permitting only controlled probes after re-evaluation.
+
+**Recorded resolution in Decision 67:**
+1. The breaker has CLOSED, OPEN, and HALF_OPEN states. OPEN blocks covered automatic attempts while the match remains RECOVERY_REQUIRED.
+2. Only configured fault classes/dependency conditions contribute to opening the breaker. Expected replay-budget yield is not a breaker failure.
+3. Thresholds/windows and breaker scope must be deterministic and bounded, preventing unrelated Recovery contexts from being blocked without an explicit shared-dependency policy.
+4. HALF_OPEN permits only a bounded probe after re-evaluation and under existing lock, context, integrity, and idempotency requirements. Failed probes reopen the breaker.
+5. Decision 66 retry dispositions and underlying recovery contracts remain authoritative. The breaker cannot make an unsafe or ambiguous operation retryable.
+6. Circuit state/evidence must survive or be safely reconstructed after interruption; untrusted breaker state fails closed.
+7. Lock lifecycle, Recovery Completion Gate, and gameplay resume rules are unchanged. Transitions and probes integrate with Decision 65's observational Audit Trail.
+8. Reset/override is explicit, authorized, scoped, and auditable. Time passage alone does not clear unresolved faults.
+9. Roblox Studio testing remains required for thresholds, concurrency, restart reconstruction, probe bounds, idempotency, and persistence failure.
+
+CI-12 is closed at the architecture-contract level. No runtime Circuit Breaker is claimed as implemented or validated.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
