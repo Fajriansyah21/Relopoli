@@ -688,3 +688,21 @@ A checkpoint is a recovery baseline, not a substitute for the authoritative reco
 6. The exact operation-journal format, retention, and storage mechanism remain to be specified separately.
 
 This decision establishes the preservation requirement for committed mutations during checkpoint recovery; it does not yet select a concrete journal implementation.
+
+
+## Decision 51 — Separated Version Domains
+**Status: LOCKED**
+
+Authoritative Match State uses separate version domains so gameplay concurrency validation is not invalidated by independent effect, recovery, or checkpoint metadata updates.
+
+1. **Gameplay `StateVersion`** protects authoritative Gameplay State and its Derived State. It increments only after a successful gameplay-state commit through the canonical State Manager pipeline.
+2. **`EffectRegistryVersion`** protects Effect Registry records and processing metadata. It increments whenever an Effect Registry record or status is changed.
+3. **`RecoveryVersion`** protects recovery status and recovery-lock lifecycle metadata. It increments whenever that recovery metadata changes.
+4. **`CheckpointCatalogVersion`** protects checkpoint catalog metadata. It increments whenever the catalog changes, including checkpoint addition, removal, or catalog-status changes.
+5. Gameplay read snapshots and Mutation Plans use `StateVersion` and `BaseStateVersion` only. Effect, recovery, or checkpoint metadata changes do not by themselves make a gameplay Mutation Plan stale.
+6. Recovery validates the version domains relevant to the records and lifecycle it reads or changes. It must still validate the latest applicable gameplay `StateVersion` before relying on gameplay state.
+7. Each checkpoint records the gameplay `StateVersion` it represents. Creating or cataloging a checkpoint does not increment gameplay `StateVersion`.
+8. Diagnostic and logging records do not require a gameplay version. They retain the relevant identifiers and timestamps needed for traceability.
+9. Version separation does not weaken Decision 47: gameplay mutation data and all required Effect Registry records must still be published atomically in the same candidate-state root swap. The Effect Registry version advances as part of that publication.
+
+This decision defines the scope of each version domain. It does not change gameplay rules or remove the requirement to validate the relevant versions at each authoritative boundary.
