@@ -423,3 +423,17 @@ This preserves required gameplay ordering without forcing unrelated presentation
 - Recovery must use an explicit server-side mechanism.
 
 This prevents gameplay from advancing while the authoritative victory outcome is unknown, without treating a system failure as a gameplay result.
+
+
+## Decision 33 — Server-Controlled Recovery
+**Status: LOCKED**
+
+- Only the server is authorized to execute match recovery.
+- Clients cannot directly request changes to internal match recovery status.
+- Recovery validates StateVersion and the latest committed operation.
+- Recovery inspects the Effect Registry to identify unfinished post-commit work.
+- Recovery resumes pending effects without re-executing mutations that have already committed.
+- If state consistency cannot be verified, the match remains blocked in RECOVERY_REQUIRED.
+- Recovery must not invent or assume gameplay outcomes.
+
+This keeps recovery under the same server authority that governs gameplay and preserves the distinction between committed mutations and unfinished post-commit effects.
