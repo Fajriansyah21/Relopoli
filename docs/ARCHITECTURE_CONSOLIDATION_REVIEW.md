@@ -175,7 +175,9 @@ An integrity hash can help detect accidental data changes, but it is not a subst
 
 ### RF-10 — Checkpoint Policy Has Overlapping Responsibilities
 
-**Related decisions:** 37–43  
+<sup>Addressed by Decision 55 — Single Checkpoint Manager Ownership.</sup>
+
+**Related decisions:** 37–43, 50, 54, 55  
 Checkpoint retention, memory budget, event-driven creation, and non-blocking failure are compatible, but their responsibilities overlap. A single Checkpoint Manager contract should own:
 - eligibility at stable boundaries;
 - candidate creation and validation;
@@ -184,7 +186,7 @@ Checkpoint retention, memory budget, event-driven creation, and non-blocking fai
 - failure reporting and retry scheduling;
 - recovery capability status.
 
-The numerical memory budget, checkpoint count, and performance thresholds remain unselected and should be measured in Roblox Studio rather than guessed.
+Decision 55 establishes the Checkpoint Manager as the single owner of these policy and lifecycle responsibilities while preserving State Manager and Recovery Executor authority boundaries. Numerical memory budgets, checkpoint counts, retry thresholds, and performance targets remain unselected and must be measured in Roblox Studio rather than guessed.
 
 ---
 
@@ -298,6 +300,6 @@ For every test, assert both the expected result and the absence of unintended si
 
 **Architecture direction: SOUND.** The responsibility boundaries, server authority, sequential mutation, source-of-truth ownership, and Turn Controller orchestration form a coherent foundation.
 
-**Implementation readiness: NOT YET.** RF-01 through RF-08 have been addressed by LOCKED Decisions 45–52, and RF-11 has been addressed by LOCKED Decision 53. RF-09 and RF-10 remain unresolved and must be closed before the shared architecture contracts are treated as implementation-ready. The remaining findings concern the checkpoint integrity-hash contract and Checkpoint Manager responsibility boundaries. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
+**Implementation readiness: NOT YET.** RF-01 through RF-08 have been addressed by LOCKED Decisions 45–52, and RF-11 has been addressed by LOCKED Decision 53. RF-09, RF-10, and RF-11 have been addressed by LOCKED Decisions 54, 55, and 53 respectively. All findings RF-01 through RF-11 are now addressed; implementation readiness still requires the shared architecture contracts are treated as implementation-ready. The findings have been addressed at the architecture-contract level. Implementation readiness remains NOT YET until required prototypes and acceptance tests are completed. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
 
 No prior LOCKED decision is silently changed by this report. Decisions 45–52 address RF-01 through RF-08. RF-09 through RF-11 remain open and are not approved design decisions. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
