@@ -66,7 +66,7 @@ The review covered:
 - A global gate preventing later relevant gameplay mutations while Victory Check is pending.
 - The boundary between evaluating victory conditions and applying a terminal Game-End state.
 
-Decisions 29–32 and 46–48 define the currently approved parts. RF-08 remains open for a more explicit contract separating read-only evaluation from the validated Game-End mutation.
+Decisions 29–32 and 46–48 define the earlier approved parts. Decision 52 now separates read-only, StateVersion-bound Victory Evaluation from the validated Game-End mutation through State Manager, while retaining the Global Victory Gate.
 
 ### E. Recovery and checkpoints
 
