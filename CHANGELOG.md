@@ -9,6 +9,7 @@ All notable documentation changes are recorded here.
 - Preserved historical progress documents as source records; they do not override newer locked decisions.
 
 ## 2026-11-14
+- Locked Decision 59 (Hash Chain Integrity for the Operation Journal) and recorded cross-decision consistency finding CI-04 as addressed. Updated the consolidation review, summary, and index. Roblox SHA-256 capability, trusted chain-head persistence, and performance still require prototype validation.
 - Locked Decision 58 (Append-Only Operation Journal) and recorded cross-decision consistency finding CI-03 as addressed. Updated the consolidation review, summary, and index; RF-01–RF-11 and CI-01–CI-03 are addressed at the architecture-contract level. Roblox implementation validation remains outstanding.
 - Locked Decision 57 (Fail-Closed Recovery on Operation Journal Integrity Failure) and recorded cross-decision consistency finding CI-02 as addressed. Updated the consolidation review, summary, and index; all RF-01–RF-11 and CI-01–CI-02 are addressed at the architecture-contract level, while implementation validation remains outstanding.
 - Locked Decision 56 (Preserve a Verified Recovery Baseline) to resolve cross-decision consistency finding CI-01 across checkpoint retention and memory-budget rules. Updated the consolidation review, summary, and index; all RF-01–RF-11 and CI-01 are addressed at the architecture-contract level, while Roblox Studio validation remains outstanding.
