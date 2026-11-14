@@ -9,6 +9,7 @@ All notable documentation changes are recorded here.
 - Preserved historical progress documents as source records; they do not override newer locked decisions.
 
 ## 2026-11-14
+- Locked Decision 69 (Recovery Isolation Boundary) and recorded cross-decision consistency finding CI-14 as addressed. Updated the consolidation review, summary, and index. Multi-match queue isolation, concurrent Recovery scheduling, global resource admission, fairness, and cross-match context validation remain subject to Roblox Studio prototype validation.
 - Locked Decision 68 (Recovery Escalation Protocol) and recorded cross-decision consistency finding CI-13 as addressed. Updated the consolidation review, summary, and index. Administrative authorization, escalation persistence, intervention validation, audit coverage, and no-bypass behavior remain subject to Roblox Studio prototype validation.
 - Locked Decision 67 (Recovery Circuit Breaker) and recorded cross-decision consistency finding CI-12 as addressed. Updated the consolidation review, summary, and index. Circuit thresholds, persistence/restart reconstruction, bounded probes, lock interaction, and fail-closed behavior remain subject to Roblox Studio prototype validation.
 - Locked Decision 66 (Structured Recovery Fault Classification) and recorded cross-decision consistency finding CI-11 as addressed. Updated the consolidation review, summary, and index. Fault registry coverage, retry dispositions, audit integration, and diagnostic filtering remain subject to Roblox Studio prototype validation.
