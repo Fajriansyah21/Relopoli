@@ -251,7 +251,7 @@ Do not begin by implementing every Domain System independently. Establish the sh
 
 | Phase | Scope | Exit criteria |
 |---|---|---|
-| 0 | Resolve RF-07 to RF-11 and freeze contracts | Remaining versioning, victory mutation, checkpoint, and Roblox authority contracts are explicit |
+| 0 | Resolve RF-08 to RF-11 and freeze contracts | Remaining versioning, victory mutation, checkpoint, and Roblox authority contracts are explicit |
 | 1 | Game State schema, ownership source, IDs, version model, immutable read API | State ownership and version semantics are testable |
 | 2 | FIFO Mutation Queue, Mutation Plan, Copy-on-Write, candidate validation, derived recalculation, root swap | Invalid plans have zero side effects; stale plans rejected |
 | 3 | Post-Commit Effect Registry, idempotent handlers, Victory/Game-End gate | Retry cannot duplicate effects; no relevant mutation passes a pending Victory gate |
@@ -293,6 +293,6 @@ For every test, assert both the expected result and the absence of unintended si
 
 **Architecture direction: SOUND.** The responsibility boundaries, server authority, sequential mutation, source-of-truth ownership, and Turn Controller orchestration form a coherent foundation.
 
-**Implementation readiness: NOT YET.** RF-01 through RF-06 have been addressed by LOCKED Decisions 45–50. RF-07 through RF-11 remain unresolved and must be closed before the shared architecture contracts are treated as implementation-ready. The remaining findings concern version scopes, the boundary between victory evaluation and Game-End mutation, checkpoint integrity and ownership, and the intended Roblox server-authority model. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
+**Implementation readiness: NOT YET.** RF-01 through RF-07 have been addressed by LOCKED Decisions 45–51. RF-08 through RF-11 remain unresolved and must be closed before the shared architecture contracts are treated as implementation-ready. The remaining findings concern version scopes, the boundary between victory evaluation and Game-End mutation, checkpoint integrity and ownership, and the intended Roblox server-authority model. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
 
-No prior LOCKED decision is silently changed by this report. Decisions 45–50 address RF-01 through RF-06. RF-07 through RF-11 remain open and are not approved design decisions. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
+No prior LOCKED decision is silently changed by this report. Decisions 45–51 address RF-01 through RF-07. RF-08 through RF-11 remain open and are not approved design decisions. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
