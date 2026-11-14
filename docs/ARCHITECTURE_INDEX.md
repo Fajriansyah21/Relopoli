@@ -67,4 +67,4 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 - Cross-decision consistency finding CI-19: addressed by Decision 74.
 - Cross-decision consistency finding CI-20: addressed by Decision 75.
 - Implementation readiness: **NOT YET**.
-- Cross-decision consistency finding CI-21: addressed by Decision 76.\n
+- Cross-decision consistency finding CI-21: addressed by Decision 76.
