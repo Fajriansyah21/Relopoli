@@ -13,8 +13,9 @@ Kalau baru membuka repository ini, ikuti urutan berikut:
 1. [Game Design](docs/GAME_DESIGN.md) untuk memahami konsep dan gameplay loop.
 2. [Game Systems](docs/GAME_SYSTEMS.md) untuk menemukan spesifikasi setiap sistem.
 3. [Map Design](docs/MAP_DESIGN.md) untuk memahami board, distrik, dan visual kota.
-4. [Development Log](docs/DEVELOPMENT_LOG.md) untuk melihat progres dan status pekerjaan.
-5. [Architecture Index](docs/ARCHITECTURE_INDEX.md) untuk keputusan teknis, validasi, dan aturan dokumentasi.
+4. [Core Gameplay Prototype Scope v1.0](docs/CORE_GAMEPLAY_PROTOTYPE_SCOPE.md) untuk melihat batas implementasi prototype yang sudah LOCKED.
+5. [Development Log](docs/DEVELOPMENT_LOG.md) untuk melihat progres dan status pekerjaan.
+6. [Architecture Index](docs/ARCHITECTURE_INDEX.md) untuk keputusan teknis, validasi, dan aturan dokumentasi.
 
 **Sumber aturan gameplay utama:** [Master Source of Truth](docs/MASTER_SOURCE_OF_TRUTH.md).
 
@@ -28,6 +29,7 @@ RELOPOLI/
 │   ├── GAME_SYSTEMS.md
 │   ├── MAP_DESIGN.md
 │   ├── DEVELOPMENT_LOG.md
+│   ├── CORE_GAMEPLAY_PROTOTYPE_SCOPE.md
 │   ├── MASTER_SOURCE_OF_TRUTH.md
 │   ├── ARCHITECTURE_INDEX.md
 │   ├── ARCHITECTURE_REVIEW_DECISIONS.md
@@ -87,4 +89,4 @@ Folder `src/` dan `assets/` saat ini adalah **scaffold**, bukan klaim bahwa impl
 
 ## Status proyek
 
-**Design consolidation / implementation preparation.** Architecture Decisions 1–79 sudah LOCKED pada tingkat dokumentasi. Roblox Studio prototypes, acceptance tests, failure-injection, dan performance validation masih harus dilakukan. Implementation readiness tetap **NOT YET**.
+**Planning: Core Gameplay Prototype.** Prototype Scope v1.0 sudah LOCKED sebagai batas implementasi. Tahap Specification belum dimulai. Architecture Decisions 1–79 juga sudah LOCKED pada tingkat dokumentasi. Roblox Studio prototypes, acceptance tests, failure-injection, dan performance validation masih harus dilakukan. Implementation readiness tetap **NOT YET**.
