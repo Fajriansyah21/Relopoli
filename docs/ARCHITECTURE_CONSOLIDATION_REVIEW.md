@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–75, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–76, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -623,6 +623,24 @@ Decisions 65 and 72–74 provide audit, durable queue state, queue integrity, an
 
 CI-20 is closed at the architecture-contract level. No zero-overhead, perfect real-time consistency, durable metric history, or runtime implementation is claimed.
 
+
+
+### CI-21 — Recovery Scheduler Shutdown and Handoff Are Not Yet Explicit
+
+**Related decisions:** 35–38, 49–50, 57–68, 69–75  
+**Concern:** Durable queue state, integrity, and fairness metadata support restart reconstruction, but the architecture did not explicitly define how a live scheduler stops dispatching, drains in-flight work, handles shutdown deadlines, or hands unfinished work to a new server. Without a shutdown protocol, an implementation could lose accepted work, duplicate an uncertain operation, restore stale locks, or incorrectly treat an interrupted Recovery as complete.
+
+**Recorded resolution in Decision 76:**
+1. Shutdown enters a monotonic DRAINING / SHUTDOWN mode, stops new admission and dispatch, and distinguishes accepted, admitted/reserved, in-flight, safe-boundary resumable, completed, and uncertain work.
+2. In-flight work may finish only a bounded verified safe stage. No forced interruption or yield is permitted inside an atomic/no-yield commit section.
+3. Handoff metadata and queue transitions must be durably persisted before acknowledgement, bound to stable QueueEntryId, MatchId, and RecoveryId, with applicable Operation Journal, checkpoint, attestation, and stage-cursor evidence.
+4. Ambiguous writes are reconciled through stable IDs, authoritative Operation Journal and Recovery evidence, and Decision 73's queue-integrity chain. Unverifiable records fail closed.
+5. Old locks, reservations, leases, and active slots are never restored as valid. A new server reacquires ownership and re-enters current isolation, admission, fairness, and dispatch validation.
+6. Shutdown cannot commit gameplay, roll back completed work, or declare Recovery complete. Existing completion gates remain authoritative.
+7. Idempotent handoff and multi-server ownership prevent duplicate executable work. Graceful drain is best-effort; abrupt crashes and platform deadlines remain covered by durable restart reconciliation, not assumed platform guarantees.
+8. Prototype tests must cover shutdown at every lifecycle boundary, crash/deadline interruption, duplicate handoff, interrupted commits, stale locks, concurrent startup, ambiguous persistence, and absence of duplicate mutation or lost pending work.
+
+CI-21 is closed at the architecture-contract level. Graceful shutdown is not guaranteed by Roblox, and implementation readiness remains subject to Roblox Studio prototypes and acceptance tests.
 
 
 ---
