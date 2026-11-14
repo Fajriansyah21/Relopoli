@@ -797,3 +797,18 @@ Recovery must fail closed whenever the authoritative committed-operation records
 7. **No rollback or fabricated state:** This decision does not authorize discarding committed mutations, selecting an unsafe older checkpoint, or fabricating a replacement authoritative state. Decisions 50 and 56 remain in force.
 
 This decision establishes a fail-closed response to uncertain operation history. It does not define an automatic journal-repair mechanism or guarantee that every integrity failure is recoverable.
+
+## Decision 58 — Append-Only Operation Journal
+**Status: LOCKED**
+
+The authoritative Operation Journal must be append-only for committed operation records.
+
+1. **Immutable committed records:** Once an operation record is committed to the authoritative journal, its contents must not be edited, overwritten, or silently removed.
+2. **Corrections by addition:** Any correction, clarification, or compensating action must be represented by a new record that references the prior record. The original committed record remains intact.
+3. **Unique operation identity:** Each operation record must carry a unique OperationId. A correction or compensating action is a distinct record and must not reuse the prior OperationId.
+4. **Verifiable ordering:** Records must preserve sufficient ordering and integrity information for Recovery to establish the committed operation history. The exact encoding and integrity mechanism remain implementation details subject to validation.
+5. **Safe retention boundary:** Journal records may be archived or removed from active storage only under a defined retention procedure that preserves verifiable recovery evidence for every committed mutation still needed to reconstruct authoritative state. If that proof cannot be established, the records must be retained.
+6. **Server authority:** Only the server-authoritative runtime may append authoritative operation records. Clients cannot directly create, edit, overwrite, or delete journal records.
+7. **Recovery compatibility:** Recovery must consume only records whose identity, integrity, ordering, and committed status can be verified, consistent with Decisions 50 and 57.
+
+This decision defines the immutability and append behavior of authoritative committed-operation history. It does not prescribe a specific database, storage medium, hash-chain format, archival implementation, or journal-repair procedure.
