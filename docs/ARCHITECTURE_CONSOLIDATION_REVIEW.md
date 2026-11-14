@@ -189,16 +189,14 @@ The numerical memory budget, checkpoint count, and performance thresholds remain
 
 ### RF-11 — Clarify Which Roblox Server-Authority Model Is Intended
 
-**Related decisions:** 12, 13, 15  
+<sup>Addressed by Decision 53 — Conventional Server-Authoritative Runtime Model.</sup>
+
+**Related decisions:** 12, 13, 15, 53  
 The project uses “server authoritative” as a trust-boundary principle: the server decides gameplay outcomes and clients send intent. Roblox also documents a specific engine Server Authority model with its own Workspace settings, Input Action System, simulation synchronization, prediction, rollback, and resimulation requirements.
 
 These are related but not interchangeable concepts. The current Relopoli design, where clients present server-confirmed movement and gameplay outcomes, does not by itself establish that the experience intends to enable Roblox's engine Server Authority mode.
 
-**Required clarification:** Explicitly state whether Relopoli will use:
-- the conventional server-authoritative model built around server scripts and validated RemoteEvents; or
-- Roblox's engine Server Authority model, with its required runtime configuration and client/server simulation architecture.
-
-Do not mix assumptions from the two models without a deliberate design and prototype.
+**Resolution:** Relopoli uses the conventional server-authoritative model built around server-side gameplay logic and validated client-server requests. It does not currently adopt Roblox's engine Server Authority simulation model. Any future adoption requires a separate architecture review and explicit decision. The existing server trust boundary and client presentation responsibilities remain unchanged.
 
 ## 4. ROBLOX LUAU FEASIBILITY
 
@@ -298,6 +296,6 @@ For every test, assert both the expected result and the absence of unintended si
 
 **Architecture direction: SOUND.** The responsibility boundaries, server authority, sequential mutation, source-of-truth ownership, and Turn Controller orchestration form a coherent foundation.
 
-**Implementation readiness: NOT YET.** RF-01 through RF-08 have been addressed by LOCKED Decisions 45–52. RF-09 through RF-11 remain unresolved and must be closed before the shared architecture contracts are treated as implementation-ready. The remaining findings concern the checkpoint integrity-hash contract, Checkpoint Manager responsibility boundaries, and the intended Roblox server-authority model. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
+**Implementation readiness: NOT YET.** RF-01 through RF-08 have been addressed by LOCKED Decisions 45–52, and RF-11 has been addressed by LOCKED Decision 53. RF-09 and RF-10 remain unresolved and must be closed before the shared architecture contracts are treated as implementation-ready. The remaining findings concern the checkpoint integrity-hash contract and Checkpoint Manager responsibility boundaries. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
 
 No prior LOCKED decision is silently changed by this report. Decisions 45–52 address RF-01 through RF-08. RF-09 through RF-11 remain open and are not approved design decisions. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
