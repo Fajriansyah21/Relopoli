@@ -41,7 +41,7 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 
 ## Current architecture review status
 
-- Decisions 1–60: **LOCKED**.
+- Decisions 1–61: **LOCKED**.
 - RF-01–RF-08: addressed by Decisions 45–52.
 - RF-09: addressed by Decision 54.
 - RF-10: addressed by Decision 55.
@@ -50,5 +50,6 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 - Cross-decision consistency finding CI-02: addressed by Decision 57.
 - Cross-decision consistency finding CI-03: addressed by Decision 58.
 - Cross-decision consistency finding CI-04: addressed by Decision 59.
-- Cross-decision consistency finding CI-05: addressed by Decision 60. see the [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md).
+- Cross-decision consistency finding CI-05: addressed by Decision 60.
+- Cross-decision consistency finding CI-06: addressed by Decision 61. see the [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md).
 - Implementation readiness: **NOT YET**.
