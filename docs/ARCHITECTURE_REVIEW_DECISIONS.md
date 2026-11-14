@@ -482,3 +482,17 @@ Before a match may leave RECOVERY_REQUIRED, the server must:
 If any verification fails, the match remains in RECOVERY_REQUIRED.
 
 Recovery is not considered complete merely because its execution stopped without an error; the server must verify that the match state is safe to resume.
+
+
+## Decision 37 — Resume From Verified Checkpoint
+**Status: LOCKED**
+
+- Recovery retains a reference to the latest verified gameplay checkpoint within the match server session.
+- After the Recovery Completion Gate passes, the server reads the latest valid Turn and Resolution context.
+- Turn Controller resumes from the PendingStep that remains valid.
+- Effects already marked COMPLETED are not executed again.
+- Pending effects are processed according to the Effect Registry and its dependency rules.
+- If the Turn or Resolution context is no longer valid, the server must not guess the next gameplay step; the match remains in recovery for further handling.
+- This checkpoint is scoped to the match server session and does not guarantee recovery after a server crash.
+
+This defines a verified in-session resume point without implying cross-server persistence.
