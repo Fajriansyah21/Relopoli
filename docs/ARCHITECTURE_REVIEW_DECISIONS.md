@@ -736,3 +736,19 @@ Relopoli will use the conventional Roblox server-authoritative model built aroun
 5. Any future adoption of Roblox's engine Server Authority model requires a separate architecture review and explicit approved decision. It must not be mixed into the conventional model implicitly.
 
 This decision clarifies the intended runtime model. It does not change the existing server trust boundary, gameplay rules, or client presentation responsibilities.
+
+## Decision 54 — Deterministic Checkpoint Serialization and Integrity Contract
+**Status: LOCKED**
+
+Checkpoint integrity validation requires a deterministic and explicitly versioned representation of checkpoint data.
+
+1. **Deterministic serialization:** The same logical checkpoint data must produce the same canonical serialized representation. Serialization must use stable key ordering and consistent value encoding.
+2. **Supported values and references:** The checkpoint format must explicitly constrain supported value types. Object references must be represented through stable identifiers rather than live Instance references or other non-portable runtime references.
+3. **Integrity algorithm:** The integrity digest must use SHA-256 through a vetted implementation or a verified platform-provided capability. The project must not invent or rely on a homegrown cryptographic hash algorithm.
+4. **Format versioning:** Each checkpoint must identify its checkpoint data/schema format version and canonicalization version so validation can apply the correct representation rules.
+5. **Creation and verification:** The digest is calculated from the canonical representation when the checkpoint is created and recalculated from that representation before the checkpoint is accepted for recovery.
+6. **Threat boundary:** The digest is intended to detect accidental corruption or unexpected data changes. It is not proof of authenticity, a substitute for server authority, or protection against a compromised server or privileged attacker able to alter both data and digest.
+7. **Recovery behavior:** A checkpoint whose canonical representation cannot be produced, whose format is unsupported, or whose digest does not match must be rejected. Recovery must continue to obey Decision 50: committed mutations must be preserved, and the system must not silently select an older checkpoint if doing so could discard committed mutations.
+8. **Feasibility gate:** Deterministic serialization, digest calculation, and verification must be prototyped and validated in Roblox Studio before this mechanism is relied upon in implementation. The concrete encoding rules and integration details may be specified during that prototype, provided they satisfy this contract.
+
+This decision defines the integrity contract without claiming that Roblox runtime feasibility or performance has already been implemented or tested.
