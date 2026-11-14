@@ -628,3 +628,17 @@ Every committed mutation that can affect victory activates a global gameplay-pro
 6. Non-gameplay presentation effects may proceed independently where they do not mutate or depend on gameplay progression.
 
 This gate serializes victory-sensitive gameplay progression across the post-commit Victory Check boundary. It does not replace the canonical candidate-state commit pipeline or the separate effect identity, idempotency, and recovery rules.
+
+
+## Decision 47 — Atomic Effect Registry Publication
+**Status: LOCKED**
+
+The Effect Registry is part of the authoritative Match State and must be published atomically with the gameplay mutation that requires its post-commit effects.
+
+1. Every mutation that requires post-commit effects must include all required Effect Records in its candidate state before Root Swap.
+2. The atomic Root Swap publishes gameplay state, derived state, committed-operation metadata, and the required Effect Registry records together.
+3. Effect Workers may process only Effect Records that are visible in committed authoritative state.
+4. There must be no observable state in which the gameplay mutation is marked COMMITTED while a required Effect Record is absent from the committed Effect Registry.
+5. If candidate preparation or validation fails, none of the candidate's gameplay state, metadata, or Effect Registry records may be published.
+
+This decision defines atomic publication, not exactly-once execution or retry semantics. Effect identity, idempotency, and recovery remain governed by their separate decisions and review findings.
