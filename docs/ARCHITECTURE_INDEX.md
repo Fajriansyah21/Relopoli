@@ -19,7 +19,7 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 | Area | Location | Purpose |
 |---|---|---|
 | Gameplay authority | [Master Source of Truth](MASTER_SOURCE_OF_TRUTH.md) | Consolidated rules and system architecture |
-| Architecture decisions | [Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md) | Approved decisions 1–56 |
+| Architecture decisions | [Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md) | Approved decisions 1–57 |
 | Architecture analysis | [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md) | RF-01–RF-11, Luau feasibility, implementation order, acceptance matrix |
 | Review recap | [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md) | One-page overview of review outcomes |
 | Review backlog | [Review Backlog](REVIEW_BACKLOG.md) | Remaining broader validation tracks and hypotheses |
@@ -41,10 +41,11 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 
 ## Current architecture review status
 
-- Decisions 1–56: **LOCKED**.
+- Decisions 1–57: **LOCKED**.
 - RF-01–RF-08: addressed by Decisions 45–52.
 - RF-09: addressed by Decision 54.
 - RF-10: addressed by Decision 55.
 - RF-11: addressed by Decision 53.
-- Cross-decision consistency finding CI-01: addressed by Decision 56. see the [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md).
+- Cross-decision consistency finding CI-01: addressed by Decision 56.
+- Cross-decision consistency finding CI-02: addressed by Decision 57. see the [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md).
 - Implementation readiness: **NOT YET**.
