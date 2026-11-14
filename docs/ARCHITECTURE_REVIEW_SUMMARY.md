@@ -9,8 +9,8 @@
 The architecture review has covered the game's orchestration model, domain-system boundaries, server authority, state mutation pipeline, post-commit effects, victory handling, recovery, checkpoints, and Roblox Luau feasibility.
 
 **Current recorded outcome:**
-- **75 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
-- **All eleven architecture findings (RF-01–RF-11) and twenty cross-decision consistency findings (CI-01–CI-20) have been addressed** by Decisions 45–55.
+- **76 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
+- **All eleven architecture findings (RF-01–RF-11) and twenty-one cross-decision consistency findings (CI-01–CI-21) have been addressed** by their respective recorded LOCKED decisions.
 - **No consolidation findings remain unresolved at the architecture-contract level.**
 - The architecture direction is assessed as sound, but implementation readiness remains **NOT YET**.
 - The repository is a documentation repository. These records do not prove that the systems have been implemented or tested in Roblox Studio.
@@ -87,7 +87,7 @@ It also records a distinction that still needs a decision: conventional server-a
 
 See sections 4, 6, and 7 of the [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md).
 
-## 3. Decision coverage: Decisions 1–72
+## 3. Decision coverage: Decisions 1–76
 
 The complete wording and status of every decision live only in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md). To avoid duplicated or drifting copies, this summary groups the decision ranges rather than reproducing all decision text:
 
@@ -99,9 +99,9 @@ The complete wording and status of every decision live only in the [Architecture
 | 29–32 | Post-commit effects, effect registry, dependency ordering, victory retry, and progression gate |
 | 33–43 | Recovery executor and lock, recovery completion, verified resume, checkpoint creation, validation, retention, memory, and failure handling |
 | 44–52 | Consolidation review and corrective decisions for candidate-state commit, global victory gating, atomic effect publication, effect idempotency, recovery completion ordering, committed-mutation preservation, separated version domains, and separated victory evaluation from Game-End mutation |
-| 53–75 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, verified recovery-baseline protection, fail-closed recovery on operation-journal integrity failure, append-only Operation Journal, hash-chain integrity, segmented Operation Journal, authoritative Journal Recovery Manifest, intermediate Journal replay checkpoints, bounded Recovery replay budget, verified Recovery progress attestation, Recovery Integrity Audit Trail, structured Recovery fault classification, Recovery Circuit Breaker, Recovery Escalation Protocol, Recovery Isolation Boundary, Priority-Based Recovery Scheduling with Fairness Guarantee, Recovery Scheduler Admission Control, Durable Recovery Queue State, Tamper-Evident Recovery Queue Records, Persistent Recovery Fairness Metadata, and Recovery Scheduler Observability |
+| 53–76 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, verified recovery-baseline protection, fail-closed recovery on operation-journal integrity failure, append-only Operation Journal, hash-chain integrity, segmented Operation Journal, authoritative Journal Recovery Manifest, intermediate Journal replay checkpoints, bounded Recovery replay budget, verified Recovery progress attestation, Recovery Integrity Audit Trail, structured Recovery fault classification, Recovery Circuit Breaker, Recovery Escalation Protocol, Recovery Isolation Boundary, Priority-Based Recovery Scheduling with Fairness Guarantee, Recovery Scheduler Admission Control, Durable Recovery Queue State, Tamper-Evident Recovery Queue Records, Persistent Recovery Fairness Metadata, Recovery Scheduler Observability, and Recovery Scheduler Shutdown and Handoff Protocol |
 
-Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decisions 56–75 resolve cross-decision consistency findings CI-01–CI-20. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
+Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decisions 56–76 resolve cross-decision consistency findings CI-01–CI-21. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
 
 ## 4. Consolidation findings status
 
@@ -139,11 +139,11 @@ Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decision
 | CI-17 | Recovery queue state could be lost or unsafely replayed after server interruption | Decision 72: Durable Recovery Queue State |
 | CI-18 | Durable Recovery queue history lacked independent tamper evidence and trusted-head rollback detection | Decision 73: Tamper-Evident Recovery Queue Records |
 | CI-19 | Recovery fairness metadata could reset or lose waiting priority after interruption | Decision 74: Persistent Recovery Fairness Metadata |
-| CI-20 | Recovery Scheduler lacked bounded operational visibility into queue health, delays, and bottlenecks | Decision 75: Recovery Scheduler Observability |
+| CI-20 | Recovery Scheduler lacked bounded operational visibility into queue health, delays, and bottlenecks | Decision 75: Recovery Scheduler Observability |\n| CI-21 | Recovery Scheduler shutdown and handoff lacked an explicit drain, safe-boundary, and restart-reconciliation protocol | Decision 76: Recovery Scheduler Shutdown and Handoff Protocol |
 
 ### Remaining findings
 
-No consolidation findings RF-01–RF-11 or cross-decision consistency findings CI-01–CI-20 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
+No consolidation findings RF-01–RF-11 or cross-decision consistency findings CI-01–CI-21 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
 
 
 ## 5. Source-of-truth boundaries
