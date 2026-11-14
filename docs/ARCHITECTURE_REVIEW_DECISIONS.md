@@ -451,3 +451,16 @@ This keeps recovery under the same server authority that governs gameplay and pr
 - A subsequent recovery attempt uses the latest authoritative state rather than assumptions from the previous attempt.
 
 This prevents concurrent recovery attempts or workers from processing the same post-commit effect at the same time.
+
+
+## Decision 35 — Recovery Lock Lifecycle
+**Status: LOCKED**
+
+- Recovery lock states are ACQUIRED, RELEASED, and INVALIDATED.
+- A lock is bound to its RecoveryId.
+- Only the Recovery Executor that owns the lock may release it.
+- Every recovery execution path must release the lock through guaranteed cleanup, including error paths.
+- A timeout must not automatically permit a second recovery executor to run concurrently.
+- If lock ownership cannot be verified, the match remains in RECOVERY_REQUIRED until the server establishes that recovery can safely proceed.
+
+This lifecycle prevents both abandoned locks and unsafe concurrent recovery execution.
