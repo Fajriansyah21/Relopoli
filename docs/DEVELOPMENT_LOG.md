@@ -73,3 +73,10 @@ Tambahkan entri terbaru di bagian paling atas setelah header ini.
 - Menambahkan scaffold folder Roblox source dan asset.
 - Mempertahankan dokumen progress, system, UI, visual, audit, dan architecture review lama sebagai sumber detail.
 - Tidak ada klaim bahwa folder source sudah berisi implementasi Roblox.
+
+### 2026-11-14 — Development Workflow v1.0 approved
+
+- Workflow enam tahap disetujui: Planning, Specification, Review & Approval, Documentation, Implementation, dan Testing & Validation.
+- Menambahkan `docs/WORKFLOW.md` sebagai acuan proses kerja.
+- README diarahkan ke workflow agar mudah ditemukan.
+- Status implementasi dan testing wajib dipisahkan dari status keputusan/rancangan.
