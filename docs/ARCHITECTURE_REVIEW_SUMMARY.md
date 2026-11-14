@@ -87,7 +87,7 @@ It also records a distinction that still needs a decision: conventional server-a
 
 See sections 4, 6, and 7 of the [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md).
 
-## 3. Decision coverage: Decisions 1–50
+## 3. Decision coverage: Decisions 1–51
 
 The complete wording and status of every decision live only in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md). To avoid duplicated or drifting copies, this summary groups the decision ranges rather than reproducing all decision text:
 
