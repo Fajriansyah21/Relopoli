@@ -519,6 +519,28 @@ CI-15 is closed at the architecture-contract level. No runtime scheduler or fair
 
 ---
 
+
+### CI-16 — Recovery Scheduling Needs Explicit Admission and Queue Bounds
+
+**Status: ADDRESSED by LOCKED Decision 71 — Recovery Scheduler Admission Control.**  
+**Related decisions:** 63, 67, 69–70
+
+Priority scheduling alone does not determine whether a request may enter the pending queue or consume an active Recovery slot. Admission needs bounded capacity checks and a distinct dispatch-time revalidation boundary.
+
+**Recorded resolution in Decision 71:**
+1. Admission outcomes distinguish REJECTED, DEFERRED, QUEUED, and ADMITTED. Queue admission does not grant an active execution slot or permission to mutate Recovery state.
+2. Initial validation binds authorization, MatchId/RecoveryId, current eligibility, metadata/context, and applicable fault, Circuit Breaker, escalation, and lock constraints.
+3. Active concurrency, per-match limits, bounded work budgets, memory, and storage are governed by explicit conservative limits. Unknown capacity is not treated as unlimited.
+4. Deferred requests hold neither active slots nor long-lived Recovery Locks. Deferred retention and pending queues are bounded, with explicit reject/expiry outcomes.
+5. Dispatch revalidates current context, state/version, lock, eligibility, retry disposition, Circuit Breaker, escalation, and stage evidence.
+6. Queue insertion, active-slot reservation, and status publication must be coordinated against concurrent requests, with rollback on failed admission.
+7. Deferred work re-enters through Decision 70's priority/fairness policy. Admission cannot bypass replay budgets, isolation, escalation, or Recovery Completion Gate.
+8. Queue bounds, admission races, resource exhaustion, deferred re-admission, reservation rollback, and stale dispatch context require Roblox Studio prototype tests.
+
+CI-16 is closed at the architecture-contract level. No runtime Admission Control implementation or capacity guarantee is claimed.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
