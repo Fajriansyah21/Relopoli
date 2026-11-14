@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–56, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–73, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -560,6 +560,28 @@ Recovery work may be QUEUED or DEFERRED when a server stops. Losing all scheduli
 8. Queue lifecycle and reconciliation integrate with Decision 65's observational Audit Trail. Interruption, duplicate delivery, concurrent reconstruction, changed capacity, and lock reacquisition require Roblox Studio prototype tests.
 
 CI-17 is closed at the architecture-contract level. No durable queue implementation or platform-level persistence guarantee is claimed.
+
+
+### CI-18 — Recovery Queue Transition History Needs Independent Tamper Evidence
+
+**Status: ADDRESSED by LOCKED Decision 73 — Tamper-Evident Recovery Queue Records.**  
+**Related decisions:** 59–61, 65–72
+
+Decision 72 makes queue state durable and reconstructible, but durable records alone do not establish whether queue transition history was altered, truncated, reordered, or rolled back. Rebuilding a trusted head from the same untrusted queue data would not independently detect those failures.
+
+**Recorded resolution in Decision 73:**
+1. Every queue transition appends a new record bound to QueueEntryId, MatchId, RecoveryId, a monotonic sequence, transition type, schema/version, and previous-record hash.
+2. Canonical deterministic serialization defines the exact hash input. Timestamps are diagnostic only and never determine ordering or repair.
+3. The queue integrity chain is a separate scheduling-only integrity domain. It is not the gameplay Operation Journal and cannot prove a gameplay operation committed or Recovery completed.
+4. A separately protected trusted anchor/head establishes the expected chain boundary. The queue records cannot be their own sole trust authority; rollback and concurrent publication protection must be explicitly designed.
+5. A transition record is persisted and validated before the new head/status is published or acknowledged. Crash ambiguity is reconciled by stable identity and sequence, with conflict-safe serialized publication.
+6. Restart verification detects altered, missing, duplicated, reordered, truncated, stale, or conflicting records before queue restoration can become executable.
+7. Verification failure quarantines the affected queue scope and keeps it non-executable. Fault classification, Circuit Breaker, escalation, and observational Audit Trail integration follow Decisions 66–68 and 65 respectively.
+8. Segmentation and bounded retention preserve verifiable boundaries and Decision 72's duplicate-prevention horizon. Only the server-side queue owner may append records or publish trusted heads.
+9. Roblox DataStoreService transaction/CAS capabilities are not assumed. Crash-safe publication, trusted-head protection, and failure behavior require prototypes against actual platform primitives.
+
+CI-18 is closed at the architecture-contract level. No cryptographic guarantee, privileged-storage-compromise protection, Roblox runtime implementation, or platform persistence guarantee is claimed.
+
 
 ---
 
