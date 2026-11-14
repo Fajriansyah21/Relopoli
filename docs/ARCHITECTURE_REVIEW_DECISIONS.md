@@ -512,3 +512,18 @@ A gameplay checkpoint may be updated only when all of the following conditions a
 The previous verified checkpoint is retained whenever these conditions are not all satisfied.
 
 This prevents recovery from selecting a checkpoint captured while gameplay is only partially processed.
+
+
+## Decision 39 — Checkpoint Version and Integrity Validation
+**Status: LOCKED**
+
+- Every checkpoint has a unique CheckpointId.
+- Every checkpoint records the StateVersion at which it was created.
+- Every checkpoint records its associated TurnId and ResolutionId.
+- Every checkpoint has an integrity hash to detect unexpected data changes or corruption.
+- Before a checkpoint is used, the server validates its integrity hash and version consistency.
+- If validation fails, the checkpoint is rejected and the server falls back to an earlier verified checkpoint.
+- If no valid checkpoint is available, the match remains in RECOVERY_REQUIRED.
+- The integrity hash is for detecting corruption or unexpected changes and does not replace server-side security validation.
+
+This makes checkpoint integrity and provenance verifiable before recovery uses the checkpoint.
