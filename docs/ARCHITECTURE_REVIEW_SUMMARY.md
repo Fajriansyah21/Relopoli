@@ -99,9 +99,9 @@ The complete wording and status of every decision live only in the [Architecture
 | 29–32 | Post-commit effects, effect registry, dependency ordering, victory retry, and progression gate |
 | 33–43 | Recovery executor and lock, recovery completion, verified resume, checkpoint creation, validation, retention, memory, and failure handling |
 | 44–52 | Consolidation review and corrective decisions for candidate-state commit, global victory gating, atomic effect publication, effect idempotency, recovery completion ordering, committed-mutation preservation, separated version domains, and separated victory evaluation from Game-End mutation |
-| 53–72 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, verified recovery-baseline protection, fail-closed recovery on operation-journal integrity failure, append-only Operation Journal, hash-chain integrity, segmented Operation Journal, authoritative Journal Recovery Manifest, intermediate Journal replay checkpoints, bounded Recovery replay budget, verified Recovery progress attestation, Recovery Integrity Audit Trail, structured Recovery fault classification, Recovery Circuit Breaker, Recovery Escalation Protocol, Recovery Isolation Boundary, Priority-Based Recovery Scheduling with Fairness Guarantee, Recovery Scheduler Admission Control, and Durable Recovery Queue State |
+| 53–73 | Conventional server-authoritative runtime, deterministic checkpoint integrity, single Checkpoint Manager ownership, verified recovery-baseline protection, fail-closed recovery on operation-journal integrity failure, append-only Operation Journal, hash-chain integrity, segmented Operation Journal, authoritative Journal Recovery Manifest, intermediate Journal replay checkpoints, bounded Recovery replay budget, verified Recovery progress attestation, Recovery Integrity Audit Trail, structured Recovery fault classification, Recovery Circuit Breaker, Recovery Escalation Protocol, Recovery Isolation Boundary, Priority-Based Recovery Scheduling with Fairness Guarantee, Recovery Scheduler Admission Control, Durable Recovery Queue State, and Tamper-Evident Recovery Queue Records |
 
-Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decisions 56–72 resolve cross-decision consistency findings CI-01–CI-17. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
+Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decisions 56–73 resolve cross-decision consistency findings CI-01–CI-18. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
 
 ## 4. Consolidation findings status
 
@@ -137,10 +137,11 @@ Decisions 45–55 close the eleven architecture findings RF-01–RF-11. Decision
 | CI-15 | Concurrent Recovery work lacked deterministic priority and fair scheduling | Decision 70: Priority-Based Recovery Scheduling with Fairness Guarantee |
 | CI-16 | Recovery scheduling lacked explicit admission stages, capacity checks, and bounded queues | Decision 71: Recovery Scheduler Admission Control |
 | CI-17 | Recovery queue state could be lost or unsafely replayed after server interruption | Decision 72: Durable Recovery Queue State |
+| CI-18 | Durable Recovery queue history lacked independent tamper evidence and trusted-head rollback detection | Decision 73: Tamper-Evident Recovery Queue Records |
 
 ### Remaining findings
 
-No consolidation findings RF-01–RF-11 or cross-decision consistency findings CI-01–CI-17 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
+No consolidation findings RF-01–RF-11 or cross-decision consistency findings CI-01–CI-18 remain unresolved at the architecture-contract level. The required Roblox Studio prototypes, performance measurements, and acceptance tests remain outstanding; documentation closure is not implementation evidence.
 
 
 ## 5. Source-of-truth boundaries
