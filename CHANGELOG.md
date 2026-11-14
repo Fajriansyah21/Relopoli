@@ -9,10 +9,12 @@ All notable documentation changes are recorded here.
 - Preserved historical progress documents as source records; they do not override newer locked decisions.
 
 ## 2026-11-14
+- Locked Decision 52 (Separate Victory Evaluation From Game-End Mutation) and recorded RF-08 as addressed.
+- Updated the consolidation review, summary, and index: Decisions 1–52 are LOCKED, RF-01–RF-08 are addressed, and RF-09–RF-11 remain unresolved.
 
 - Locked Decision 51 (Separated Version Domains) and recorded RF-07 as addressed.
-- Updated the architecture review summary and index: Decisions 1–51 are LOCKED, RF-01–RF-07 are addressed, and RF-08–RF-11 remain unresolved.
+- Updated the architecture review summary and index: Decisions 1–52 are LOCKED, RF-01–RF-08 are addressed, and RF-09–RF-11 remain unresolved.
 - Added a central architecture/documentation index and an architecture review summary.
-- Updated the consolidation review to mark RF-01–RF-07 as addressed by Decisions 45–51 and RF-08–RF-11 as unresolved.
+- Updated the consolidation review to mark RF-01–RF-08 as addressed by Decisions 45–52 and RF-09–RF-11 as unresolved.
 - Corrected the implementation dependency phase and review verdict to reflect the current finding status.
 - Updated repository entry points and contribution guidance to clarify canonical document ownership and avoid duplicated decision text.
