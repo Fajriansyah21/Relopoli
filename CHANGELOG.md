@@ -9,6 +9,7 @@ All notable documentation changes are recorded here.
 - Preserved historical progress documents as source records; they do not override newer locked decisions.
 
 ## 2026-11-14
+- Locked Decision 55 (Single Checkpoint Manager Ownership) and recorded RF-10 as addressed. All RF-01–RF-11 architecture findings are now addressed at the documentation-contract level; Roblox Studio prototypes and acceptance tests remain outstanding.
 - Locked Decision 54 (Deterministic Checkpoint Serialization and Integrity Contract) and recorded RF-09 as addressed. Updated the consolidation review, summary, and index; RF-10 remains unresolved.
 - Locked Decision 53 (Conventional Server-Authoritative Runtime Model) and recorded RF-11 as addressed. Updated the consolidation review, summary, and index; RF-09 and RF-10 remain unresolved.
 - Locked Decision 52 (Separate Victory Evaluation From Game-End Mutation) and recorded RF-08 as addressed.
