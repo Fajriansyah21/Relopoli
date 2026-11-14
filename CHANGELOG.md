@@ -13,6 +13,6 @@ All notable documentation changes are recorded here.
 - Locked Decision 51 (Separated Version Domains) and recorded RF-07 as addressed.
 - Updated the architecture review summary and index: Decisions 1–51 are LOCKED, RF-01–RF-07 are addressed, and RF-08–RF-11 remain unresolved.
 - Added a central architecture/documentation index and an architecture review summary.
-- Updated the consolidation review to mark RF-01–RF-06 as addressed by Decisions 45–50 and RF-07–RF-11 as unresolved.
+- Updated the consolidation review to mark RF-01–RF-07 as addressed by Decisions 45–51 and RF-08–RF-11 as unresolved.
 - Corrected the implementation dependency phase and review verdict to reflect the current finding status.
 - Updated repository entry points and contribution guidance to clarify canonical document ownership and avoid duplicated decision text.
