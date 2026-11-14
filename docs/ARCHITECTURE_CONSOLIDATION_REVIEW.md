@@ -389,6 +389,27 @@ CI-09 is closed at the architecture-contract level. No runtime implementation or
 
 ---
 
+
+### CI-10 — Recovery Diagnostics Need an Independent Integrity-Protected Audit Trail
+
+**Status: ADDRESSED by LOCKED Decision 65 — Recovery Integrity Audit Trail.**  
+**Related decisions:** 12, 33–39, 48–64
+
+Recovery lifecycle and verification events are important for diagnosing failures and understanding why Recovery succeeded, yielded, or remained blocked. Those diagnostics must not be mixed into the authoritative Operation Journal or allowed to determine gameplay state.
+
+**Recorded resolution in Decision 65:**
+1. Maintain a separate, server-generated, append-only Recovery Audit Trail. It is observational evidence, not a source of truth for gameplay mutations or operation commitment.
+2. Record significant lifecycle and integrity events, including lock transitions, baseline/manifest/journal validation, replay outcomes, attestation decisions, yield/continuation, failures, and completion-gate outcomes.
+3. Give events unique identities and monotonic stream ordering, referencing RecoveryId and relevant authoritative identifiers where available. Wall-clock timestamps are diagnostic only.
+4. Make the trail tamper-evident through deterministic event representation, SHA-256 linkage, and an independently maintained trusted audit-chain head.
+5. Minimize event contents and filter client-facing diagnostics so secrets, private player data, and unnecessary authoritative payloads are not exposed.
+6. Audit write or verification failure is reported as incomplete audit coverage. It does not alter gameplay state, operation commitment, or Recovery's authoritative success/failure; those remain governed by the existing state, journal, manifest, lock, and completion-gate contracts.
+7. Retention, storage, integrity verification, and failure behavior require Roblox Studio prototype validation.
+
+CI-10 is closed at the architecture-contract level. No audit storage, tamper-resistance, or runtime performance result is claimed.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
