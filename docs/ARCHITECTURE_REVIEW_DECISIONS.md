@@ -958,3 +958,25 @@ The Recovery system must classify Recovery faults using stable, structured fault
 10. **Feasibility and coverage gate:** The fault-code registry, retry dispositions, audit integration, diagnostic filtering, and handling for each category must be prototyped and tested in Roblox Studio, including interruption, duplicate requests, stale context, lock loss, persistence failure, and ambiguous replay outcomes.
 
 This decision standardizes Recovery fault reporting and handling metadata. It does not guarantee that a fault is recoverable, authorize automatic retries by default, or claim that the classification registry has already been implemented or tested.
+
+## Decision 67 — Recovery Circuit Breaker
+**Status: LOCKED**
+
+Recovery must support a Circuit Breaker mechanism to prevent repeated automatic attempts from continuing when a recurring fault or unavailable dependency makes further attempts unsafe, futile, or likely to consume unbounded resources.
+
+1. **Purpose and boundary:** The Circuit Breaker controls whether another automatic Recovery attempt may start. It does not replace the Recovery Executor, Recovery Lock, Operation Journal, Recovery Manifest, Checkpoint Manager, Progress Attestation, Recovery Integrity Audit Trail, or Recovery Completion Gate.
+2. **Circuit states:** The mechanism must represent at least:
+   - `CLOSED`: automatic attempts may proceed, subject to all existing Recovery validations and gates.
+   - `OPEN`: automatic attempts covered by the breaker are blocked. The match remains `RECOVERY_REQUIRED`.
+   - `HALF_OPEN`: a bounded, controlled probe may be permitted only after the configured re-evaluation conditions are met. A probe is not permission to resume gameplay or bypass any recovery validation.
+3. **Fault eligibility:** Only explicitly configured fault codes/categories and dependency failure conditions may contribute to opening a circuit. Expected bounded replay-budget yield under Decision 63 must not count as a breaker failure. Faults classified as `NO_AUTOMATIC_RETRY` under Decision 66 must not be automatically retried merely because the circuit transitions to HALF_OPEN.
+4. **Failure threshold and scope:** Opening criteria must be deterministic and bounded, based on a documented threshold/window and scoped to the relevant RecoveryId, fault class, and/or dependency. Unrelated matches or independent Recovery contexts must not be blocked by a broader shared counter unless an explicit shared dependency policy requires it.
+5. **Controlled probing:** HALF_OPEN must permit only a bounded probe with explicit attempt limits and the required lock ownership, context validation, integrity checks, and idempotency guarantees. A failed probe reopens the circuit. A successful probe closes the circuit only for the defined scope; normal Recovery gates still apply.
+6. **No unsafe retry:** The Circuit Breaker must not automatically repeat an operation whose commit outcome is ambiguous, replay an operation without idempotency proof, bypass revalidation, or turn an integrity/persistence failure into a retryable condition. Retry disposition remains governed by Decision 66 and the underlying authoritative recovery contracts.
+7. **Lock and recovery lifecycle:** Opening the circuit must not force-release or transfer a Recovery Lock. Lock acquisition, renewal, release, and stale-lock handling remain governed by Decision 35. The circuit must not declare Recovery complete or permit gameplay to resume. The Recovery Completion Gate remains mandatory.
+8. **Persistence and restart behavior:** Circuit state and the minimum evidence needed to enforce its threshold and scope must be persisted or safely reconstructible across server interruption. If breaker state or its required evidence cannot be trusted, the system must fail closed for the affected Recovery context rather than assume the circuit is CLOSED.
+9. **Observability:** Circuit transitions, blocked attempts, probe starts/results, and reset decisions must be represented in the Recovery Integrity Audit Trail under Decision 65. Audit failure remains observational and must not change authoritative breaker or Recovery outcomes.
+10. **Reset policy:** Reset or manual override must be explicit, authorized, scoped, and auditable. Time passage alone must not silently authorize a retry when the underlying fault or evidence remains unresolved.
+11. **Feasibility and acceptance gate:** Roblox Studio prototyping must validate thresholds, concurrent attempts, server restart reconstruction, lock interaction, HALF_OPEN probe bounds, idempotent retry behavior, audit coverage, and fail-closed handling when breaker persistence is unavailable.
+
+This decision introduces a guard against repeated unsafe or futile Recovery attempts. It does not guarantee fault resolution, authorize unrestricted manual retries, or claim that the Circuit Breaker has already been implemented or tested.
