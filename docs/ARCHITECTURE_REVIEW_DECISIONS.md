@@ -812,3 +812,18 @@ The authoritative Operation Journal must be append-only for committed operation 
 7. **Recovery compatibility:** Recovery must consume only records whose identity, integrity, ordering, and committed status can be verified, consistent with Decisions 50 and 57.
 
 This decision defines the immutability and append behavior of authoritative committed-operation history. It does not prescribe a specific database, storage medium, hash-chain format, archival implementation, or journal-repair procedure.
+
+## Decision 59 — Hash Chain Integrity for the Operation Journal
+**Status: LOCKED**
+
+The authoritative append-only Operation Journal must use a verifiable hash chain to detect unexpected changes to committed-operation history.
+
+1. **Linked records:** Each journal record must include the integrity digest of the immediately preceding record. The first record in a journal chain uses a defined genesis value.
+2. **Record digest:** Each record's digest must be calculated from a deterministic canonical representation that includes, at minimum, its sequence/order identity, OperationId, committed-record content, and previous-record digest. Any additional fields that affect authoritative interpretation must also be covered.
+3. **Approved algorithm:** The chain must use SHA-256 through a vetted implementation or a verified platform-provided capability, consistent with Decision 54. The project must not invent or rely on a homegrown cryptographic hash algorithm.
+4. **Verification before replay:** Recovery must verify record integrity and chain continuity, including ordering and linkage, before using journal records to reconstruct state. A broken, missing, mismatched, or unverifiable link makes the required history unverifiable and invokes Decision 57: fail closed and remain RECOVERY_REQUIRED.
+5. **Trusted chain-head reference:** The system must preserve a trusted reference to the latest accepted chain head, bound to authoritative recovery metadata, so truncation or replacement of a journal suffix cannot be mistaken for a complete valid history. The exact persistence and atomic-update mechanism must be established and tested during implementation.
+6. **Threat boundary:** Hash chaining detects unexpected record changes, insertion, reordering, and broken continuity when checked against a trusted chain-head reference. It is not proof of authenticity and does not protect against a compromised server or a privileged attacker able to alter both journal data and trusted metadata.
+7. **Feasibility gate:** Canonical record serialization, SHA-256 availability, chain verification, trusted-head persistence, and their performance/recovery behavior must be prototyped and validated in Roblox Studio before the mechanism is relied upon in implementation.
+
+This decision extends the integrity contract to the Operation Journal. It does not replace Decision 58's append-only rule, Decision 57's fail-closed recovery behavior, or Decision 50's committed-mutation preservation requirements. It does not claim that Roblox runtime feasibility or implementation has already been demonstrated.
