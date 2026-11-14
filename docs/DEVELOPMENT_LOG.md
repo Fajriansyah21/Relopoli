@@ -67,6 +67,15 @@ Fokus berikutnya:
 
 Tambahkan entri terbaru di bagian paling atas setelah header ini.
 
+### 2026-11-14 — Core Gameplay Prototype Scope v1.0 locked
+
+- Scope Core Gameplay Prototype disetujui dan dikunci sebagai batas implementasi.
+- Cakupan meliputi multiplayer empat pemain, board logis 40 tile, Turn Controller, Physical Dice, Movement, Start Reward, Minimal Balance, enam Landing Resolution handlers, Triple Double, Disconnect, dan Reset/Death Recovery.
+- Property/Crown dibatasi pada Detection & Display; News/Reward/Transport/Jail menggunakan Temporary Handler/Stub sesuai guardrails.
+- Fitur di luar scope dilarang masuk tanpa persetujuan eksplisit.
+- Open Items dipindahkan ke Specification Stage; belum ada implementasi yang diklaim selesai.
+- Dokumen kanonis: [Core Gameplay Prototype Scope v1.0](CORE_GAMEPLAY_PROTOTYPE_SCOPE.md).
+
 ### 2026-11-14 — Documentation structure organized
 
 - Menambahkan empat dokumen navigasi utama: Game Design, Game Systems, Map Design, dan Development Log.
