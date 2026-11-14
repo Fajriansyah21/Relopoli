@@ -496,3 +496,19 @@ Recovery is not considered complete merely because its execution stopped without
 - This checkpoint is scoped to the match server session and does not guarantee recovery after a server crash.
 
 This defines a verified in-session resume point without implying cross-server persistence.
+
+
+## Decision 38 — Stable-Boundary Checkpoint
+**Status: LOCKED**
+
+A gameplay checkpoint may be updated only when all of the following conditions are true:
+
+1. No mutation is currently being processed.
+2. All required effects from the preceding commit have completed.
+3. Victory Check has completed.
+4. Turn and Resolution Context are at a valid boundary.
+5. No recovery process is active.
+
+The previous verified checkpoint is retained whenever these conditions are not all satisfied.
+
+This prevents recovery from selecting a checkpoint captured while gameplay is only partially processed.
