@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–73, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–74, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -581,6 +581,27 @@ Decision 72 makes queue state durable and reconstructible, but durable records a
 9. Roblox DataStoreService transaction/CAS capabilities are not assumed. Crash-safe publication, trusted-head protection, and failure behavior require prototypes against actual platform primitives.
 
 CI-18 is closed at the architecture-contract level. No cryptographic guarantee, privileged-storage-compromise protection, Roblox runtime implementation, or platform persistence guarantee is claimed.
+
+
+### CI-19 — Recovery Scheduling Fairness Must Survive Server Interruption
+
+**Status: ADDRESSED by LOCKED Decision 74 — Persistent Recovery Fairness Metadata.**  
+**Related decisions:** 65, 69–73
+
+Decision 70 defines priority and fairness scheduling, while Decisions 72–73 make queue entries durable and their transition history verifiable. However, without persisted fairness metadata, reconstruction could reset waiting order or accumulated priority-aging credit after repeated server interruptions. Newly arriving work could then repeatedly overtake older eligible work.
+
+**Recorded resolution in Decision 74:**
+1. Fairness metadata is bound to QueueEntryId, MatchId, RecoveryId, and the stable enqueue sequence from Decision 72.
+2. The scheduler persists bounded priority class and validated fairness/wait credit, with references to Decision 73's integrity records.
+3. Credit is updated only through server-controlled, verifiable scheduler transitions or another explicitly trusted mechanism. Raw client timestamps and unverified wall-clock values cannot grant priority.
+4. Restart reconstruction uses verified enqueue order, priority class, and persisted credit under Decision 70's deterministic tie-breaking and fairness rules. Repeated reconstruction cannot reset or inflate credit.
+5. Aging is bounded. Fairness never overrides eligibility, Admission Control, replay budgets, Circuit Breaker, escalation, isolation, lock requirements, or dispatch-time validation.
+6. Restored fairness position does not restore capacity reservations, active slots, locks, or dispatch authorization. Work re-enters current admission and scheduling.
+7. Fairness metadata integrity follows Decision 73; observational audit follows Decision 65. Retention and schema evolution follow Decisions 72–73.
+8. Repeated restart, clock jumps, duplicate updates, credit rollback, long-waiting versus new work, changed capacity, and aging caps require Roblox Studio prototype tests.
+
+CI-19 is closed at the architecture-contract level. No guarantee of eventual execution under capacity or safety constraints, runtime implementation, or platform-level trusted clock is claimed.
+
 
 
 ---
