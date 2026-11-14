@@ -1,7 +1,7 @@
 # Relopoli — Architecture Consolidation Review
 
 > **Status:** REVIEW FINDINGS — not yet converted into new LOCKED decisions  
-> **Scope:** Architecture Review Decisions 1–78, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
+> **Scope:** Architecture Review Decisions 1–79, Master Source of Truth, Progress 19, Progress 20, and Roblox/Luau implementation feasibility  
 > **Purpose:** Identify consistency gaps and define a dependency-aware implementation path before Roblox implementation.
 
 ---
@@ -676,6 +676,25 @@ CI-22 is closed at the architecture-contract level. The required atomic ownershi
 7. Prototype tests cover loss, corruption, rollback, fork, duplicate/reordered requests, crash/publication ambiguity, concurrent startup, backup restoration, administrative recovery, and sink outages. They must prove no generation reset/reuse, duplicate grant, stale side effect, or competing execution under uncertainty.
 
 CI-23 is closed at the architecture-contract level. The actual trusted monotonic anchor and atomic cross-server primitive remain implementation feasibility gates; if they cannot be proven, competing Recovery takeover remains blocked.
+
+
+
+### CI-24 — Recovery Authority Outage and Safe Re-Entry Are Not Fully Defined
+
+**Related decisions:** 35, 57–69, 72–79  
+**Concern:** Decisions 77–78 define fencing and trusted generation-history integrity, but they do not fully specify system-wide behavior when the authority or its coordination path is unavailable and later restored. Without an outage protocol, servers could incorrectly use cached tokens, local locks, lease expiry, or incomplete restoration to resume or elect Recovery owners.
+
+**Recorded resolution in Decision 79:**
+1. Authority uncertainty fails closed: no new Recovery owner, generation advance, or authoritative mutation requiring an unverifiable fence.
+2. Cached tokens, server memory, queue/checkpoint/handoff records, timestamps, timeouts, leases, and local locks are not fallback ownership authorities.
+3. In-flight work may proceed only when the actual mutation sink still enforces the authoritative fence. Work stops at safe boundaries; atomic no-yield commits are not interrupted midway.
+4. Durable pending queue work is not acknowledged, discarded, or marked complete without confirmed persistence. Ambiguous outcomes are reconciled by stable identities and authoritative journal evidence.
+5. Re-entry requires verified trusted generation continuity, serialized grant publication, owner/grant identity, and fencing enforcement at every authoritative mutation sink.
+6. Restarted or returning servers require fresh grants; old executors do not automatically regain ownership. Outage/restoration does not mutate gameplay or bypass completion/Game-End gates.
+7. Partial restoration, unavailable sinks, and ambiguous state remain fail-closed; administrative intervention remains separately authorized and audited.
+8. Failure-injection prototypes cover total/partial outages, partitions, simultaneous restarts, stale tokens, lost acknowledgements, partial restoration, unavailable sinks, and queue persistence failures.
+
+CI-24 is closed at the architecture-contract level. Roblox Studio must still prove the actual authority availability, persistence, and sink-fencing mechanisms. Until then, unsafe Recovery takeover remains unavailable.
 
 
 ---
