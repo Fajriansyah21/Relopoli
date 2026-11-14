@@ -177,6 +177,20 @@ The numerical memory budget, checkpoint count, and performance thresholds remain
 
 ---
 
+
+### RF-11 — Clarify Which Roblox Server-Authority Model Is Intended
+
+**Related decisions:** 12, 13, 15  
+The project uses “server authoritative” as a trust-boundary principle: the server decides gameplay outcomes and clients send intent. Roblox also documents a specific engine Server Authority model with its own Workspace settings, Input Action System, simulation synchronization, prediction, rollback, and resimulation requirements.
+
+These are related but not interchangeable concepts. The current Relopoli design, where clients present server-confirmed movement and gameplay outcomes, does not by itself establish that the experience intends to enable Roblox's engine Server Authority mode.
+
+**Required clarification:** Explicitly state whether Relopoli will use:
+- the conventional server-authoritative model built around server scripts and validated RemoteEvents; or
+- Roblox's engine Server Authority model, with its required runtime configuration and client/server simulation architecture.
+
+Do not mix assumptions from the two models without a deliberate design and prototype.
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
@@ -233,7 +247,7 @@ Do not begin by implementing every Domain System independently. Establish the sh
 
 | Phase | Scope | Exit criteria |
 |---|---|---|
-| 0 | Resolve RF-01 to RF-10 and freeze contracts | No unresolved mutation/effect/recovery ordering ambiguity |
+| 0 | Resolve RF-07 to RF-11 and freeze contracts | Remaining versioning, victory mutation, checkpoint, and Roblox authority contracts are explicit |
 | 1 | Game State schema, ownership source, IDs, version model, immutable read API | State ownership and version semantics are testable |
 | 2 | FIFO Mutation Queue, Mutation Plan, Copy-on-Write, candidate validation, derived recalculation, root swap | Invalid plans have zero side effects; stale plans rejected |
 | 3 | Post-Commit Effect Registry, idempotent handlers, Victory/Game-End gate | Retry cannot duplicate effects; no relevant mutation passes a pending Victory gate |
@@ -275,20 +289,6 @@ For every test, assert both the expected result and the absence of unintended si
 
 **Architecture direction: SOUND.** The responsibility boundaries, server authority, sequential mutation, source-of-truth ownership, and Turn Controller orchestration form a coherent foundation.
 
-**Implementation readiness: NOT YET.** Resolve the critical findings first, especially RF-02, RF-03, RF-04, RF-05, and RF-06. These affect whether the game can safely publish state, detect victory, retry effects, and recover without duplicating or losing committed gameplay.
+**Implementation readiness: NOT YET.** RF-01 through RF-06 have been addressed by LOCKED Decisions 45–50. RF-07 through RF-11 remain unresolved and must be closed before the shared architecture contracts are treated as implementation-ready. The remaining findings concern version scopes, the boundary between victory evaluation and Game-End mutation, checkpoint integrity and ownership, and the intended Roblox server-authority model. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
 
-No prior LOCKED decision is silently changed by this report. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
-
-
-### RF-11 — Clarify Which Roblox Server-Authority Model Is Intended
-
-**Related decisions:** 12, 13, 15  
-The project uses “server authoritative” as a trust-boundary principle: the server decides gameplay outcomes and clients send intent. Roblox also documents a specific engine Server Authority model with its own Workspace settings, Input Action System, simulation synchronization, prediction, rollback, and resimulation requirements.
-
-These are related but not interchangeable concepts. The current Relopoli design, where clients present server-confirmed movement and gameplay outcomes, does not by itself establish that the experience intends to enable Roblox's engine Server Authority mode.
-
-**Required clarification:** Explicitly state whether Relopoli will use:
-- the conventional server-authoritative model built around server scripts and validated RemoteEvents; or
-- Roblox's engine Server Authority model, with its required runtime configuration and client/server simulation architecture.
-
-Do not mix assumptions from the two models without a deliberate design and prototype.
+No prior LOCKED decision is silently changed by this report. Decisions 45–50 address RF-01 through RF-06. RF-07 through RF-11 remain open and are not approved design decisions. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
