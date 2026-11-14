@@ -300,6 +300,8 @@ For every test, assert both the expected result and the absence of unintended si
 
 **Architecture direction: SOUND.** The responsibility boundaries, server authority, sequential mutation, source-of-truth ownership, and Turn Controller orchestration form a coherent foundation.
 
-**Implementation readiness: NOT YET.** RF-01 through RF-08 have been addressed by LOCKED Decisions 45–52, and RF-11 has been addressed by LOCKED Decision 53. RF-09, RF-10, and RF-11 have been addressed by LOCKED Decisions 54, 55, and 53 respectively. All findings RF-01 through RF-11 are now addressed; implementation readiness still requires the shared architecture contracts are treated as implementation-ready. The findings have been addressed at the architecture-contract level. Implementation readiness remains NOT YET until required prototypes and acceptance tests are completed. The review is documentation analysis, not evidence of Roblox Studio implementation or testing.
+**Architecture findings: ADDRESSED.** RF-01 through RF-08 are addressed by LOCKED Decisions 45–52; RF-09 is addressed by Decision 54; RF-10 is addressed by Decision 55; and RF-11 is addressed by Decision 53.
 
-No prior LOCKED decision is silently changed by this report. Decisions 45–52 address RF-01 through RF-08. RF-09 through RF-11 remain open and are not approved design decisions. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
+**Implementation readiness: NOT YET.** All findings are addressed at the architecture-contract level, but required Roblox Studio prototypes and the minimum acceptance test matrix have not been completed or evidenced by this review. Implementation readiness must remain NOT YET until those validations support it. This review is documentation analysis, not evidence of Roblox Studio implementation or testing.
+
+No prior LOCKED decision is silently changed by this report. Any correction or refinement must be approved as a new, traceable decision and recorded in the Architecture Review Decision Log.
