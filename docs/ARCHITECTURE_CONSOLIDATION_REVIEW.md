@@ -262,6 +262,26 @@ CI-03 is closed at the architecture-contract level. Decision 58 does not prescri
 
 ---
 
+
+### CI-04 — Operation Journal Integrity Needs Tamper-Evident Record Linkage
+
+**Status: ADDRESSED by LOCKED Decision 59 — Hash Chain Integrity for the Operation Journal.**  
+**Related decisions:** 50, 54, 57–59
+
+Decision 58 makes committed journal records immutable and append-only, but immutability rules alone do not provide a verifiable way to detect unexpected changes, insertion, reordering, or truncation in the stored record history.
+
+**Recorded resolution in Decision 59:**
+1. Each record links to the preceding record's integrity digest, with a defined genesis value for the first record.
+2. Each record digest covers a deterministic canonical representation including ordering identity, OperationId, committed content, previous digest, and other authoritative fields.
+3. SHA-256 must be provided by a vetted implementation or verified platform capability, consistent with Decision 54. No homegrown cryptographic hash is permitted.
+4. Recovery verifies chain integrity and continuity before replay. Broken or unverifiable history invokes Decision 57 and remains RECOVERY_REQUIRED.
+5. A trusted chain-head reference bound to authoritative recovery metadata is required to detect suffix truncation or replacement. Its persistence and atomic-update mechanism remain implementation details requiring prototype validation.
+6. Hash chaining is tamper-evident under the stated trust boundary, not proof of authenticity or protection against a compromised server able to alter both records and trusted metadata.
+
+CI-04 is closed at the architecture-contract level. Roblox feasibility, trusted-head persistence, and performance remain unvalidated until prototyped.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
