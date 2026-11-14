@@ -7,7 +7,7 @@ This index is the navigation entry point for the repository's design and archite
 Use these documents according to their scope:
 
 1. [Master Source of Truth](MASTER_SOURCE_OF_TRUTH.md) — canonical gameplay rules, system behavior, and source hierarchy.
-2. [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md) — the canonical record of approved architecture decisions. Decisions 1–52 are LOCKED.
+2. [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md) — the canonical record of approved architecture decisions. Decisions 1–67 are LOCKED.
 3. [Architecture Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md) — analysis, review findings, feasibility notes, implementation dependencies, and acceptance tests. Findings are not decisions by themselves.
 4. [Architecture Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md) — concise map of what has been reviewed, what is resolved, and what remains open.
 5. [Review Backlog](REVIEW_BACKLOG.md) — broader system, economy, technical, and UX validation work. It is not a replacement for the architecture findings above.
@@ -19,8 +19,8 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 | Area | Location | Purpose |
 |---|---|---|
 | Gameplay authority | [Master Source of Truth](MASTER_SOURCE_OF_TRUTH.md) | Consolidated rules and system architecture |
-| Architecture decisions | [Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md) | Approved decisions 1–57 |
-| Architecture analysis | [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md) | RF-01–RF-11, Luau feasibility, implementation order, acceptance matrix |
+| Architecture decisions | [Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md) | Approved decisions 1–67 |
+| Architecture analysis | [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md) | RF-01–RF-11, CI-01–CI-12, Luau feasibility, implementation order, acceptance matrix |
 | Review recap | [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md) | One-page overview of review outcomes |
 | Review backlog | [Review Backlog](REVIEW_BACKLOG.md) | Remaining broader validation tracks and hypotheses |
 | Progress history | [progress/](progress/) | Master Flow and historical progress records |
@@ -41,7 +41,7 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 
 ## Current architecture review status
 
-- Decisions 1–66: **LOCKED**.
+- Decisions 1–67: **LOCKED**.
 - RF-01–RF-08: addressed by Decisions 45–52.
 - RF-09: addressed by Decision 54.
 - RF-10: addressed by Decision 55.
@@ -56,5 +56,6 @@ If documents appear to conflict, follow the source hierarchy and conflict policy
 - Cross-decision consistency finding CI-08: addressed by Decision 63.
 - Cross-decision consistency finding CI-09: addressed by Decision 64.
 - Cross-decision consistency finding CI-10: addressed by Decision 65.
-- Cross-decision consistency finding CI-11: addressed by Decision 66. see the [Review Summary](ARCHITECTURE_REVIEW_SUMMARY.md).
+- Cross-decision consistency finding CI-11: addressed by Decision 66.
+- Cross-decision consistency finding CI-12: addressed by Decision 67.
 - Implementation readiness: **NOT YET**.
