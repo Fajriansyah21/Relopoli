@@ -592,3 +592,24 @@ This keeps checkpoint creation as a protective layer without undoing valid commi
 - Record findings separately from locked decisions; do not silently alter or reinterpret prior decisions during the review.
 
 This review is a consolidation and readiness assessment, not evidence that the systems have been implemented or tested in Roblox.
+
+
+## Decision 45 — Canonical Candidate-State Commit Pipeline
+**Status: LOCKED**
+
+All critical gameplay mutations use one canonical candidate-state pipeline:
+
+1. State Manager accepts the operation through the FIFO Mutation Queue.
+2. State Manager reads the latest immutable snapshot and records its BaseStateVersion.
+3. The operation builds a Mutation Plan and Copy-on-Write candidate state without modifying the active root.
+4. State Manager validates operation preconditions and confirms the BaseStateVersion is still current.
+5. Derived Calculators recalculate all affected derived values against the candidate state.
+6. State Manager validates the complete candidate state for consistency.
+7. Required post-commit effect records and operation metadata are prepared as part of the candidate state.
+8. State Manager performs the root swap without yielding and increments StateVersion.
+9. The operation is marked COMMITTED at the authoritative commit boundary.
+10. Post-commit effects execute outside the critical section under their own identity, status, dependency, and retry rules.
+
+The root swap publishes the gameplay state, recalculated derived state, committed-operation metadata, and required post-commit effect records as one authoritative candidate. No active state or effect registry entry may be published partially.
+
+This decision establishes the canonical ordering for the mutation pipeline. It does not by itself resolve effect idempotency, Victory Check gating, or recovery ordering; those remain separate review findings requiring explicit decisions.
