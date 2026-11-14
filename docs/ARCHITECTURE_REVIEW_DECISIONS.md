@@ -673,3 +673,18 @@ Recovery may restore gameplay progression only after all recovery completion con
 7. If any condition cannot be verified, Recovery must remain locked and the system must enter or remain in `RECOVERY_REQUIRED`. Gameplay must not resume based on guessed or incomplete state.
 
 `Recovery Completed` is the sole authorization boundary for restoring gameplay progression.
+
+
+## Decision 50 — Checkpoint Recovery Must Preserve Committed Mutations
+**Status: LOCKED**
+
+A checkpoint is a recovery baseline, not a substitute for the authoritative record of committed mutations.
+
+1. Every committed mutation must have an authoritative operation record sufficient to establish its committed identity and ordering for recovery.
+2. Recovery identifies a valid checkpoint and reconstructs the committed state changes that occurred after that checkpoint using the authoritative committed-operation records.
+3. A mutation already marked committed must not be re-executed as a new operation during reconstruction. Replay or reconstruction must preserve its committed identity and avoid applying its gameplay effect twice.
+4. If the required operation records are incomplete, inconsistent, or cannot be integrity-verified, the system must enter or remain in `RECOVERY_REQUIRED`.
+5. The system must not silently fall back to an older checkpoint when doing so could discard committed gameplay mutations.
+6. The exact operation-journal format, retention, and storage mechanism remain to be specified separately.
+
+This decision establishes the preservation requirement for committed mutations during checkpoint recovery; it does not yet select a concrete journal implementation.
