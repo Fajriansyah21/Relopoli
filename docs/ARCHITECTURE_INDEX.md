@@ -2,6 +2,15 @@
 
 This index is the navigation entry point for the repository's design and architecture documentation. It points to canonical documents instead of copying their contents.
 
+## Project overview
+
+Start with the short project guides:
+- [Game Design](GAME_DESIGN.md) — what Relopoli is and how a normal game flows.
+- [Game Systems](GAME_SYSTEMS.md) — where each gameplay and UI specification lives.
+- [Map Design](MAP_DESIGN.md) — board/city visual direction and district identities.
+- [Development Log](DEVELOPMENT_LOG.md) — progress history and current readiness.
+- [Repository README](../README.md) — folder map and where future code/assets belong.
+
 ## Source authority
 
 Use these documents according to their scope:
