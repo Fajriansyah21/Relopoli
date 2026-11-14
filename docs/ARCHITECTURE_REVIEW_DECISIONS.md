@@ -437,3 +437,17 @@ This prevents gameplay from advancing while the authoritative victory outcome is
 - Recovery must not invent or assume gameplay outcomes.
 
 This keeps recovery under the same server authority that governs gameplay and preserves the distinction between committed mutations and unfinished post-commit effects.
+
+
+## Decision 34 — Single Recovery Executor
+**Status: LOCKED**
+
+- Only one Recovery Executor may be active for a match at a time.
+- Recovery uses an internal server-side lock.
+- An effect being processed by recovery must not be processed concurrently by another worker.
+- Each recovery attempt has a unique RecoveryId.
+- Recovery revalidates StateVersion before continuing work.
+- If recovery fails, the lock is released safely and the match remains in RECOVERY_REQUIRED.
+- A subsequent recovery attempt uses the latest authoritative state rather than assumptions from the previous attempt.
+
+This prevents concurrent recovery attempts or workers from processing the same post-commit effect at the same time.
