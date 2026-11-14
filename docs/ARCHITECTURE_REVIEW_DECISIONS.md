@@ -782,3 +782,18 @@ Checkpoint retention and memory-budget enforcement must preserve the match's min
 6. **No fabricated capability:** If no verified checkpoint exists, the system must report limited or unavailable recovery capability as applicable. It must not label an unverified checkpoint as a recovery baseline.
 
 This decision refines Decisions 40, 41, and 43 by establishing a minimum recovery-baseline protection rule. It does not guarantee recovery after server failure or replace the committed-operation preservation requirements in Decision 50.
+
+## Decision 57 — Fail-Closed Recovery on Operation Journal Integrity Failure
+**Status: LOCKED**
+
+Recovery must fail closed whenever the authoritative committed-operation records required to reconstruct gameplay state cannot be verified.
+
+1. **No uncertain replay:** Recovery must not replay an operation record whose integrity, identity, ordering, or committed status cannot be established.
+2. **No inferred outcome:** An ambiguous operation must not be assumed to be either committed or uncommitted. Recovery must not infer its gameplay outcome from incomplete evidence.
+3. **No replacement identity:** Recovery must not recreate an ambiguous operation under a new OperationId as a workaround for missing or unverifiable records.
+4. **Recovery remains blocked:** The Recovery Executor must retain the recovery lock and keep the match in RECOVERY_REQUIRED while required operation records remain incomplete, inconsistent, or unverifiable.
+5. **Diagnostic evidence:** The system must preserve and expose the available record identifiers, OperationIds, relevant version/context information, and failure reason for diagnosis without treating diagnostic data as proof of a committed gameplay outcome.
+6. **Resume condition:** Recovery may continue only after the integrity and ordering of the required committed-operation history can be established and all existing Recovery Completion Gate conditions are satisfied.
+7. **No rollback or fabricated state:** This decision does not authorize discarding committed mutations, selecting an unsafe older checkpoint, or fabricating a replacement authoritative state. Decisions 50 and 56 remain in force.
+
+This decision establishes a fail-closed response to uncertain operation history. It does not define an automatic journal-repair mechanism or guarantee that every integrity failure is recoverable.
