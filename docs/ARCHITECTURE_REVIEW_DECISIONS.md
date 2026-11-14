@@ -566,3 +566,16 @@ This keeps checkpoint retention bounded and prevents recovery history from consu
 - When multiple eligible events occur close together, checkpoint creation may be coalesced into one checkpoint at the next stable boundary.
 
 This avoids excessive checkpoint creation while preserving important in-session recovery points.
+
+
+## Decision 43 — Non-Blocking Checkpoint Failure
+**Status: LOCKED**
+
+- Failure to create a checkpoint does not cancel a mutation that has already committed.
+- The match may continue gameplay when all normal gameplay conditions are satisfied.
+- The previous verified checkpoint is retained.
+- Checkpoint creation failure is recorded with its reason and the relevant StateVersion context.
+- Checkpoint Manager may retry checkpoint creation at a subsequent stable boundary.
+- If no valid checkpoint is available, the system marks recovery capability as limited and must not fabricate a replacement checkpoint.
+
+This keeps checkpoint creation as a protective layer without undoing valid committed gameplay operations.
