@@ -464,3 +464,21 @@ This prevents concurrent recovery attempts or workers from processing the same p
 - If lock ownership cannot be verified, the match remains in RECOVERY_REQUIRED until the server establishes that recovery can safely proceed.
 
 This lifecycle prevents both abandoned locks and unsafe concurrent recovery execution.
+
+
+## Decision 36 — Recovery Completion Gate
+**Status: LOCKED**
+
+Before a match may leave RECOVERY_REQUIRED, the server must:
+
+1. Confirm that no other recovery process is active.
+2. Confirm that all required post-commit effects are COMPLETED.
+3. Confirm that no mutation operation remains in an ambiguous state.
+4. Validate consistency between the Game State and its Derived State.
+5. Confirm that Victory Check has completed.
+6. Ensure StateVersion remains valid throughout the verification process.
+7. Only then restore the match to the appropriate gameplay state.
+
+If any verification fails, the match remains in RECOVERY_REQUIRED.
+
+Recovery is not considered complete merely because its execution stopped without an error; the server must verify that the match state is safe to resume.
