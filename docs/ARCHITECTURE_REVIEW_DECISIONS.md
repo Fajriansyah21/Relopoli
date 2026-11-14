@@ -613,3 +613,18 @@ All critical gameplay mutations use one canonical candidate-state pipeline:
 The root swap publishes the gameplay state, recalculated derived state, committed-operation metadata, and required post-commit effect records as one authoritative candidate. No active state or effect registry entry may be published partially.
 
 This decision establishes the canonical ordering for the mutation pipeline. It does not by itself resolve effect idempotency, Victory Check gating, or recovery ordering; those remain separate review findings requiring explicit decisions.
+
+
+## Decision 46 — Global Victory Check Gate
+**Status: LOCKED**
+
+Every committed mutation that can affect victory activates a global gameplay-progression gate after the atomic Root Swap.
+
+1. The gate prevents subsequent gameplay mutations from committing until the Victory Check associated with the newly committed StateVersion has completed.
+2. Victory Check evaluates the authoritative state at the StateVersion produced by the triggering commit.
+3. If no victory condition is met, the gate is released and queued gameplay mutations may continue in their defined order.
+4. If victory is detected, Game End is applied through the State Manager's canonical mutation pipeline. An Effect Worker or Victory Check worker must not directly mutate authoritative gameplay state.
+5. If Victory Check fails, the gate remains locked. The system enters the defined Recovery path; gameplay mutation processing must not resume until the check is successfully resolved.
+6. Non-gameplay presentation effects may proceed independently where they do not mutate or depend on gameplay progression.
+
+This gate serializes victory-sensitive gameplay progression across the post-commit Victory Check boundary. It does not replace the canonical candidate-state commit pipeline or the separate effect identity, idempotency, and recovery rules.
