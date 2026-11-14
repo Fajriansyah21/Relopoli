@@ -1053,4 +1053,3 @@ sudah **deprecated** dan digantikan oleh:
 
 > 250K Rels.
 
-```
