@@ -886,4 +886,5 @@ Next workflow gate:
 1. Complete consolidated review for consistency, missing cases, and prototype boundary, including the TC-31 Prototype Scope reconciliation.
 2. Resolve or explicitly mark remaining TBD items.
 3. Obtain explicit approval of the complete Specification 01.
-4. Update affected canonical documents through the approved documentation workflow, including the TC-31 change from ABORTED to ENDED for zero active players.\n5. Only then promote the document to LOCKED and proceed to implementation planning under the project workflow.
+4. Update affected canonical documents through the approved documentation workflow, including the TC-31 change from ABORTED to ENDED for zero active players.
+5. Only then promote the document to LOCKED and proceed to implementation planning under the project workflow.
