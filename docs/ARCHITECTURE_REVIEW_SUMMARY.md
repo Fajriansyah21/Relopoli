@@ -125,7 +125,7 @@ Decisions 45–52 specifically close the eight findings described below. They re
 | RF-10 | What is the single ownership contract for Checkpoint Manager responsibilities? | Avoids overlapping eligibility, validation, retention, memory, in-use protection, retry, and recovery rules |
 | RF-11 | Which Roblox server-authority model is intended: conventional server-authoritative scripts/remotes or engine Server Authority mode? | Prevents mixing incompatible assumptions about simulation, prediction, rollback, and networking |
 
-Decisions 51, 52, and 53 close RF-07, RF-08, and RF-11 respectively. RF-09 and RF-10 remain open; they must not be represented as LOCKED decisions.
+Decisions 51, 52, 53, and 54 close RF-07, RF-08, RF-11, and RF-09 respectively. RF-10 remains open; it must not be represented as a LOCKED decision.
 
 ## 5. Source-of-truth boundaries
 
@@ -141,7 +141,7 @@ A review finding is not an approved rule. A proposal is not LOCKED until explici
 
 ## 6. Recommended next work
 
-1. Resolve RF-09 and RF-10 one at a time, recording each approved decision in the Decision Log before proceeding to the next.
+1. Resolve RF-10, recording the approved decision in the Decision Log before proceeding to broader implementation planning.
 2. Update the relevant architecture contracts and this status summary only after the corresponding decision is approved.
 3. Prototype the shared state pipeline and failure boundaries in Roblox Studio.
 4. Execute the minimum acceptance test matrix in the Consolidation Review, including concurrency, retry, victory gating, recovery, checkpoint, disconnect, and exploit cases.
