@@ -527,3 +527,17 @@ This prevents recovery from selecting a checkpoint captured while gameplay is on
 - The integrity hash is for detecting corruption or unexpected changes and does not replace server-side security validation.
 
 This makes checkpoint integrity and provenance verifiable before recovery uses the checkpoint.
+
+
+## Decision 40 — Bounded Checkpoint Retention
+**Status: LOCKED**
+
+- Retain a bounded set of the newest verified checkpoints.
+- The newest valid checkpoint is the primary recovery candidate.
+- Do not delete a previous checkpoint until its replacement has been successfully verified.
+- A checkpoint currently in use by recovery must not be deleted.
+- Apply limits to checkpoint count and memory usage so retention remains bounded.
+- When a limit is reached, remove the oldest checkpoint that is not in use.
+- This retention policy applies within the lifetime of the match server session.
+
+This balances fallback availability with bounded memory usage and does not imply persistence across server crashes.
