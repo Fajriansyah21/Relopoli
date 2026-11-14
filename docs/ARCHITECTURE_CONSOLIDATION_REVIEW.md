@@ -303,6 +303,28 @@ CI-05 is closed at the architecture-contract level. Bounded verification perform
 
 ---
 
+
+### CI-06 — Recovery Needs an Authoritative Reference for the Accepted Checkpoint and Journal Boundary
+
+**Status: ADDRESSED by LOCKED Decision 61 — Authoritative Journal Recovery Manifest.**  
+**Related decisions:** 16, 23–25, 33–43, 50–61
+
+The checkpoint and segmented Operation Journal contracts establish recoverable data and integrity linkage, but Recovery also needs an authoritative reference identifying which checkpoint baseline and exact committed journal boundary form the accepted recovery history.
+
+**Recorded resolution in Decision 61:**
+1. Maintain a versioned manifest identifying the Journal, format versions, accepted checkpoint baseline, latest accepted segment boundary, last committed sequence, and trusted terminal record hash.
+2. Bind the manifest to the relevant StateVersion/version-domain references without collapsing the distinct version domains required by Decision 51.
+3. Coordinate manifest advancement with authoritative journal and commit publication so it cannot point beyond verified committed records or omit an accepted journal boundary.
+4. Use monotonic manifest versioning and a crash-safe publication protocol. The concrete storage transaction or prepare/commit mechanism remains implementation-defined.
+5. Before replay, validate manifest integrity and format support against checkpoint, segment, sequence, terminal-hash, and StateVersion evidence.
+6. Missing, stale, corrupt, contradictory, or unreconcilable manifest evidence invokes Decision 57. Recovery must not guess or replay uncertain history.
+7. A digest alone is not proof of authenticity; trusted status depends on server authority and protected persistence/publication.
+8. Roblox persistence, interruption behavior, and consistency with journal/checkpoint publication require prototype validation.
+
+CI-06 is closed at the architecture-contract level. No claim is made that Roblox provides the required atomic persistence behavior without implementation testing.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
