@@ -541,6 +541,28 @@ CI-16 is closed at the architecture-contract level. No runtime Admission Control
 
 ---
 
+
+### CI-17 — Recovery Queue State Must Survive Interruption Without Becoming Authoritative
+
+**Status: ADDRESSED by LOCKED Decision 72 — Durable Recovery Queue State.**  
+**Related decisions:** 35, 60–65, 69–71
+
+Recovery work may be QUEUED or DEFERRED when a server stops. Losing all scheduling metadata can strand valid work, while blindly replaying persisted entries can create duplicate execution, stale reservations, or unsafe dispatch.
+
+**Recorded resolution in Decision 72:**
+1. QueueEntryId and stable enqueue sequence bind each record to MatchId and RecoveryId. Durable QUEUED/DEFERRED acknowledgement requires successful persistence or an approved durable publication boundary.
+2. Queue records contain bounded scheduling metadata only. They do not duplicate authoritative gameplay or Recovery state.
+3. Restart reconstruction begins in a non-executable reconciliation state. Schema, integrity, identity, scope, transitions, retention, and current eligibility are checked before an entry can be considered.
+4. Restored entries must pass current Admission Control, scheduling/fairness, resource checks, and dispatch-time validation. Old capacity reservations and lock ownership are not restored from queue data.
+5. Duplicate and ambiguous persistence/dispatch outcomes are reconciled through stable identity and authoritative Operation Journal/Recovery evidence, never queue status alone.
+6. Corrupt, stale, unsupported, duplicate, or cross-match-inconsistent entries are quarantined/rejected, not silently repaired into executable work.
+7. Pending retention and terminal tombstones are bounded but must prevent duplicate resurrection within the defined retry horizon. Authoritative gameplay and Recovery evidence is not cleaned up as queue data.
+8. Queue lifecycle and reconciliation integrate with Decision 65's observational Audit Trail. Interruption, duplicate delivery, concurrent reconstruction, changed capacity, and lock reacquisition require Roblox Studio prototype tests.
+
+CI-17 is closed at the architecture-contract level. No durable queue implementation or platform-level persistence guarantee is claimed.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
