@@ -9,9 +9,9 @@
 The architecture review has covered the game's orchestration model, domain-system boundaries, server authority, state mutation pipeline, post-commit effects, victory handling, recovery, checkpoints, and Roblox Luau feasibility.
 
 **Current recorded outcome:**
-- **51 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
-- **Seven consolidation findings (RF-01–RF-07) have been addressed** by Decisions 45–51.
-- **Four findings (RF-08–RF-11) remain unresolved** and still require explicit design decisions.
+- **52 architecture decisions are LOCKED** in the [Architecture Review Decision Log](ARCHITECTURE_REVIEW_DECISIONS.md).
+- **Eight consolidation findings (RF-01–RF-08) have been addressed** by Decisions 45–52.
+- **Three findings (RF-09–RF-11) remain unresolved** and still require explicit design decisions.
 - The architecture direction is assessed as sound, but implementation readiness remains **NOT YET**.
 - The repository is a documentation repository. These records do not prove that the systems have been implemented or tested in Roblox Studio.
 
@@ -53,7 +53,7 @@ The review developed a controlled mutation pipeline:
 - Fail-closed behavior when recalculation fails.
 - A short, non-yielding root-swap boundary.
 
-Decisions 45–51 further consolidated the candidate-state pipeline and its interaction with victory, effects, and recovery.
+Decisions 45–52 further consolidated the candidate-state pipeline and its interaction with victory, effects, and recovery.
 
 Related canonical records: Decisions 19–28 and 45; [Consolidation Review](ARCHITECTURE_CONSOLIDATION_REVIEW.md).
 
@@ -98,9 +98,9 @@ The complete wording and status of every decision live only in the [Architecture
 | 19–28 | Serialized mutations, FIFO ordering, staged plans, Copy-on-Write, versioning, controlled reads, recalculation, and root swap |
 | 29–32 | Post-commit effects, effect registry, dependency ordering, victory retry, and progression gate |
 | 33–43 | Recovery executor and lock, recovery completion, verified resume, checkpoint creation, validation, retention, memory, and failure handling |
-| 44–51 | Consolidation review and corrective decisions for candidate-state commit, global victory gating, atomic effect publication, effect idempotency, recovery completion ordering, committed-mutation preservation, and separated version domains |
+| 44–52 | Consolidation review and corrective decisions for candidate-state commit, global victory gating, atomic effect publication, effect idempotency, recovery completion ordering, committed-mutation preservation, separated version domains, and separated victory evaluation from Game-End mutation |
 
-Decisions 45–51 specifically close the seven findings described below. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
+Decisions 45–52 specifically close the eight findings described below. They refine the architecture mechanisms and do not silently rewrite source gameplay rules.
 
 ## 4. Consolidation findings status
 
@@ -115,17 +115,17 @@ Decisions 45–51 specifically close the seven findings described below. They re
 | RF-05 | Recovery completion and resume ordering conflicted | Decision 49: Recovery Completion Gate Before Gameplay Resume |
 | RF-06 | Older checkpoint fallback could rewind committed gameplay | Decision 50: Checkpoint Recovery Must Preserve Committed Mutations |
 | RF-07 | Gameplay StateVersion scope was ambiguous across effect, recovery, and checkpoint metadata | Decision 51: Separated Version Domains |
+| RF-08 | Victory evaluation and the authoritative Game-End mutation had overlapping responsibilities | Decision 52: Separate Victory Evaluation From Game-End Mutation |
 
 ### Still unresolved
 
 | Finding | Open question | Why it matters |
 |---|---|---|
-| RF-08 | How are read-only victory evaluation and the validated Game-End state mutation separated? | Keeps all authoritative state changes inside State Manager and preserves the terminal gate |
 | RF-09 | What deterministic serialization and integrity-hash contract is feasible, and what threat is it intended to detect? | Prevents reliance on an underspecified hash or treating it as a security boundary |
 | RF-10 | What is the single ownership contract for Checkpoint Manager responsibilities? | Avoids overlapping eligibility, validation, retention, memory, in-use protection, retry, and recovery rules |
 | RF-11 | Which Roblox server-authority model is intended: conventional server-authoritative scripts/remotes or engine Server Authority mode? | Prevents mixing incompatible assumptions about simulation, prediction, rollback, and networking |
 
-Decision 51 closes RF-07. RF-08 through RF-11 remain open; they must not be represented as LOCKED decisions.
+Decisions 51 and 52 close RF-07 and RF-08 respectively. RF-09 through RF-11 remain open; they must not be represented as LOCKED decisions.
 
 ## 5. Source-of-truth boundaries
 
@@ -141,7 +141,7 @@ A review finding is not an approved rule. A proposal is not LOCKED until explici
 
 ## 6. Recommended next work
 
-1. Resolve RF-08 through RF-11 one at a time, recording each approved decision in the Decision Log before proceeding to the next.
+1. Resolve RF-09 through RF-11 one at a time, recording each approved decision in the Decision Log before proceeding to the next.
 2. Update the relevant architecture contracts and this status summary only after the corresponding decision is approved.
 3. Prototype the shared state pipeline and failure boundaries in Roblox Studio.
 4. Execute the minimum acceptance test matrix in the Consolidation Review, including concurrency, retry, victory gating, recovery, checkpoint, disconnect, and exploit cases.
