@@ -222,6 +222,26 @@ CI-01 is closed at the architecture-contract level. This does not guarantee reco
 
 ---
 
+
+### CI-02 — Operation Journal Integrity Failure Needs an Explicit Recovery Boundary
+
+**Status: ADDRESSED by LOCKED Decision 57 — Fail-Closed Recovery on Operation Journal Integrity Failure.**  
+**Related decisions:** 33–38, 48–50, 56, 57
+
+Decision 50 requires committed-operation records to reconstruct mutations after a checkpoint and requires RECOVERY_REQUIRED when those records are incomplete, inconsistent, or cannot be integrity-verified. It did not explicitly define whether recovery may replay uncertain records, infer an ambiguous operation's outcome, or replace it with a new operation identity.
+
+**Recorded resolution in Decision 57:**
+1. Do not replay records whose integrity, identity, ordering, or committed status cannot be established.
+2. Do not infer whether an ambiguous operation committed or did not commit, and do not recreate it under a new OperationId.
+3. Retain the Recovery Lock and RECOVERY_REQUIRED while required history remains unverifiable.
+4. Preserve available identifiers, version/context information, and failure reasons for diagnosis without treating diagnostics as proof of a gameplay outcome.
+5. Continue recovery only when required committed-operation history is verifiable and the Recovery Completion Gate passes.
+6. Do not discard committed mutations, select an unsafe older checkpoint, or fabricate authoritative state.
+
+CI-02 is closed at the architecture-contract level. Decision 57 does not define automatic journal repair or guarantee that every integrity failure can be recovered.
+
+---
+
 ## 4. ROBLOX LUAU FEASIBILITY
 
 ### Feasible With Explicit Engineering Constraints
