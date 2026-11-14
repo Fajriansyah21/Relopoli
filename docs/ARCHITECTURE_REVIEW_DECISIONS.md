@@ -642,3 +642,18 @@ The Effect Registry is part of the authoritative Match State and must be publish
 5. If candidate preparation or validation fails, none of the candidate's gameplay state, metadata, or Effect Registry records may be published.
 
 This decision defines atomic publication, not exactly-once execution or retry semantics. Effect identity, idempotency, and recovery remain governed by their separate decisions and review findings.
+
+
+## Decision 48 — Effect Idempotency and Retry Safety
+**Status: LOCKED**
+
+Post-commit effects use stable identities and explicit completion semantics to prevent duplicate gameplay state transitions during retries and recovery.
+
+1. Every Effect Record has a unique, stable `EffectId`. All retries of the same logical effect reuse that identity.
+2. Every effect handler must inspect the effect's committed status and prior result before attempting execution.
+3. A gameplay-mutating effect and its `COMPLETED` status must be applied through one atomic State Manager commit. The gameplay transition must not become committed separately from the completion record that prevents its duplicate application.
+4. Retry processing may execute only effects that are not already completed. An effect marked `COMPLETED` must never be applied again.
+5. `PROCESSING` does not mean completed. Recovery must inspect the authoritative committed state and effect identity before deciding whether the effect needs execution or can be marked completed.
+6. For external or presentation effects, exactly-once execution is not guaranteed when the destination system does not support deduplication. Where supported, pass the stable `EffectId` as the destination's idempotency key.
+
+The target guarantee is effectively-once gameplay state transition, not a universal exactly-once guarantee for every Roblox-side or external effect.
