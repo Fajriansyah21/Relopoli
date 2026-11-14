@@ -706,3 +706,20 @@ Authoritative Match State uses separate version domains so gameplay concurrency 
 9. Version separation does not weaken Decision 47: gameplay mutation data and all required Effect Registry records must still be published atomically in the same candidate-state root swap. The Effect Registry version advances as part of that publication.
 
 This decision defines the scope of each version domain. It does not change gameplay rules or remove the requirement to validate the relevant versions at each authoritative boundary.
+
+
+## Decision 52 — Separate Victory Evaluation From Game-End Mutation
+**Status: LOCKED**
+
+Victory determination and the authoritative Game-End state change are separate responsibilities.
+
+1. **Victory Evaluator is read-only.** It evaluates the authoritative gameplay snapshot for a specific `StateVersion`. It must not mutate Match State, set the winner, or directly stop gameplay.
+2. The evaluation result includes the `EvaluatedStateVersion` and the outcome of the applicable victory rules.
+3. **State Manager validates the result.** Before acting on it, State Manager confirms that `EvaluatedStateVersion` still matches the current gameplay `StateVersion`. A stale result is rejected and Victory Evaluation must be repeated against the latest authoritative snapshot.
+4. When the validated result indicates no victory, the corresponding Victory Check is marked successfully completed and the Global Victory Gate may be released, provided its triggering context is still current.
+5. When the validated result indicates victory, Game-End is submitted as a dedicated mutation through State Manager's canonical candidate-state commit pipeline. The mutation validates the winner and applicable state conditions before committing the terminal Game-End state.
+6. The Global Victory Gate remains locked throughout evaluation and any required Game-End mutation. Once Game End commits, the gate becomes terminal: no subsequent gameplay mutation or gameplay continuation may be admitted.
+7. Victory Evaluator, Effect Workers, and other post-commit workers must never directly mutate authoritative gameplay state. They may submit validated intents or results to State Manager under the established contracts.
+8. If evaluation, version validation, or Game-End mutation fails, the gate remains locked and the existing retry/recovery rules apply. The system must not release gameplay progression based on an unknown or uncommitted outcome.
+
+This decision makes Victory Evaluation a version-bound read operation and Game End a separately validated authoritative mutation. It refines Decision 46 without changing the victory rules or winner conditions defined by the gameplay sources.
