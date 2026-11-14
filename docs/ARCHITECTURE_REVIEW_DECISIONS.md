@@ -370,3 +370,16 @@ This ensures that a recalculation failure cannot publish a partially updated or 
 - A failure occurring after commit must not trigger automatic re-execution of the operation.
 
 This defines a clear boundary between pre-commit failure and post-commit failure. It does not assume Roblox provides a built-in transaction for Lua tables.
+
+
+## Decision 29 — Post-Commit Effect Separation
+**Status: LOCKED**
+
+- A successful root state swap marks the mutation operation as committed.
+- Post-commit effects execute after commit and outside the critical section.
+- Each post-commit effect has its own identity and execution status.
+- A failed effect may be retried under an explicit retry policy without re-running the committed mutation.
+- An effect that has already succeeded must not be executed again.
+- Gameplay-critical effects, including Victory Check, require a stronger recovery mechanism than presentation-only effects such as UI notifications or animations.
+
+This separates authoritative state mutation from subsequent work and prevents post-commit failures from duplicating committed gameplay operations.
