@@ -752,3 +752,19 @@ Checkpoint integrity validation requires a deterministic and explicitly versione
 8. **Feasibility gate:** Deterministic serialization, digest calculation, and verification must be prototyped and validated in Roblox Studio before this mechanism is relied upon in implementation. The concrete encoding rules and integration details may be specified during that prototype, provided they satisfy this contract.
 
 This decision defines the integrity contract without claiming that Roblox runtime feasibility or performance has already been implemented or tested.
+
+## Decision 55 — Single Checkpoint Manager Ownership
+**Status: LOCKED**
+
+A single Checkpoint Manager owns the checkpoint policy and lifecycle coordination. This centralizes checkpoint responsibilities without transferring authority over authoritative gameplay state or recovery execution.
+
+1. **Eligibility and creation:** The Checkpoint Manager determines whether the match is at an eligible stable boundary and coordinates checkpoint candidate creation.
+2. **Validation:** It coordinates checkpoint format, version, provenance, and integrity validation before a checkpoint is considered usable.
+3. **Retention and memory:** It owns checkpoint retention policy, memory-budget enforcement, and removal of checkpoints that are no longer protected or needed.
+4. **In-use protection:** It protects any checkpoint currently selected or held by an active Recovery process from retention cleanup or replacement.
+5. **Failure handling:** It records checkpoint creation and validation failures, exposes their status, and coordinates bounded retry scheduling without blocking ordinary gameplay solely because checkpoint creation failed, consistent with Decision 43.
+6. **Recovery capability status:** It exposes whether verified checkpoints and required recovery material are available. This status is informational input to the Recovery process, not permission to execute or complete Recovery.
+7. **Authority boundary:** The Checkpoint Manager must not directly mutate authoritative Match State, commit gameplay mutations, select gameplay outcomes, or independently execute Recovery. State Manager remains the authority for state mutation, and the established Recovery Executor remains responsible for Recovery execution and completion gates.
+8. **Preservation rules:** Checkpoint selection and cleanup must preserve the committed-mutation recovery requirements in Decision 50. A checkpoint must not be deleted or selected in a way that could cause committed mutations to be lost.
+
+This decision centralizes checkpoint policy and lifecycle ownership while preserving the existing State Manager and Recovery Executor authority boundaries. Numeric retention limits, memory budgets, and retry thresholds remain subject to profiling and validation in Roblox Studio.
