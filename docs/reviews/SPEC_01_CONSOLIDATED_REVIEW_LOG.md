@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #10  
+**Approved findings:** #1 through #11  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -201,6 +201,25 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** TC-23 poin 8 diperjelas agar urutan handoff selaras dengan TC-13A, TC-51, dan TC-56. Tidak ada decision ID baru yang ditambahkan.
 
 **Batas teknis:** Detail generator ID, penyimpanan, dan scheduling tetap TBD.
+### Finding #11 — Prepared Turn Identity Invalidated When Candidate Becomes Ineligible
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-23, TC-51, TC-55, TC-56
+
+**Keputusan yang disetujui:**
+
+1. Jika kandidat menjadi tidak eligible saat otorisasi Turn Start, kandidat tidak dicatat sebagai pemilik Turn yang sedang dipersiapkan dan tidak menjalani Turn Initialization.
+2. TurnID dan Parent Turn Chain identity yang telah dibuat untuk kandidat tersebut tidak berlaku untuk memulai Turn.
+3. Identitas tersebut tidak boleh diaktifkan, menjalankan Resolution, atau digunakan kembali.
+4. Kondisi ini merupakan hasil validasi eligibility, bukan kegagalan teknis, sehingga tidak otomatis membuat Chain berstatus FAILED.
+5. Turn Controller melanjutkan pemeriksaan kandidat berikutnya sesuai TC-55 dan membuat identitas baru untuk kandidat berikutnya.
+6. Detail representasi, pencatatan, dan penyimpanan identitas yang tidak digunakan tetap TBD.
+
+**Perubahan dokumentasi:** TC-23 poin 8 dan TC-51 telah diperjelas untuk menetapkan lifecycle identitas Turn yang dibuat bagi kandidat yang kemudian tidak eligible. Tidak ada decision ID baru yang ditambahkan.
+
+**Batas teknis:** Representasi dan persistence identitas yang tidak digunakan tetap TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -215,5 +234,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #8 | Player Eligibility vs Disconnect and Turn Handoff | Approved with documentation prerequisite | TC-32, TC-55, and TC-56 updated; Prototype Scope v1.0 revision remains pending |
 | #9 | Turn Completion Commit Boundary vs Late/Concurrent Result | Approved | TC-23 and TC-30 updated; technical sequencing details remain TBD |
 | #10 | Turn Identity Creation vs Turn Start Authorization | Approved | TC-23 point 8 aligned with TC-13A, TC-51, and TC-56 |
+| #11 | Prepared Turn Identity Invalidated When Candidate Becomes Ineligible | Approved | TC-23 point 8 and TC-51 clarified; identity cannot be reused |
 
-**Next step:** Continue consolidated review with Finding #11, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #12, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
