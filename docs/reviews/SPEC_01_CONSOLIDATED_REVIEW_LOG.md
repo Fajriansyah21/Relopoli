@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #14  
+**Approved findings:** #1 through #15  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -279,6 +279,23 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Representasi status proses Turn Start yang gagal sebelum Chain dimulai tetap TBD; tidak ditambahkan status lifecycle Chain baru.
 
+### Finding #15 — Concurrent Event Arbitration vs Pre-Lifecycle Failure
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-04A, TC-30, TC-56, TC-57
+
+**Keputusan yang disetujui:**
+
+1. Jika urutan atau validitas state tidak dapat dipastikan setelah Parent Turn Chain memasuki lifecycle, Chain menjadi FAILED.
+2. Jika ketidakmampuan verifikasi terjadi sebelum Chain dimulai, proses Turn Start dinyatakan gagal tanpa menetapkan status lifecycle Chain.
+3. Batas pemberian status FAILED pada TC-30 harus konsisten dengan TC-04A, TC-56, dan TC-57.
+4. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-30 poin 10 diperjelas untuk membedakan kegagalan verifikasi setelah Parent Turn Chain memasuki lifecycle dari kegagalan proses Turn Start sebelum Chain dimulai.
+
+**Batas teknis:** Detail sequencing, queue, dan arbitration teknis tetap TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -297,5 +314,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #12 | Prepared Identity vs Parent Turn Chain Lifecycle | Approved | TC-04A and TC-51 distinguish identity creation from Chain lifecycle start |
 | #13 | Parent Turn Chain Lifecycle During Turn Initialization | Approved | TC-04A, TC-06B, and TC-13A define lifecycle start after successful authorization and before Initialization |
 | #14 | Turn Start Authorization Failure Before Parent Turn Chain Lifecycle | Approved | TC-04A, TC-51, TC-56, and TC-57 distinguish pre-lifecycle process failure from Chain FAILED |
+| #15 | Concurrent Event Arbitration vs Pre-Lifecycle Failure | Approved | TC-30 point 10 aligned with the pre-lifecycle failure boundary in TC-04A, TC-56, and TC-57 |
 
-**Next step:** Continue consolidated review with Finding #15, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #16, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
