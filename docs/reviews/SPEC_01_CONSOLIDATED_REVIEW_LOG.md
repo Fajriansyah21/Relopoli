@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #28  
+**Approved findings:** #1 through #29  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -581,8 +581,32 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #26 | Game End vs Winner State Finalization | Approved | TC-21A and TC-31 define validated winner identity, Player State WINNER assignment for Last Player Standing, no winner assignment when zero active players remain, and finalization before UI handoff |
 | #27 | Global Victory Check Outside Parent Turn Chain | Approved | TC-21A applies the shared Global Victory Check to relevant State Changes inside and outside Parent Turn Chain and routes external GAME_END results through Turn Controller / TC-25 |
 | #28 | Global Victory Check Before the Next Relevant State Change | Approved | TC-02A and TC-21A require the shared Global Victory Check to finish before the next relevant State Change commits; GAME_END blocks subsequent State Changes |
+| #29 | Global Sequential State Change Across Gameplay Systems | Approved | TC-02A, TC-09A, and TC-30 establish one global server processing order for all gameplay State Changes, atomic completion, and Final Validation against the latest authoritative state; Global Victory Check remains scoped by TC-21A |
 
-**Next step:** Continue consolidated review with Finding #29, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #30, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+
+
+### Finding #29 — Global Sequential State Change Across Gameplay Systems
+
+**Status:** Approved
+
+**Kontrak terkait:** TC-02A, TC-09A, TC-21A, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Seluruh gameplay State Change, baik yang terjadi di dalam Parent Turn Chain maupun yang berasal dari sistem asynchronous di luar Chain, mengikuti satu urutan pemrosesan server secara global.
+2. State Change berikutnya hanya boleh mulai diproses setelah State Change sebelumnya menyelesaikan Atomic Operation secara utuh.
+3. Final Validation setiap State Change harus menggunakan state authoritative terbaru setelah seluruh State Change yang mendahuluinya dalam urutan global selesai diproses; preconditions yang dapat berubah divalidasi kembali sebelum commit.
+4. Sequential Resolution Execution di dalam Parent Turn Chain merupakan bagian dari urutan pemrosesan State Change global dan tidak membentuk jalur sequencing terpisah.
+5. Global Victory Check tetap diwajibkan hanya untuk State Change yang dapat memengaruhi Win Condition, sesuai TC-21A. Pemeriksaan tersebut harus selesai sebelum State Change relevan berikutnya boleh melakukan commit.
+6. Jika Global Victory Check menghasilkan GAME_END, State Change berikutnya ditolak dan konsekuensi Game End dijalankan melalui Turn Controller sesuai TC-25.
+7. Aturan sequencing global tidak memberikan authority Turn Controller kepada sistem gameplay atau asynchronous.
+8. Mekanisme teknis sequencing, queue, dan arbitration tetap TBD.
+9. Tidak ada TC atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-02A menetapkan satu urutan pemrosesan global untuk seluruh gameplay State Change, kewajiban Atomic Operation selesai sebelum State Change berikutnya dimulai, dan Final Validation terhadap state authoritative terbaru. TC-09A menyelaraskan sequential execution Parent Turn Chain dengan urutan global tersebut. TC-30 memperjelas cakupan sequencing global serta mempertahankan detail mekanisme teknis sebagai TBD. TC-21A tetap menjadi acuan cakupan dan timing Global Victory Check untuk State Change yang dapat memengaruhi Win Condition.
+
+**Batas teknis:** Implementasi queue, arbitration, fairness, dan mekanisme sequencing lintas sistem belum ditetapkan. Approval ini merupakan persetujuan desain/dokumentasi, bukan persetujuan implementasi atau pengujian.
 
 ### Finding #28 — Global Victory Check Before the Next Relevant State Change
 
