@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #36  
+**Approved findings:** #1 through #37  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
