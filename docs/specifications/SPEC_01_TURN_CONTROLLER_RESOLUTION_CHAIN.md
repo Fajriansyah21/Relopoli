@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #32 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #34 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -367,6 +367,14 @@ Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang
 7. Setelah Parent Turn Chain ditetapkan COMPLETED, hasil atau respons terlambat maupun duplikat dari Chain tersebut ditolak tanpa side effect; Chain lama tidak dibuka kembali.
 8. Handoff normal hanya dilakukan setelah Parent Turn Chain sebelumnya benar-benar COMPLETED. Turn Controller kemudian menentukan kandidat pemain berikutnya sesuai urutan match dan memvalidasi kelayakannya sesuai TC-55. Setelah kandidat dipilih, Turn Controller membuat TurnID dan ParentTurnChainID untuk Turn yang sedang dipersiapkan sesuai TC-13A dan TC-51. Otorisasi Turn Start sesuai TC-56 dilakukan terhadap identitas Turn yang sedang dipersiapkan sebelum pemain dicatat sebagai pemilik Turn dan sebelum Turn Initialization dijalankan. Jika kandidat tidak lagi eligible saat validasi ulang, kandidat tidak dicatat sebagai pemilik Turn dan tidak menjalani Initialization; identitas Turn dan Parent Turn Chain yang telah dibuat untuk kandidat tersebut tidak berlaku untuk memulai Turn, tidak boleh diaktifkan atau menjalankan Resolution, dan tidak boleh digunakan kembali. Kondisi ini bukan kegagalan teknis dan tidak otomatis membuat Chain berstatus FAILED. Turn Controller memeriksa kandidat berikutnya sesuai TC-55 dan membuat identitas baru untuk kandidat tersebut. Pembuatan identitas tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
 9. Sistem lain tidak boleh memulai handoff atau Turn berikutnya secara langsung.
+10. Jika Resolution menghasilkan efek Forced Break yang menetapkan Frozen Turn, Turn Controller mencatat kewajiban melewati satu giliran terjadwal berikutnya. Kewajiban ini baru berlaku setelah Turn saat ini benar-benar selesai, termasuk penyelesaian Deferred Turn End dan Blocking UI yang masih wajib ditutup.
+11. Frozen Turn adalah mekanisme handoff/skip yang dikendalikan langsung oleh Turn Controller, bukan Resolution normal dan bukan Turn baru yang dijalankan sebagian. Frozen Turn tidak membuat TurnID atau ParentTurnChainID, tidak memulai Parent Turn Chain, dan tidak menjalankan Turn Initialization atau Turn Activation.
+12. Setelah Turn sebelumnya COMPLETED, Turn Controller memeriksa Game State terlebih dahulu. Jika Game State ENDED, Game End mengalahkan Frozen Turn dan tidak ada pemain yang dilewati atau Turn baru yang dimulai.
+13. Jika Game State masih RUNNING, Turn Controller menentukan pemain berikutnya yang eligible menurut urutan roster dan TC-55. Turn terjadwal pemain eligible tersebut dilewati sepenuhnya sebelum Turn Start normal. Jika kandidat tidak lagi eligible saat validasi, kandidat dilewati sesuai TC-55 dan Frozen Turn diterapkan kepada kandidat eligible berikutnya; pemain yang tidak eligible tidak mengonsumsi Frozen Turn.
+14. Selama giliran terjadwal yang dilewati, tidak ada Turn Initialization, Turn Activation, News Phase, Roll, Dice Resolution, Movement, Fast Travel, aktivitas giliran, atau pemrosesan status berbasis giliran. Tidak ada Parent Turn Chain atau Resolution yang dijalankan untuk giliran yang dilewati.
+15. Pemain yang dilewati tetap berstatus ACTIVE, mempertahankan seluruh aset dan Balance, serta tetap berada pada posisi yang sama dalam urutan roster. Frozen Turn tidak mengeliminasi pemain dan tidak mengubah kepemilikan aset.
+16. Satu Frozen Turn dikonsumsi tepat satu kali ketika satu pemain eligible benar-benar dilewati. Frozen Turn tidak ditumpuk, tidak dipindahkan ke pemain berikutnya setelah berhasil dikonsumsi, dan tidak menyebabkan giliran pemain yang sama dilewati lebih dari sekali.
+17. Setelah Frozen Turn dikonsumsi, Turn Controller melanjutkan handoff normal dan memulai Turn pemain eligible berikutnya melalui TC-55 dan TC-56. Seluruh keputusan pemilihan dan perpindahan tetap menjadi authority Turn Controller.
 
 ### TC-24 — Player Elimination dan Turn Handoff
 
