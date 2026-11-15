@@ -769,7 +769,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 3. Turn sebelumnya harus COMPLETED atau dihentikan secara sah melalui jalur terminal.
 4. Pemain penerima Turn harus lolos validasi TC-55.
 5. MatchID, TurnID baru, dan ParentTurnChainID baru harus memiliki hubungan identitas valid.
-6. Seluruh pemeriksaan diselesaikan sebelum pemain ditetapkan sebagai pemilik giliran aktif.
+6. Seluruh pemeriksaan diselesaikan sebelum pemain dicatat sebagai pemilik Turn yang sedang dipersiapkan. Penetapan ini tidak berarti Turn telah aktif dan tidak memberikan hak gameplay.
 7. Jika pemeriksaan gagal, Turn baru tidak dimulai.
 8. Kegagalan otorisasi teknis membuat proses FAILED, bukan melewati validasi.
 9. Tidak ada dua Turn aktif dalam satu Match.
