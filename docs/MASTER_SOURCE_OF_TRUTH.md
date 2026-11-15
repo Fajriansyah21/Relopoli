@@ -1240,14 +1240,33 @@ setelah Game End.
 
 ## Sequential State Change
 
-Server memproses gameplay State Changes sequentially.
+Seluruh gameplay State Changes diproses secara sequential dalam satu urutan
+server global, baik State Change berasal dari Parent Turn Chain maupun dari
+operasi asynchronous di luar Chain.
+
+State Change berikutnya hanya mulai diproses setelah Atomic Operation dari
+State Change sebelumnya selesai secara utuh. Final Validation menggunakan
+state authoritative terbaru sesuai urutan pemrosesan tersebut.
+
+Global Victory Check **tidak wajib untuk setiap State Change**. Pemeriksaan
+hanya dijalankan setelah Atomic Operation yang dapat memengaruhi Win
+Condition selesai. Jika pemeriksaan diperlukan, Global Victory Check harus
+selesai sebelum State Change relevan berikutnya melakukan commit.
+
+Jika hasilnya CONTINUE, pemrosesan dapat berlanjut setelah validasi terhadap
+state authoritative terbaru. Jika hasilnya GAME_END, State Change berikutnya
+ditolak dan konsekuensi Game End dijalankan melalui Turn Controller.
 
 ``` text
 State Change A
 ↓
-Global Victory Check
+Atomic Operation selesai
 ↓
-State Change B
+Dapat memengaruhi Win Condition?
+├── Tidak → lanjut sesuai urutan server global
+└── Ya → Global Victory Check
+          ├── CONTINUE → validasi state terbaru, lanjut
+          └── GAME_END → tolak State Change berikutnya
 ```
 
 Tidak boleh:
@@ -1260,7 +1279,9 @@ B ─────┘
 
 ## Atomic Operation
 
-Atomic Operation tidak boleh terputus di tengah oleh Victory Check.
+Atomic Operation tidak boleh terputus di tengah oleh Global Victory Check.
+Seluruh perubahan yang menjadi bagian dari satu operasi harus selesai secara
+utuh terlebih dahulu.
 
 Contoh:
 
@@ -1269,7 +1290,8 @@ Atomic Trade
 ↓
 Complete Transfer
 ↓
-Victory Check
+Jika dapat memengaruhi Win Condition:
+Global Victory Check
 ```
 
 Bukan:
@@ -1277,7 +1299,7 @@ Bukan:
 ``` text
 Transfer A
 ↓
-Victory Check
+Global Victory Check
 ↓
 Transfer B
 ```
@@ -1331,10 +1353,18 @@ Atomic State Change
 ↓
 Update Authoritative State
 ↓
-Global Victory Check
+Can this State Change affect Win Condition?
+├── Yes → Global Victory Check
+│         ↓
+│         CONTINUE / GAME_END
+└── No  → Skip Global Victory Check
 ↓
 Resolution Result
 ```
+
+Global Victory Check hanya dijalankan untuk State Change yang dapat
+memengaruhi Win Condition. Semua State Change tetap mengikuti urutan
+pemrosesan server global dan aturan Atomic Operation pada bagian 18.
 
 ## Duplicate Request
 
