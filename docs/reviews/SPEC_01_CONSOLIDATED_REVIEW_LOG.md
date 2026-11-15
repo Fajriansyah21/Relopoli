@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #30  
+**Approved findings:** #1 through #31  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -583,8 +583,9 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #28 | Global Victory Check Before the Next Relevant State Change | Approved | TC-02A and TC-21A require the shared Global Victory Check to finish before the next relevant State Change commits; GAME_END blocks subsequent State Changes |
 | #29 | Global Sequential State Change Across Gameplay Systems | Approved | TC-02A, TC-09A, and TC-30 establish one global server processing order for all gameplay State Changes, atomic completion, and Final Validation against the latest authoritative state; Global Victory Check remains scoped by TC-21A |
 | #30 | Pending Trade / Transaction During Party Disconnect | Approved | TC-26 clarifies cancellation of pending proposals on party disconnect, completion of started atomic operations, and no rollback of completed operations |
+| #31 | Global Victory Check Scope in Global State Sequencing | Approved | Master Source of Truth sections 18–19 and Progress 20 section 2 clarify that all gameplay State Changes remain globally sequential, while Global Victory Check is required only for State Changes that can affect Win Condition |
 
-**Next step:** Continue consolidated review with Finding #31, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #32, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
 
 
@@ -647,3 +648,24 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 7. Tidak ada TC atau decision ID baru yang ditambahkan.
 
 **Perubahan dokumentasi:** TC-02A dan TC-21A diperjelas untuk mewajibkan penyelesaian Global Victory Check sebelum commit State Change relevan berikutnya. Hasil CONTINUE mengizinkan proses berikutnya setelah validasi state terbaru; GAME_END menolak State Change berikutnya dan diteruskan melalui Turn Controller / TC-25.
+
+### Finding #31 — Global Victory Check Scope in Global State Sequencing
+
+**Status:** Approved
+
+**Dokumen terkait:** Master Source of Truth sections 18–19; Progress 20 section 2.2–2.3
+
+**Keputusan yang disetujui:**
+
+1. Seluruh gameplay State Change, baik di dalam Parent Turn Chain maupun dari sistem asynchronous di luar Chain, tetap mengikuti satu urutan pemrosesan server secara global.
+2. State Change berikutnya hanya mulai diproses setelah Atomic Operation sebelumnya selesai secara utuh.
+3. Final Validation menggunakan state authoritative terbaru sesuai urutan pemrosesan server.
+4. Global Victory Check tidak diwajibkan untuk setiap State Change. Pemeriksaan hanya wajib setelah Atomic Operation yang dapat memengaruhi Win Condition selesai.
+5. Jika Global Victory Check diperlukan, pemeriksaan harus selesai sebelum State Change relevan berikutnya melakukan commit.
+6. Jika hasilnya CONTINUE, pemrosesan dapat berlanjut setelah validasi terhadap state authoritative terbaru. Jika hasilnya GAME_END, State Change berikutnya ditolak dan konsekuensi Game End dijalankan melalui Turn Controller.
+7. State Change yang tidak dapat memengaruhi Win Condition tetap mengikuti urutan global, tetapi tidak memerlukan Global Victory Check tersendiri.
+8. Tidak ada TC atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** Master Source of Truth bagian 18 diperjelas untuk membedakan global sequential processing dari cakupan Global Victory Check. Bagian 19, Standard Action Pipeline, diperbarui agar Global Victory Check menjadi langkah kondisional berdasarkan dampak State Change terhadap Win Condition. Progress 20 bagian 2.2 dan 2.3 diselaraskan dengan batasan yang sama.
+
+**Batas teknis:** Penentuan teknis apakah suatu State Change dapat memengaruhi Win Condition harus mengikuti kontrak domain dan implementasi authoritative. Mekanisme sequencing global tetap mengikuti batas TBD yang telah ditetapkan. Approval ini merupakan persetujuan desain/dokumentasi, bukan persetujuan implementasi atau pengujian.
