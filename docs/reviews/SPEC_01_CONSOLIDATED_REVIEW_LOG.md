@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #21  
+**Approved findings:** #1 through #22  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -419,6 +419,25 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail deteksi disconnect, penghentian Resolution, penyelesaian Atomic Operation sampai batas aman, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
 
+### Finding #22 — First Lap Reward vs Normal Start Reward
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-18A
+
+**Keputusan yang disetujui:**
+
+1. First Lap hanya diberikan satu kali untuk setiap pemain.
+2. Jika pemain menyelesaikan First Lap melalui Movement yang melewati atau mendarat di Start, reward yang diberikan adalah 100.000 Rels total.
+3. Reward First Lap menggantikan reward Pass Start 20.000 Rels atau Landing Start 30.000 Rels pada Movement yang sama.
+4. Reward First Lap tidak ditambahkan di atas reward normal Start.
+5. Setelah First Lap selesai, reward Pass Start dan Landing Start kembali mengikuti aturan normal.
+6. Tidak ada perubahan nominal reward atau penambahan decision ID.
+
+**Perubahan dokumentasi:** TC-18A poin 4 diperjelas bahwa First Lap sebesar 100K menggantikan reward Pass Start atau Landing Start pada Movement yang sama dan tidak ditumpuk. TC-18A poin 5 menegaskan bahwa reward normal Start kembali berlaku setelah First Lap selesai. Perubahan ini menyelaraskan Specification 01 dengan Prototype Scope v1.0 bagian 2.6.
+
+**Batas teknis:** Mekanisme pencatatan First Lap dan pemrosesan reward tetap mengikuti kontrak Start System serta detail implementasi yang belum ditetapkan.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -444,5 +463,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #19 | Active Player Disconnect After Turn Activation but Before News Phase | Approved | TC-28, TC-24, and TC-60 define ABORTED handling; News Phase and Roll do not start |
 | #20 | Active Player Disconnect During Movement | Approved | TC-17A, TC-18A, TC-24, and TC-28 define safe Movement stop, authoritative safe tile, and ABORTED handling |
 | #21 | Active Player Disconnect During Resolution | Approved | TC-24, TC-28, and TC-30 define safe Atomic Operation boundary, ABORTED handling, and distinction from independent technical failure |
+| #22 | First Lap Reward vs Normal Start Reward | Approved | TC-18A clarifies that the 100K First Lap reward replaces, rather than stacks with, the normal Start reward |
 
-**Next step:** Continue consolidated review with Finding #22, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #23, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
