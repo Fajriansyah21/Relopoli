@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #16  
+**Approved findings:** #1 through #17  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -313,6 +313,23 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail commit, penyimpanan, dan atomic publication tetap TBD.
 
+### Finding #17 — News Phase Transition State Unverifiable
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-04A, TC-11A, TC-59, TC-60
+
+**Keputusan yang disetujui:**
+
+1. Jika transisi News Phase gagal secara teknis atau status keberhasilannya tidak dapat diverifikasi setelah Parent Turn Chain dimulai, Parent Turn Chain ditetapkan FAILED sesuai TC-04A.
+2. Turn Controller tidak mengulang transisi berdasarkan asumsi.
+3. Turn Controller tidak menerima aksi gameplay dan tidak melanjutkan ke Roll.
+4. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-60 poin 8 diperjelas untuk mencakup kegagalan teknis maupun status transisi News Phase yang tidak dapat diverifikasi setelah Parent Turn Chain dimulai.
+
+**Batas teknis:** Detail commit dan mekanisme verifikasi transisi tetap TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -333,5 +350,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #14 | Turn Start Authorization Failure Before Parent Turn Chain Lifecycle | Approved | TC-04A, TC-51, TC-56, and TC-57 distinguish pre-lifecycle process failure from Chain FAILED |
 | #15 | Concurrent Event Arbitration vs Pre-Lifecycle Failure | Approved | TC-30 point 10 aligned with the pre-lifecycle failure boundary in TC-04A, TC-56, and TC-57 |
 | #16 | Turn Activation State Unverifiable vs Chain Failure | Approved | TC-59 point 10 aligned with TC-04A failure handling after Chain lifecycle start |
+| #17 | News Phase Transition State Unverifiable | Approved | TC-60 point 8 aligned with TC-04A failure handling; no assumed retry or gameplay continuation |
 
-**Next step:** Continue consolidated review with Finding #17, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #18, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
