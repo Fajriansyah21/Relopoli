@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #26  
+**Approved findings:** #1 through #27  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -529,6 +529,26 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Mekanisme penyimpanan dan publikasi hasil pemenang tetap mengikuti implementasi Global Victory Check dan detail teknis yang belum ditetapkan.
 
+
+### Finding #27 — Global Victory Check Outside Parent Turn Chain
+
+**Status:** Approved
+
+**Kontrak terkait:** TC-02A, TC-21A, TC-25, TC-26
+
+**Keputusan yang disetujui:**
+
+1. Global Victory Check berlaku untuk seluruh State Change yang dapat memengaruhi Win Condition, baik yang terjadi di dalam maupun di luar Parent Turn Chain.
+2. Sistem yang menyelesaikan State Change di luar Parent Turn Chain meminta Global Victory Check setelah Atomic Operation terkait selesai.
+3. Seluruh sistem menggunakan mekanisme Global Victory Check yang sama; sistem individual tidak membuat pemeriksaan Victory lokal sebagai pengganti pemeriksaan global.
+4. Jika pemeriksaan yang diminta dari luar Parent Turn Chain menghasilkan GAME_END, hasil diteruskan kepada Turn Controller untuk menjalankan konsekuensi Game End sesuai TC-25.
+5. Sistem peminta tidak memperoleh authority untuk menetapkan hasil Victory, menghentikan Match, atau mengambil alih Turn Controller secara independen.
+6. Tidak ada TC atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-21A diperluas untuk menetapkan cakupan Global Victory Check di dalam dan di luar Parent Turn Chain, kewajiban meminta pemeriksaan setelah Atomic Operation eksternal selesai, penggunaan satu mekanisme global, serta penerusan hasil GAME_END kepada Turn Controller.
+
+**Batas teknis:** Mekanisme pemanggilan, koordinasi, dan sequencing teknis untuk Global Victory Check dari operasi asynchronous tetap mengikuti detail implementasi dan bagian TBD; tidak ditambahkan authority baru kepada sistem pemanggil.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -559,5 +579,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #24 | Active Player Disconnect During Roll / Dice Resolution | Approved | TC-15A, TC-16A, TC-24, TC-28, and TC-30 define cancellation before valid Roll, safe Dice Resolution completion, Double Counter retention, and ABORTED handling |
 | #25 | Active Player Disconnect During News Phase / News Card | Approved | TC-14A, TC-24, TC-28, and TC-30 define News Card cleanup, retention of processed effects, cancellation of unstarted work, and active vs non-active disconnect handling |
 | #26 | Game End vs Winner State Finalization | Approved | TC-21A and TC-31 define validated winner identity, Player State WINNER assignment for Last Player Standing, no winner assignment when zero active players remain, and finalization before UI handoff |
+| #27 | Global Victory Check Outside Parent Turn Chain | Approved | TC-21A applies the shared Global Victory Check to relevant State Changes inside and outside Parent Turn Chain and routes external GAME_END results through Turn Controller / TC-25 |
 
-**Next step:** Continue consolidated review with Finding #27, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #28, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
