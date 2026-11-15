@@ -159,6 +159,20 @@ Extra Roll Check
 Turn End
 ```
 
+## Frozen Turn (Forced Break)
+
+Frozen Turn melewati satu giliran terjadwal pemain eligible berikutnya setelah Turn yang menghasilkan Forced Break benar-benar selesai, termasuk penyelesaian Deferred Turn End jika masih ada News Card atau Blocking UI yang wajib ditutup.
+
+Frozen Turn merupakan mekanisme handoff/skip yang dikendalikan Turn Controller, bukan Turn normal atau Resolution baru. Untuk giliran yang dilewati:
+- Tidak dibuat TurnID atau ParentTurnChainID.
+- Tidak dijalankan Turn Initialization atau Turn Activation.
+- Tidak ada News Phase, Roll, Dice Resolution, Movement, Fast Travel, atau aktivitas giliran.
+- Tidak diproses status berbasis giliran.
+
+Turn Controller memeriksa Game State sebelum melakukan skip. Jika Game State ENDED, Game End mengalahkan Frozen Turn. Jika Match masih RUNNING, pemain berikutnya dipilih dan divalidasi menurut urutan roster serta aturan eligibility. Kandidat yang tidak lagi eligible dilewati tanpa mengonsumsi Frozen Turn; skip berlaku pada kandidat eligible berikutnya.
+
+Pemain yang dilewati tetap ACTIVE, mempertahankan Balance dan seluruh aset, serta tetap berada pada posisi yang sama dalam urutan roster. Satu Frozen Turn dikonsumsi tepat satu kali setelah satu pemain eligible berhasil dilewati, tidak dibawa ke pemain berikutnya. Setelah itu, handoff normal berlanjut ke pemain eligible berikutnya.
+
 ## Resolution Result
 
 Resolution dapat menghasilkan:
