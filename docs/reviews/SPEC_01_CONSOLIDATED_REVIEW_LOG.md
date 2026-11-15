@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #5  
+**Approved findings:** #1 through #6  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -106,6 +106,24 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Perubahan dokumentasi:** TC-13A, TC-14A, dan TC-51 poin 2 telah diselaraskan dalam Specification 01. TC-59 tetap menjadi kontrak Turn Activation dan TC-60 tetap menjadi satu-satunya kontrak transisi menuju News Phase.
 
+
+
+### Finding #6 — Turn Start Authorization vs Turn Ownership
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-13A, TC-56, TC-59
+
+**Keputusan yang disetujui:**
+
+1. Pemeriksaan otorisasi Turn Start diselesaikan sebelum pemain dicatat sebagai pemilik Turn yang sedang dipersiapkan.
+2. Penetapan pemain sebagai pemilik Turn yang sedang dipersiapkan tidak berarti Turn telah aktif dan tidak memberikan hak gameplay.
+3. Turn Initialization tetap dilakukan sebelum Turn Activation.
+4. Turn baru aktif setelah seluruh Initialization wajib berhasil dan diverifikasi sesuai TC-59.
+5. News Phase hanya dimulai melalui transisi TC-60 setelah Turn berhasil diaktifkan.
+
+**Perubahan dokumentasi:** TC-56 poin 6 diselaraskan dengan TC-13A, TC-59, dan TC-60. Tidak ada decision ID baru yang ditambahkan.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -115,5 +133,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #3 | Match Termination vs Prototype Scope | Approved with prerequisite | Locked Prototype Scope revision and approval required |
 | #4 | Turn Activation vs News Phase Transition | Approved | TC-59 and TC-60 updated |
 | #5 | Turn Identity, Initialization, and Activation Alignment | Approved | TC-13A, TC-14A, and TC-51 updated |
+| #6 | Turn Start Authorization vs Turn Ownership | Approved | TC-56 point 6 updated |
 
-**Next step:** Continue consolidated review with Finding #6, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #7, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
