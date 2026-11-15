@@ -334,11 +334,13 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 
 1. TURN_END hanya diproses setelah Resolution aktif selesai.
 2. Tidak boleh ada Resolution lanjutan wajib, Blocking UI tertunda, atau Extra Roll yang masih memenuhi syarat.
-3. Turn Controller melakukan pemeriksaan akhir terhadap hasil terminal.
+3. Turn Controller melakukan pemeriksaan akhir terhadap hasil terminal berdasarkan state authoritative terbaru dan sequencing server sesuai TC-30.
 4. Jika tidak ada hasil terminal yang menghalangi, Turn diselesaikan tepat satu kali.
-5. Parent Turn Chain ditandai COMPLETED dan tidak boleh diaktifkan kembali.
-6. Turn Controller menentukan pemain berikutnya sesuai urutan match dan membuat TurnID serta ParentTurnChainID baru.
-7. Sistem lain tidak boleh memulai handoff atau Turn berikutnya secara langsung.
+5. Parent Turn Chain ditetapkan COMPLETED sebagai batas resmi penyelesaian Turn dan tidak boleh diaktifkan kembali.
+6. Jika hasil terminal dengan prioritas lebih tinggi berlaku sebelum Parent Turn Chain ditetapkan COMPLETED, hasil tersebut mengalahkan handoff normal sesuai Result Priority.
+7. Setelah Parent Turn Chain ditetapkan COMPLETED, hasil atau respons terlambat maupun duplikat dari Chain tersebut ditolak tanpa side effect; Chain lama tidak dibuka kembali.
+8. Handoff normal hanya dilakukan setelah Parent Turn Chain sebelumnya benar-benar COMPLETED. Turn Controller kemudian menentukan pemain berikutnya sesuai urutan match, memvalidasi kelayakannya sesuai TC-55, dan menjalankan otorisasi Turn Start sesuai TC-56 sebelum membuat atau memulai identitas Turn baru.
+9. Sistem lain tidak boleh memulai handoff atau Turn berikutnya secara langsung.
 
 ### TC-24 — Player Elimination dan Turn Handoff
 
@@ -420,10 +422,11 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 4. Priority tetap GAME_END > PLAYER_ELIMINATED > TURN_END > EXTRA_ROLL > CONTINUE.
 5. Atomic Operation yang sudah dimulai diselesaikan utuh sebelum event lain diproses pada batas aman berikutnya.
 6. Event terminal yang lebih tinggi prioritasnya menghentikan Resolution lanjutan setelah batas aman.
-7. Event yang tidak relevan akibat perubahan state, eliminasi, atau Game End ditolak.
+7. Event yang tidak relevan akibat perubahan state, eliminasi, Game End, atau Parent Turn Chain yang telah COMPLETED ditolak.
 8. Event duplikat tidak menghasilkan perubahan tambahan.
-9. Jika urutan atau validitas state tidak dapat dipastikan, Chain menjadi FAILED.
-10. Detail sequencing, queue, dan arbitration teknis tetap TBD.
+9. Penetapan Parent Turn Chain menjadi COMPLETED dan penerimaan event yang dapat memengaruhi Turn harus mengikuti sequencing server yang sama; setelah COMPLETED ditetapkan, tidak ada event dari Chain tersebut yang dapat membuka kembali Chain atau mengubah hasil penyelesaian Turn.
+10. Jika urutan atau validitas state tidak dapat dipastikan, Chain menjadi FAILED.
+11. Detail sequencing, queue, dan arbitration teknis tetap TBD.
 
 ### TC-31 — Match Termination When No Active Players Remain
 
