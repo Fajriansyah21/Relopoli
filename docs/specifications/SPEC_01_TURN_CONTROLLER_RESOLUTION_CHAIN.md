@@ -56,7 +56,9 @@ Batas ini hanya berlaku untuk Parent Turn Resolution Chain. Operasi asynchronous
 2. Trade dan Transaction tetap asynchronous dan tidak terikat pada giliran aktif.
 3. Trade dan Transaction tidak boleh mengambil alih, menangguhkan, atau memajukan Turn Controller.
 4. Perubahan state dari Trade atau Transaction diproses sesuai server sequencing, final validation terhadap state terbaru, atomic operation, dan Global Victory Check.
-5. Ketika GAME_END terjadi, seluruh proposal Trade dan Transaction yang masih pending dibatalkan. Operasi yang telah selesai tidak di-rollback.
+5. State Change yang dapat memengaruhi Win Condition diproses secara berurutan. Setelah Atomic Operation selesai, Global Victory Check untuk State Change tersebut harus diselesaikan sebelum State Change relevan berikutnya boleh melakukan commit.
+6. Jika Global Victory Check menghasilkan CONTINUE, State Change relevan berikutnya dapat diproses setelah validasi terhadap state authoritative terbaru. Jika menghasilkan GAME_END, State Change berikutnya ditolak dan konsekuensi Game End dijalankan melalui Turn Controller sesuai TC-25.
+7. Ketika GAME_END terjadi, seluruh proposal Trade dan Transaction yang masih pending dibatalkan. Operasi yang sudah selesai tidak di-rollback.
 
 ### TC-03A — Match Game State dan Startup Gate
 
@@ -331,8 +333,9 @@ Kategori handler:
 8. Global Victory Check tidak mengubah urutan pemain atau mengakhiri giliran secara independen.
 9. Jika hasilnya GAME_END, Global Victory Check menyertakan identitas pemenang atau himpunan pemenang yang telah divalidasi berdasarkan Win Condition yang terpenuhi. Turn Controller menggunakan hasil tersebut dan tidak menyimpulkan atau menebak identitas pemenang sendiri.
 10. Sistem yang menyelesaikan State Change di luar Parent Turn Chain wajib meminta Global Victory Check setelah Atomic Operation terkait selesai. Permintaan ini tidak memberikan sistem pemanggil authority untuk menetapkan hasil Victory atau mengakhiri Match.
-11. Semua sistem menggunakan mekanisme Global Victory Check yang sama dan tidak membuat pemeriksaan Victory terpisah atau lokal sebagai pengganti pemeriksaan global.
-12. Jika Global Victory Check yang diminta dari luar Parent Turn Chain menghasilkan GAME_END, hasil tersebut diteruskan kepada Turn Controller untuk menjalankan konsekuensi Game End sesuai TC-25. Sistem peminta tidak boleh menghentikan Match atau mengambil alih Turn Controller secara independen.
+11. Global Victory Check untuk suatu State Change yang relevan harus selesai sebelum State Change relevan berikutnya boleh melakukan commit. Jika hasilnya CONTINUE, pemrosesan dapat dilanjutkan setelah validasi terhadap state authoritative terbaru; jika hasilnya GAME_END, State Change berikutnya ditolak dan konsekuensi Game End diteruskan kepada Turn Controller sesuai TC-25.
+12. Semua sistem menggunakan mekanisme Global Victory Check yang sama dan tidak membuat pemeriksaan Victory terpisah atau lokal sebagai pengganti pemeriksaan global.
+13. Jika Global Victory Check yang diminta dari luar Parent Turn Chain menghasilkan GAME_END, hasil tersebut diteruskan kepada Turn Controller untuk menjalankan konsekuensi Game End sesuai TC-25. Sistem peminta tidak boleh menghentikan Match atau mengambil alih Turn Controller secara independen.
 
 Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang dapat memengaruhi Win Condition, baik di dalam maupun di luar Parent Turn Chain. Global Victory Check menggunakan state authoritative terbaru dan mengembalikan hasil Victory yang telah divalidasi. Turn Controller tetap menjalankan konsekuensi GAME_END terhadap Turn Flow dan Match sesuai kontrak yang berlaku.
 
