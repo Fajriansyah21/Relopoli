@@ -419,6 +419,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 13. Disconnect sebelum Turn Activation maupun setelah Turn Activation tetapi sebelum News Phase dimulai merupakan Player Leave/Elimination, bukan kegagalan teknis Initialization, Activation, atau transisi News Phase yang otomatis membuat Chain FAILED. Disconnect ketika Movement atau Resolution berlangsung juga merupakan Player Leave/Elimination dan tidak otomatis membuat Chain FAILED. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap ditangani sesuai aturan FAILED yang berlaku.
 14. Rejoin tidak memulihkan giliran atau status aktif secara otomatis.
 15. Disconnect bukan Character Reset dan tidak menggunakan Movement Recovery TC-27.
+16. Jika disconnect terjadi setelah Movement Complete selama Start Detection atau Start Reward, Start Detection atau Start Reward yang belum dimulai dibatalkan. Jika Atomic Operation Start Reward sudah dimulai, operasi diselesaikan sampai batas aman sesuai TC-30. Reward yang berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Landing Resolution yang belum dimulai dibatalkan.
 
 
 ### TC-29 — Stale Player Action dan Late Response Protection
