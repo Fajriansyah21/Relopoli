@@ -67,6 +67,16 @@ Fokus berikutnya:
 
 Tambahkan entri terbaru di bagian paling atas setelah header ini.
 
+### 2026-11-15 — Prototype Scope v1.0 reconciliation
+
+- Merevisi Prototype Scope v1.0 setelah persetujuan eksplisit untuk menyelesaikan dependency Finding #3 dan #8 pada Consolidated Review Specification 01.
+- Bagian 2.1 dan 2.10 kini mempertahankan urutan awal roster; pemain yang ELIMINATED atau tidak eligible dilewati tanpa membangun ulang urutan.
+- Bagian 2.10 dan Acceptance Criteria bagian 5 kini menetapkan Game State ENDED tanpa pemenang ketika tidak ada pemain aktif.
+- Rejoin tidak otomatis memulihkan status aktif atau hak gameplay.
+- Review Log diperbarui untuk menandai prasyarat dokumentasi Finding #3 dan #8 selesai.
+- Status Prototype Scope tetap LOCKED; Specification 01 tetap DRAFT. Tidak ada implementasi atau pengujian yang diklaim.
+
+
 ### 2026-11-14 — Core Gameplay Prototype Scope v1.0 locked
 
 - Scope Core Gameplay Prototype disetujui dan dikunci sebagai batas implementasi.
