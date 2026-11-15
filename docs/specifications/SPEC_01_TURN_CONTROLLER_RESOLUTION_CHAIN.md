@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #27 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #28 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -942,7 +942,7 @@ Jika implementasi membutuhkan keputusan di luar kontrak atau scope, berhenti dan
 - Testing: not performed.
 
 Next workflow gate:
-1. Complete consolidated review for consistency, missing cases, and prototype boundary, including the TC-31 Prototype Scope reconciliation.
+1. Continue consolidated review for consistency, missing cases, and prototype boundary. Findings #1 through #28 are approved; next checkpoint is Finding #29.
 2. Resolve or explicitly mark remaining TBD items.
 3. Obtain explicit approval of the complete Specification 01.
 4. Update affected canonical documents through the approved documentation workflow, including the TC-31 change from ABORTED to ENDED for zero active players.
