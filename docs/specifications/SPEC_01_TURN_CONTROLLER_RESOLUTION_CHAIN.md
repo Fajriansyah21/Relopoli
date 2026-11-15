@@ -73,7 +73,7 @@ Lifecycle Parent Turn Chain yang telah dimulai menggunakan status berikut:
 
 | Status | Makna |
 |---|---|
-| ACTIVE | Chain sedang menjalankan Resolution secara normal. |
+| ACTIVE | Chain telah dimulai setelah otorisasi Turn Start berhasil dan pemain dicatat sebagai pemilik Turn yang dipersiapkan; status ini mencakup proses Turn Initialization maupun pelaksanaan Resolution secara normal. ACTIVE tidak dengan sendirinya memberikan hak gameplay kepada pemain. |
 | SUSPENDED | Chain menunggu proses sah yang belum selesai, misalnya Blocking UI. |
 | FAILED | Kegagalan teknis membuat Chain tidak aman untuk dilanjutkan. |
 | ABORTED | Chain dihentikan oleh hasil terminal seperti PLAYER_ELIMINATED atau GAME_END. |
@@ -107,7 +107,7 @@ Jika TURN_END dihasilkan ketika Blocking UI yang wajib tetap terbuka masih tampi
 
 ### TC-06B — Parent Turn Chain Lifecycle per Turn
 
-1. Parent Turn Chain dibuat ketika Turn Controller memulai giliran seorang pemain.
+1. Parent Turn Chain mulai memasuki lifecycle ketika otorisasi Turn Start berhasil dan Turn Controller mencatat pemain terpilih sebagai pemilik Turn yang sedang dipersiapkan. Chain dimulai sebelum Turn Initialization; pembuatan identitas sebelum otorisasi belum berarti Chain telah dimulai.
 2. Chain mencakup seluruh rangkaian giliran, termasuk News Phase, Roll, Movement, Landing Resolution, Special Resolution, dan Extra Roll.
 3. Extra Roll tetap berada di Parent Turn Chain yang sama.
 4. Chain berakhir ketika Turn Controller menyelesaikan giliran, pemain tereliminasi, atau Game End terjadi.
@@ -197,7 +197,7 @@ TurnID mengidentifikasi giliran. ParentTurnChainID mengidentifikasi rangkaian Re
 ### TC-13A — Turn Initialization
 
 1. Setelah pemain ditentukan, Turn Controller membuat TurnID dan ParentTurnChainID untuk Turn yang sedang dipersiapkan. Pembuatan identitas tidak berarti Turn telah aktif.
-2. Setelah seluruh pemeriksaan otorisasi Turn Start sesuai TC-56 berhasil, Turn Controller mencatat pemain terpilih sebagai pemilik Turn yang sedang dipersiapkan. Penetapan ini tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
+2. Setelah seluruh pemeriksaan otorisasi Turn Start sesuai TC-56 berhasil, Turn Controller mencatat pemain terpilih sebagai pemilik Turn yang sedang dipersiapkan. Pada titik ini Parent Turn Chain resmi dimulai dan memasuki lifecycle sesuai TC-04A dan TC-06B. Penetapan ini tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
 3. Inisialisasi aturan per-turn dilakukan sebelum Turn Activation dan fase gameplay pertama.
 4. Double Counter di-reset pada awal giliran baru.
 5. Batas penggunaan aksi per-turn, termasuk Stored News, mengikuti aturan sistem terkait.
