@@ -585,8 +585,9 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #30 | Pending Trade / Transaction During Party Disconnect | Approved | TC-26 clarifies cancellation of pending proposals on party disconnect, completion of started atomic operations, and no rollback of completed operations |
 | #31 | Global Victory Check Scope in Global State Sequencing | Approved | Master Source of Truth sections 18–19 and Progress 20 section 2 clarify that all gameplay State Changes remain globally sequential, while Global Victory Check is required only for State Changes that can affect Win Condition |
 | #32 | Specification 01 Consolidated Review Status Metadata | Approved | Specification 01 header now reflects the approved findings through #32, matching this review log; no gameplay contract or decision ID changed |
+| #33 | Final Bankruptcy with Zero Active Players | Approved | Progress 20 Audit #1 point 10 now distinguishes remaining active players from zero active players; zero active players ends the Match without a winner or a new Turn, consistent with TC-31 |
 
-**Next step:** Continue consolidated review with Finding #33, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #34, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
 
 
@@ -689,3 +690,22 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** Metadata Consolidated Review pada header Specification 01 diperbarui dari Findings #1 through #29 menjadi Findings #1 through #32. Header dan daftar Approved Findings pada Consolidated Review Log diselaraskan, dan langkah berikutnya diperbarui menjadi Finding #33.
 
 **Batas:** Persetujuan ini hanya menyangkut konsistensi metadata review. Ini bukan approval final Specification 01, bukan perubahan kontrak gameplay, dan bukan persetujuan implementasi atau pengujian.
+
+
+### Finding #33 — Final Bankruptcy with Zero Active Players
+
+**Status:** Approved
+
+**Dokumen terkait:** Progress 20 Audit #1, point 10; TC-31
+
+**Keputusan yang disetujui:**
+
+1. Setelah Final Bankruptcy, Global Victory Check tetap dijalankan.
+2. Jika Global Victory Check tidak menemukan Win Condition dan masih terdapat pemain aktif, Turn Controller dapat melanjutkan ke pemain aktif berikutnya sesuai Master Flow.
+3. Jika tidak ada pemain aktif tersisa, Match berakhir dengan Game State ENDED tanpa pemenang.
+4. Dalam kondisi nol pemain aktif, tidak ada Turn baru yang dibuat atau dijalankan.
+5. Aturan ini menyelaraskan Progress 20 Audit #1 dengan TC-31. Tidak ada perubahan pada TC-01 sampai TC-60 dan tidak ada decision ID baru.
+
+**Perubahan dokumentasi:** Progress 20 Audit #1 point 10 diperjelas agar kelanjutan ke pemain aktif berikutnya hanya berlaku jika masih ada pemain aktif. Jika tidak ada pemain aktif tersisa, Match berakhir dengan Game State ENDED tanpa pemenang dan tanpa Turn baru sesuai TC-31.
+
+**Batas:** Perubahan ini merupakan revisi dokumentasi yang disetujui pada dokumen Progress 20 yang berstatus LOCKED. Approval ini bukan persetujuan implementasi atau pengujian.
