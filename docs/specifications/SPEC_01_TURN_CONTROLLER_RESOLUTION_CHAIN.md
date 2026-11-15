@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #28 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #29 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -55,10 +55,12 @@ Batas ini hanya berlaku untuk Parent Turn Resolution Chain. Operasi asynchronous
 1. Batas satu Chain aktif berlaku hanya untuk Parent Turn Resolution Chain.
 2. Trade dan Transaction tetap asynchronous dan tidak terikat pada giliran aktif.
 3. Trade dan Transaction tidak boleh mengambil alih, menangguhkan, atau memajukan Turn Controller.
-4. Perubahan state dari Trade atau Transaction diproses sesuai server sequencing, final validation terhadap state terbaru, atomic operation, dan Global Victory Check.
-5. State Change yang dapat memengaruhi Win Condition diproses secara berurutan. Setelah Atomic Operation selesai, Global Victory Check untuk State Change tersebut harus diselesaikan sebelum State Change relevan berikutnya boleh melakukan commit.
-6. Jika Global Victory Check menghasilkan CONTINUE, State Change relevan berikutnya dapat diproses setelah validasi terhadap state authoritative terbaru. Jika menghasilkan GAME_END, State Change berikutnya ditolak dan konsekuensi Game End dijalankan melalui Turn Controller sesuai TC-25.
-7. Ketika GAME_END terjadi, seluruh proposal Trade dan Transaction yang masih pending dibatalkan. Operasi yang sudah selesai tidak di-rollback.
+4. Seluruh gameplay State Change, baik yang terjadi di dalam Parent Turn Chain maupun yang berasal dari sistem asynchronous di luar Chain, mengikuti satu urutan pemrosesan server secara global.
+5. State Change berikutnya hanya boleh mulai diproses setelah State Change sebelumnya menyelesaikan Atomic Operation secara utuh. Aturan ini berlaku lintas sistem dan tidak terbatas pada State Change yang dapat memengaruhi Win Condition.
+6. Final Validation setiap State Change harus menggunakan state authoritative terbaru setelah seluruh State Change yang mendahuluinya dalam urutan global selesai diproses. Preconditions yang dapat berubah harus divalidasi kembali sebelum commit.
+7. Parent Turn Chain tetap menjalankan satu Resolution pada satu waktu sesuai TC-09A; sequential execution tersebut merupakan bagian dari urutan pemrosesan State Change global dan tidak membentuk jalur sequencing terpisah.
+8. Untuk State Change yang dapat memengaruhi Win Condition, Global Victory Check tetap wajib diselesaikan sesuai TC-21A sebelum State Change relevan berikutnya boleh melakukan commit. Jika hasilnya CONTINUE, pemrosesan dapat dilanjutkan setelah validasi terhadap state authoritative terbaru. Jika hasilnya GAME_END, State Change berikutnya ditolak dan konsekuensi Game End dijalankan melalui Turn Controller sesuai TC-25.
+9. Ketika GAME_END terjadi, seluruh proposal Trade dan Transaction yang masih pending dibatalkan. Operasi yang sudah selesai tidak di-rollback.
 
 ### TC-03A — Match Game State dan Startup Gate
 
@@ -155,11 +157,12 @@ Aturan:
 
 1. Parent Turn Chain hanya menjalankan satu Resolution aktif pada satu waktu.
 2. Turn Controller menunggu Resolution aktif menyelesaikan proses dan mengembalikan hasil sebelum memulai Resolution berikutnya.
-3. Setiap State Change harus selesai secara atomic sebelum proses berikutnya dimulai.
-4. State Change yang dapat memengaruhi Victory Condition diikuti Global Victory Check setelah perubahan selesai.
-5. Jika Global Victory Check menghasilkan GAME_END, Resolution berikutnya dibatalkan.
-6. Resolution yang sedang menjalankan Atomic Operation tidak boleh dipotong di tengah operasi tersebut.
-7. Resolution tidak boleh dijalankan paralel hanya untuk mempercepat gameplay.
+3. Setiap State Change yang dilakukan oleh Resolution harus selesai secara atomic sebelum State Change berikutnya mulai diproses sesuai urutan server global pada TC-02A.
+4. Final Validation sebelum commit menggunakan state authoritative terbaru setelah State Change sebelumnya dalam urutan global selesai diproses.
+5. State Change yang dapat memengaruhi Victory Condition diikuti Global Victory Check setelah perubahan selesai sesuai TC-21A.
+6. Jika Global Victory Check menghasilkan GAME_END, Resolution berikutnya dibatalkan.
+7. Resolution yang sedang menjalankan Atomic Operation tidak boleh dipotong di tengah operasi tersebut.
+8. Resolution tidak boleh dijalankan paralel hanya untuk mempercepat gameplay.
 
 ### TC-10A — Blocking UI Contract
 
@@ -459,17 +462,17 @@ Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang
 
 ### TC-30 — Concurrent Event Arbitration
 
-1. Event yang memengaruhi Turn Controller diproses melalui validasi dan sequencing server.
-2. Event tidak boleh mengubah Turn State secara paralel atau melewati authority Turn Controller.
-3. Event yang tiba hampir bersamaan dievaluasi berdasarkan state authoritative terbaru.
+1. Seluruh gameplay State Change diproses dalam satu urutan server global sesuai TC-02A, termasuk State Change dari sistem asynchronous di luar Parent Turn Chain.
+2. Event yang memengaruhi Turn Controller diproses melalui validasi dan sequencing server serta tidak boleh melewati authority Turn Controller.
+3. Event yang tiba hampir bersamaan diurutkan oleh server dan dievaluasi berdasarkan state authoritative terbaru. Final Validation State Change menggunakan state setelah seluruh State Change yang mendahuluinya selesai diproses.
 4. Priority tetap GAME_END > PLAYER_ELIMINATED > TURN_END > EXTRA_ROLL > CONTINUE.
-5. Atomic Operation yang sudah dimulai diselesaikan utuh sebelum event lain diproses pada batas aman berikutnya.
+5. Atomic Operation yang sudah dimulai diselesaikan utuh sebelum State Change berikutnya mulai diproses pada urutan global. Operasi tidak boleh dipotong di tengah commit.
 6. Event terminal yang lebih tinggi prioritasnya menghentikan Resolution lanjutan setelah batas aman.
 7. Event yang tidak relevan akibat perubahan state, eliminasi, Game End, atau Parent Turn Chain yang telah COMPLETED ditolak.
 8. Event duplikat tidak menghasilkan perubahan tambahan.
 9. Penetapan Parent Turn Chain menjadi COMPLETED dan penerimaan event yang dapat memengaruhi Turn harus mengikuti sequencing server yang sama; setelah COMPLETED ditetapkan, tidak ada event dari Chain tersebut yang dapat membuka kembali Chain atau mengubah hasil penyelesaian Turn.
 10. Jika urutan atau validitas state tidak dapat dipastikan setelah Parent Turn Chain memasuki lifecycle, Chain menjadi FAILED. Jika ketidakmampuan verifikasi terjadi sebelum Chain dimulai, proses Turn Start dinyatakan gagal tanpa menetapkan status lifecycle Chain sesuai TC-04A, TC-56, dan TC-57.
-11. Detail sequencing, queue, dan arbitration teknis tetap TBD.
+11. Detail mekanisme sequencing global, queue, dan arbitration teknis tetap TBD.
 12. Disconnect pemain aktif selama Resolution ditangani sebagai Player Leave/Elimination sesuai TC-28. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai poin 5 sebelum penghentian Resolution lanjutan; kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 13. Disconnect pemain aktif setelah Movement Complete selama Start Detection atau Start Reward ditangani sebagai Player Leave/Elimination sesuai TC-28. Jika Atomic Operation Start Reward telah dimulai, operasi diselesaikan sampai batas aman sesuai poin 5 sebelum pekerjaan lanjutan dibatalkan. Reward yang berhasil diproses tetap dipertahankan; kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 14. Disconnect pemain aktif selama Roll atau Dice Resolution ditangani sebagai Player Leave/Elimination sesuai TC-28. Roll yang belum menghasilkan hasil valid dibatalkan tanpa efek gameplay. Hasil Roll valid tidak dibuat ulang; jika Dice Resolution telah dimulai, proses diselesaikan sampai batas aman sesuai poin 5 dan perubahan Double Counter yang berhasil diproses dipertahankan sebelum Movement dibatalkan. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
@@ -942,7 +945,7 @@ Jika implementasi membutuhkan keputusan di luar kontrak atau scope, berhenti dan
 - Testing: not performed.
 
 Next workflow gate:
-1. Continue consolidated review for consistency, missing cases, and prototype boundary. Findings #1 through #28 are approved; next checkpoint is Finding #29.
+1. Continue consolidated review for consistency, missing cases, and prototype boundary. Findings #1 through #29 are approved; next checkpoint is Finding #30.
 2. Resolve or explicitly mark remaining TBD items.
 3. Obtain explicit approval of the complete Specification 01.
 4. Update affected canonical documents through the approved documentation workflow, including the TC-31 change from ABORTED to ENDED for zero active players.
