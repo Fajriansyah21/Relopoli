@@ -60,7 +60,7 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 ### Finding #3 — Match Termination vs Prototype Scope v1.0
 
-**Status:** Approved with documentation prerequisite
+**Status:** Approved and incorporated into Prototype Scope v1.0
 
 **Kontrak terkait:** TC-03A, TC-25, TC-31  
 **Dokumen terdampak:** [Core Gameplay Prototype Scope v1.0](../CORE_GAMEPLAY_PROTOTYPE_SCOPE.md)
@@ -69,10 +69,10 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 1. Arah keputusan TC-31 dipertahankan: Game State hanya RUNNING atau ENDED.
 2. Jika tidak ada pemain aktif tersisa, Match berakhir dengan Game State ENDED dan tanpa pemenang.
-3. Prototype Scope v1.0 saat ini masih menyebut ABORTED untuk kondisi nol pemain aktif.
+3. Prototype Scope v1.0 sebelumnya menyebut ABORTED untuk kondisi nol pemain aktif.
 4. Karena Prototype Scope v1.0 berstatus LOCKED, perubahan tersebut tidak boleh diterapkan secara diam-diam.
 
-**Prasyarat:** Prototype Scope v1.0 dan dokumen terkait harus direvisi melalui workflow dokumentasi dan memperoleh approval resmi sebelum perubahan ini diterapkan atau dijadikan dasar implementasi. Sampai prasyarat tersebut terpenuhi, konflik dokumentasi ini tetap terbuka sebagai dependency.
+**Perubahan dokumentasi:** Prototype Scope v1.0 bagian 2.10 dan Acceptance Criteria bagian 5 telah diselaraskan dengan TC-31. Nol pemain aktif menghasilkan Game State ENDED tanpa pemenang; Match Outcome dan alasan berakhir dicatat terpisah. Revisi disetujui secara eksplisit sebelum diterapkan. Dependency dokumentasi Finding #3 selesai.
 
 ### Finding #4 — Turn Activation vs News Phase Transition
 
@@ -147,7 +147,7 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 ### Finding #8 — Player Eligibility vs Disconnect and Turn Handoff
 
-**Status:** Approved and incorporated into Specification 01, with Prototype Scope documentation prerequisite
+**Status:** Approved and incorporated into Specification 01 and Prototype Scope v1.0
 
 **Kontrak terkait:** TC-24, TC-26, TC-28, TC-32, TC-33, TC-54, TC-55, TC-56
 
@@ -159,9 +159,9 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 4. Disconnect pemain nonaktif diproses terpisah dan tidak menghentikan atau me-reset Parent Turn Chain pemain aktif.
 5. Jika kelayakan pemain atau integritas roster tidak dapat diverifikasi, Turn baru tidak dipaksakan dan kegagalan ditangani sesuai kontrak.
 6. Rejoin tidak memulihkan status aktif atau hak gameplay secara otomatis.
-7. Konflik Prototype Scope v1.0 bagian 2.10 yang menyebut Turn Order dibangun kembali berdasarkan pemain aktif harus diselesaikan melalui workflow revisi dokumen LOCKED dan approval resmi. Prototype Scope tidak diubah sebagai bagian dari Finding #8.
+7. Konflik Prototype Scope v1.0 bagian 2.10 yang sebelumnya menyebut Turn Order dibangun kembali berdasarkan pemain aktif telah diselesaikan melalui revisi dokumen LOCKED yang disetujui.
 
-**Perubahan dokumentasi:** TC-32, TC-55, dan TC-56 diselaraskan untuk menegaskan urutan roster awal, validasi ulang menggunakan state authoritative terbaru, dan penanganan pemain yang menjadi tidak eligible sebelum otorisasi. TC-26 dan TC-54 tetap menjadi dasar perlindungan Chain aktif serta integritas roster. Tidak ada decision ID baru yang ditambahkan.
+**Perubahan dokumentasi:** TC-32, TC-55, dan TC-56 diselaraskan untuk menegaskan urutan roster awal, validasi ulang menggunakan state authoritative terbaru, dan penanganan pemain yang menjadi tidak eligible sebelum otorisasi. TC-26 dan TC-54 tetap menjadi dasar perlindungan Chain aktif serta integritas roster. Tidak ada decision ID baru yang ditambahkan. Prototype Scope v1.0 bagian 2.1 dan 2.10 kini menegaskan urutan awal, skip pemain tidak eligible tanpa membangun ulang roster, dan tidak memulihkan hak gameplay otomatis saat rejoin. Prasyarat dokumentasi Finding #8 selesai.
 
 ### Finding #9 — Turn Completion Commit Boundary vs Late/Concurrent Result
 
@@ -515,12 +515,12 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 |---|---|---|---|
 | #1 | Turn Identity vs Turn Activation | Approved | Cross-contract alignment to be checked during consolidation |
 | #2 | Initialization Atomicity vs Partial State Persistence | Approved | Technical storage/recovery details remain TBD |
-| #3 | Match Termination vs Prototype Scope | Approved with prerequisite | Locked Prototype Scope revision and approval required |
+| #3 | Match Termination vs Prototype Scope | Approved; prerequisite completed | Prototype Scope v1.0 sections 2.10 and 5 updated to ENDED without a winner for zero active players |
 | #4 | Turn Activation vs News Phase Transition | Approved | TC-59 and TC-60 updated |
 | #5 | Turn Identity, Initialization, and Activation Alignment | Approved | TC-13A, TC-14A, and TC-51 updated |
 | #6 | Turn Start Authorization vs Turn Ownership | Approved | TC-56 point 6 updated |
 | #7 | Duplicate Turn Start vs Prepared Turn Lifecycle | Approved | TC-57 point 2 updated |
-| #8 | Player Eligibility vs Disconnect and Turn Handoff | Approved with documentation prerequisite | TC-32, TC-55, and TC-56 updated; Prototype Scope v1.0 revision remains pending |
+| #8 | Player Eligibility vs Disconnect and Turn Handoff | Approved; prerequisite completed | TC-32, TC-55, and TC-56 updated; Prototype Scope v1.0 sections 2.1 and 2.10 aligned with initial roster order and eligibility skipping |
 | #9 | Turn Completion Commit Boundary vs Late/Concurrent Result | Approved | TC-23 and TC-30 updated; technical sequencing details remain TBD |
 | #10 | Turn Identity Creation vs Turn Start Authorization | Approved | TC-23 point 8 aligned with TC-13A, TC-51, and TC-56 |
 | #11 | Prepared Turn Identity Invalidated When Candidate Becomes Ineligible | Approved | TC-23 point 8 and TC-51 clarified; identity cannot be reused |
