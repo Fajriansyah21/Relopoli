@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #7  
+**Approved findings:** #1 through #8  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -144,6 +144,24 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 9. Mekanisme teknis pencegahan duplikasi tetap TBD.
 
 **Perubahan dokumentasi:** TC-57 poin 2 diperjelas untuk mencakup proses Turn Start dan Turn yang masih dipersiapkan, sedang menjalani Initialization, telah aktif, maupun telah selesai. Tidak ada decision ID baru yang ditambahkan.
+
+### Finding #8 — Player Eligibility vs Disconnect and Turn Handoff
+
+**Status:** Approved and incorporated into Specification 01, with Prototype Scope documentation prerequisite
+
+**Kontrak terkait:** TC-24, TC-26, TC-28, TC-32, TC-33, TC-54, TC-55, TC-56
+
+**Keputusan yang disetujui:**
+
+1. Turn Controller menggunakan state authoritative server terbaru untuk memvalidasi kelayakan pemain, baik saat seleksi maupun tepat sebelum otorisasi Turn Start.
+2. Pemain yang menjadi tidak eligible sebelum otorisasi tidak dicatat sebagai pemilik Turn yang sedang dipersiapkan dan tidak menjalani Initialization; Turn Controller melewatinya dan memvalidasi pemain berikutnya menurut urutan awal.
+3. Eliminasi atau disconnect tidak mengacak atau membangun ulang urutan awal roster. Pemain yang tidak eligible dilewati.
+4. Disconnect pemain nonaktif diproses terpisah dan tidak menghentikan atau me-reset Parent Turn Chain pemain aktif.
+5. Jika kelayakan pemain atau integritas roster tidak dapat diverifikasi, Turn baru tidak dipaksakan dan kegagalan ditangani sesuai kontrak.
+6. Rejoin tidak memulihkan status aktif atau hak gameplay secara otomatis.
+7. Konflik Prototype Scope v1.0 bagian 2.10 yang menyebut Turn Order dibangun kembali berdasarkan pemain aktif harus diselesaikan melalui workflow revisi dokumen LOCKED dan approval resmi. Prototype Scope tidak diubah sebagai bagian dari Finding #8.
+
+**Perubahan dokumentasi:** TC-32, TC-55, dan TC-56 diselaraskan untuk menegaskan urutan roster awal, validasi ulang menggunakan state authoritative terbaru, dan penanganan pemain yang menjadi tidak eligible sebelum otorisasi. TC-26 dan TC-54 tetap menjadi dasar perlindungan Chain aktif serta integritas roster. Tidak ada decision ID baru yang ditambahkan.
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -155,5 +173,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #5 | Turn Identity, Initialization, and Activation Alignment | Approved | TC-13A, TC-14A, and TC-51 updated |
 | #6 | Turn Start Authorization vs Turn Ownership | Approved | TC-56 point 6 updated |
 | #7 | Duplicate Turn Start vs Prepared Turn Lifecycle | Approved | TC-57 point 2 updated |
+| #8 | Player Eligibility vs Disconnect and Turn Handoff | Approved with documentation prerequisite | TC-32, TC-55, and TC-56 updated; Prototype Scope v1.0 revision remains pending |
 
-**Next step:** Continue consolidated review with Finding #8, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #9, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
