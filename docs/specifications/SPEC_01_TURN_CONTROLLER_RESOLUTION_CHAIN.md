@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #24 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #25 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -218,6 +218,11 @@ Turn Controller mengatur kapan inisialisasi berlangsung. Detail reset setiap mek
 6. TURN_END, PLAYER_ELIMINATED, dan GAME_END mengikuti Result Priority.
 7. Jika News Phase selesai tanpa hasil terminal, Turn Controller melanjutkan ke Roll.
 8. News System tidak boleh memulai Roll secara langsung.
+9. Jika pemain aktif disconnect selama News Phase, Turn Controller menghentikan penerimaan aksi gameplay baru dari pemain tersebut dan memproses Player Leave/Elimination sesuai TC-24 dan TC-28.
+10. Jika News Card sedang terbuka ketika pemain aktif disconnect, News Card segera dibersihkan tanpa menunggu respons OK. News Resolution atau pekerjaan lanjutan yang belum dimulai dibatalkan.
+11. News effect yang telah berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai TC-30.
+12. Jika pemain nonaktif disconnect selama News Phase, News Card dan News Resolution milik pemain aktif tetap berjalan tanpa interupsi, kecuali perubahan state menyebabkan GAME_END.
+13. Disconnect pemain aktif selama News Phase merupakan Player Leave/Elimination, bukan kegagalan teknis News System yang otomatis menghasilkan FAILED. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 
 **Prototype constraint:** sesuai Prototype Scope v1.0, belum ada Stored News yang tersedia dan efek kartu ditunda. News Phase prototype otomatis melanjutkan ke Roll.
 
@@ -370,6 +375,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 13. Jika Player Leave/Elimination terjadi ketika Resolution berlangsung, Resolution lanjutan yang belum dimulai dibatalkan dan Parent Turn Chain dihentikan sebagai ABORTED setelah eliminasi tervalidasi sesuai TC-28. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai TC-30; State Change yang telah berhasil diproses tetap dipertahankan.
 14. Jika Player Leave/Elimination terjadi setelah Movement Complete ketika Start Detection atau Start Reward berlangsung, Start Detection atau Start Reward yang belum dimulai dan Landing Resolution yang belum dimulai dibatalkan. Atomic Operation Start Reward yang telah dimulai diselesaikan sampai batas aman sesuai TC-30. Setelah eliminasi tervalidasi, Parent Turn Chain dihentikan sebagai ABORTED sesuai TC-28; reward yang telah berhasil diproses tetap dipertahankan.
 15. Jika Player Leave/Elimination terjadi selama Roll atau setelah hasil Roll valid tetapi sebelum Movement dimulai, Roll atau Dice Resolution yang belum dimulai dibatalkan. Jika Dice Resolution sudah dimulai, proses tersebut diselesaikan sampai batas aman sesuai TC-30; perubahan Double Counter yang telah berhasil diproses dipertahankan. Setelah eliminasi tervalidasi, Parent Turn Chain dihentikan sebagai ABORTED sesuai TC-28 dan Movement tidak dimulai.
+16. Jika Player Leave/Elimination terjadi selama News Phase, News Card yang sedang terbuka dibersihkan tanpa menunggu respons OK dan pekerjaan News Resolution yang belum dimulai dibatalkan. News effect yang telah berhasil diproses tetap dipertahankan; Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai TC-30. Setelah eliminasi tervalidasi, Parent Turn Chain dihentikan sebagai ABORTED sesuai TC-28.
 
 ### TC-25 — Game End dan Match Shutdown
 
@@ -407,7 +413,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 8. Jika Recovery gagal secara teknis, Parent Turn Chain menjadi FAILED tanpa mengakhiri Turn atau memindahkan pemain secara diam-diam.
 9. Detail Recovery harus tetap sesuai Prototype Scope v1.0.
 
-### TC-28 — Active Player Disconnect During Turn Initialization, Before News Phase, Roll / Dice Resolution, Movement, Start Detection / Start Reward, or During Resolution
+### TC-28 — Active Player Disconnect During Turn Initialization, News Phase / News Card, Roll / Dice Resolution, Movement, Start Detection / Start Reward, or During Resolution
 
 1. Jika pemain aktif disconnect setelah Parent Turn Chain dimulai, termasuk ketika Turn Initialization berlangsung sebelum Turn Activation, setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, ketika Roll atau Dice Resolution berlangsung, ketika Movement berlangsung, setelah Movement Complete selama Start Detection atau Start Reward, atau ketika Resolution berlangsung, server menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
 2. Jika disconnect terjadi sebelum Turn Activation, Turn tidak diaktifkan dan News Phase maupun Roll tidak dimulai.
@@ -426,6 +432,10 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 15. Disconnect bukan Character Reset dan tidak menggunakan Movement Recovery TC-27.
 16. Jika disconnect terjadi setelah Movement Complete selama Start Detection atau Start Reward, Start Detection atau Start Reward yang belum dimulai dibatalkan. Jika Atomic Operation Start Reward sudah dimulai, operasi diselesaikan sampai batas aman sesuai TC-30. Reward yang berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Landing Resolution yang belum dimulai dibatalkan.
 17. Jika disconnect terjadi selama Roll sebelum hasil valid diperoleh, proses Roll dibatalkan dan tidak menghasilkan efek gameplay. Jika hasil Roll sudah valid, hasil tersebut tidak dibuat ulang atau digunakan untuk Roll tambahan. Jika Dice Resolution belum dimulai, proses tersebut dan Movement dibatalkan. Jika Dice Resolution sudah dimulai, proses diselesaikan sampai batas aman sesuai TC-30; Double Counter yang berhasil diperbarui tetap dipertahankan. Setelah Player Leave/Elimination tervalidasi, Parent Turn Chain menjadi ABORTED sesuai TC-24 dan Movement tidak dimulai.
+18. Jika pemain aktif disconnect selama News Phase, News Card yang sedang terbuka segera dibersihkan tanpa menunggu respons OK. News Resolution atau pekerjaan lanjutan yang belum dimulai dibatalkan.
+19. News effect yang telah berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai TC-30 sebelum pekerjaan lanjutan dibatalkan.
+20. Jika pemain nonaktif disconnect selama News Phase, News Card dan News Resolution milik pemain aktif tetap berjalan tanpa interupsi, kecuali disconnect tersebut menyebabkan GAME_END.
+21. Disconnect pemain aktif selama News Phase merupakan Player Leave/Elimination, bukan kegagalan teknis News System yang otomatis membuat Chain FAILED. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap ditangani sesuai aturan FAILED yang berlaku.
 
 
 ### TC-29 — Stale Player Action dan Late Response Protection
@@ -456,6 +466,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 12. Disconnect pemain aktif selama Resolution ditangani sebagai Player Leave/Elimination sesuai TC-28. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai poin 5 sebelum penghentian Resolution lanjutan; kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 13. Disconnect pemain aktif setelah Movement Complete selama Start Detection atau Start Reward ditangani sebagai Player Leave/Elimination sesuai TC-28. Jika Atomic Operation Start Reward telah dimulai, operasi diselesaikan sampai batas aman sesuai poin 5 sebelum pekerjaan lanjutan dibatalkan. Reward yang berhasil diproses tetap dipertahankan; kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 14. Disconnect pemain aktif selama Roll atau Dice Resolution ditangani sebagai Player Leave/Elimination sesuai TC-28. Roll yang belum menghasilkan hasil valid dibatalkan tanpa efek gameplay. Hasil Roll valid tidak dibuat ulang; jika Dice Resolution telah dimulai, proses diselesaikan sampai batas aman sesuai poin 5 dan perubahan Double Counter yang berhasil diproses dipertahankan sebelum Movement dibatalkan. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
+15. Disconnect pemain aktif selama News Phase ditangani sebagai Player Leave/Elimination sesuai TC-28. News Card dibersihkan tanpa menunggu respons OK; News effect yang telah berhasil diproses dipertahankan dan pekerjaan yang belum dimulai dibatalkan. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai poin 5. Disconnect pemain nonaktif tidak menginterupsi News Card atau News Resolution pemain aktif, kecuali menyebabkan GAME_END. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 
 ### TC-31 — Match Termination When No Active Players Remain
 
