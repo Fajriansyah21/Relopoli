@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #34 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #35 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -375,6 +375,11 @@ Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang
 15. Pemain yang dilewati tetap berstatus ACTIVE, mempertahankan seluruh aset dan Balance, serta tetap berada pada posisi yang sama dalam urutan roster. Frozen Turn tidak mengeliminasi pemain dan tidak mengubah kepemilikan aset.
 16. Satu Frozen Turn dikonsumsi tepat satu kali ketika satu pemain eligible benar-benar dilewati. Frozen Turn tidak ditumpuk, tidak dipindahkan ke pemain berikutnya setelah berhasil dikonsumsi, dan tidak menyebabkan giliran pemain yang sama dilewati lebih dari sekali.
 17. Setelah Frozen Turn dikonsumsi, Turn Controller melanjutkan handoff normal dan memulai Turn pemain eligible berikutnya melalui TC-55 dan TC-56. Seluruh keputusan pemilihan dan perpindahan tetap menjadi authority Turn Controller.
+18. Frozen Turn tidak mengurangi atau mengonsumsi efek, privilege, maupun durasi yang dihitung berdasarkan giliran normal milik pemain yang dilewati. Efek tersebut tetap tersimpan sampai pemain menjalani giliran normal berikutnya.
+19. Efek atau privilege yang dijadwalkan aktif pada giliran normal pemain berikutnya tetap pending selama Frozen Turn dan baru diproses ketika giliran normal pemain tersebut benar-benar dimulai. Frozen Turn tidak dianggap sebagai pemenuhan giliran untuk aktivasi efek tersebut.
+20. Durasi Reward yang dihitung berdasarkan jumlah giliran pemilik tidak berkurang selama Frozen Turn. Perhitungan durasi dilanjutkan pada giliran normal pemilik sesuai aturan Reward.
+21. Fast Travel privilege yang menunggu penggunaan tetap tersedia dan tidak dikonsumsi oleh Frozen Turn. Fast Travel UI dan proses penggunaannya baru dijalankan pada giliran normal pemain tersebut.
+22. Jail Attempt Counter dan counter berbasis percobaan tidak berubah karena Frozen Turn; counter hanya berubah ketika peristiwa gameplay yang menjadi dasar penghitungannya benar-benar terjadi. Secara khusus, Jail Attempt Counter hanya bertambah setelah pemain benar-benar melakukan percobaan Double di Jail dan hasilnya Non-Double.
 
 ### TC-24 — Player Elimination dan Turn Handoff
 
