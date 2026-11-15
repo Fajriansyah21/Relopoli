@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #23  
+**Approved findings:** #1 through #24  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -461,6 +461,30 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail deteksi disconnect, pembatalan Start Detection, penyelesaian Atomic Operation Start Reward, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
 
+### Finding #24 — Active Player Disconnect During Roll / Dice Resolution
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-15A, TC-16A, TC-24, TC-28, TC-29, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Jika pemain aktif disconnect ketika Physical Dice masih bergulir dan hasil Roll belum valid, proses Roll dibatalkan.
+2. Roll yang dibatalkan tidak menghasilkan Dice Resolution, Double Counter, Movement, atau efek gameplay.
+3. Jika hasil Roll sudah divalidasi server, hasil tersebut tidak dibuat ulang atau digunakan untuk memulai Roll tambahan.
+4. Jika Dice Resolution belum dimulai, proses tersebut dan Movement dibatalkan.
+5. Jika Dice Resolution sudah dimulai, proses diselesaikan sampai batas aman sesuai TC-30.
+6. Perubahan Double Counter yang telah berhasil diproses dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis.
+7. Movement yang belum dimulai dibatalkan dan Turn tidak melanjutkan gameplay setelah pemain disconnect.
+8. Player Leave/Elimination harus divalidasi terlebih dahulu. Setelah tervalidasi, Parent Turn Chain menjadi ABORTED melalui TC-24 dan TC-28.
+9. Global Victory Check menggunakan state authoritative terbaru. Jika Match tetap RUNNING, pemain berikutnya dipilih sesuai urutan match.
+10. Disconnect bukan kegagalan teknis Roll atau Dice Resolution yang otomatis menghasilkan FAILED. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
+11. Tidak ada status Chain atau decision ID baru.
+
+**Perubahan dokumentasi:** TC-15A membedakan disconnect sebelum dan sesudah hasil Roll valid. TC-16A mengatur penghentian Dice Resolution dan persistensi Double Counter. TC-24 menambahkan jalur ABORTED ketika Player Leave/Elimination terjadi selama Roll atau Dice Resolution. TC-28 memperluas cakupan disconnect dan menetapkan pembatalan Roll/Dice Resolution yang belum dimulai, penyelesaian proses yang sudah dimulai sampai batas aman, serta pembatalan Movement. TC-30 menyelaraskan sequencing dan batas aman operasi. TC-29 tetap menjadi perlindungan terhadap aksi Roll yang stale atau duplikat.
+
+**Batas teknis:** Detail pembatalan Physical Dice, validasi hasil Roll, penyelesaian Dice Resolution, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -488,5 +512,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #21 | Active Player Disconnect During Resolution | Approved | TC-24, TC-28, and TC-30 define safe Atomic Operation boundary, ABORTED handling, and distinction from independent technical failure |
 | #22 | First Lap Reward vs Normal Start Reward | Approved | TC-18A clarifies that the 100K First Lap reward replaces, rather than stacks with, the normal Start reward |
 | #23 | Active Player Disconnect During Start Detection / Start Reward | Approved | TC-18A, TC-24, TC-28, and TC-30 define safe reward completion, reward retention, ABORTED handling, and cancellation of unstarted Landing Resolution |
+| #24 | Active Player Disconnect During Roll / Dice Resolution | Approved | TC-15A, TC-16A, TC-24, TC-28, and TC-30 define cancellation before valid Roll, safe Dice Resolution completion, Double Counter retention, and ABORTED handling |
 
-**Next step:** Continue consolidated review with Finding #24, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #25, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
