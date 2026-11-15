@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #9  
+**Approved findings:** #1 through #10  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -181,6 +181,26 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** TC-23 diperjelas untuk menetapkan batas penyelesaian Parent Turn Chain dan prasyarat handoff. TC-30 diperjelas untuk menyelaraskan arbitration event dengan penetapan COMPLETED dan penolakan event setelah Chain ditutup. Tidak ada decision ID baru yang ditambahkan.
 
 **Batas teknis:** Database transaction, queue, retry, dan mekanisme teknis sequencing tetap TBD.
+
+### Finding #10 — Turn Identity Creation vs Turn Start Authorization
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-12A, TC-13A, TC-23, TC-51, TC-56, TC-57
+
+**Keputusan yang disetujui:**
+
+1. Parent Turn Chain sebelumnya harus ditetapkan COMPLETED sebelum handoff normal.
+2. Turn Controller memilih kandidat berikutnya sesuai urutan match dan memvalidasi eligibility sesuai TC-55.
+3. Setelah kandidat dipilih, Turn Controller membuat TurnID dan ParentTurnChainID untuk Turn yang sedang dipersiapkan sesuai TC-13A dan TC-51.
+4. Turn Start authorization sesuai TC-56 dilakukan terhadap identitas Turn yang sedang dipersiapkan, sebelum pemain dicatat sebagai pemilik Turn dan sebelum Turn Initialization.
+5. Jika kandidat tidak lagi eligible saat validasi ulang, kandidat tidak dicatat sebagai pemilik Turn dan tidak menjalani Initialization; Turn Controller memeriksa kandidat berikutnya sesuai TC-55.
+6. Pembuatan identitas Turn tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
+7. Setelah otorisasi berhasil, Turn Initialization berjalan sesuai TC-13A, kemudian Turn Activation mengikuti TC-59 dan transisi News Phase mengikuti TC-60.
+
+**Perubahan dokumentasi:** TC-23 poin 8 diperjelas agar urutan handoff selaras dengan TC-13A, TC-51, dan TC-56. Tidak ada decision ID baru yang ditambahkan.
+
+**Batas teknis:** Detail generator ID, penyimpanan, dan scheduling tetap TBD.
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -194,5 +214,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #7 | Duplicate Turn Start vs Prepared Turn Lifecycle | Approved | TC-57 point 2 updated |
 | #8 | Player Eligibility vs Disconnect and Turn Handoff | Approved with documentation prerequisite | TC-32, TC-55, and TC-56 updated; Prototype Scope v1.0 revision remains pending |
 | #9 | Turn Completion Commit Boundary vs Late/Concurrent Result | Approved | TC-23 and TC-30 updated; technical sequencing details remain TBD |
+| #10 | Turn Identity Creation vs Turn Start Authorization | Approved | TC-23 point 8 aligned with TC-13A, TC-51, and TC-56 |
 
-**Next step:** Continue consolidated review with Finding #10, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #11, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
