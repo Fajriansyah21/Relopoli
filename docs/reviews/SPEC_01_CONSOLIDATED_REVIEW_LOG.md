@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #8  
+**Approved findings:** #1 through #9  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -162,6 +162,25 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 7. Konflik Prototype Scope v1.0 bagian 2.10 yang menyebut Turn Order dibangun kembali berdasarkan pemain aktif harus diselesaikan melalui workflow revisi dokumen LOCKED dan approval resmi. Prototype Scope tidak diubah sebagai bagian dari Finding #8.
 
 **Perubahan dokumentasi:** TC-32, TC-55, dan TC-56 diselaraskan untuk menegaskan urutan roster awal, validasi ulang menggunakan state authoritative terbaru, dan penanganan pemain yang menjadi tidak eligible sebelum otorisasi. TC-26 dan TC-54 tetap menjadi dasar perlindungan Chain aktif serta integritas roster. Tidak ada decision ID baru yang ditambahkan.
+
+### Finding #9 — Turn Completion Commit Boundary vs Late/Concurrent Result
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-23, TC-24, TC-25, TC-29, TC-30, TC-51, TC-56, TC-57
+
+**Keputusan yang disetujui:**
+
+1. Pemeriksaan hasil terminal dan penyelesaian Turn mengikuti sequencing server berdasarkan state authoritative terbaru.
+2. Result Priority tetap GAME_END > PLAYER_ELIMINATED > TURN_END > EXTRA_ROLL > CONTINUE.
+3. Hasil terminal dengan prioritas lebih tinggi yang berlaku sebelum Parent Turn Chain ditetapkan COMPLETED mengalahkan handoff normal.
+4. Setelah Parent Turn Chain ditetapkan COMPLETED, hasil atau respons terlambat maupun duplikat dari Chain tersebut ditolak tanpa side effect; Chain tidak dibuka kembali.
+5. Handoff normal hanya dilakukan setelah Chain sebelumnya benar-benar COMPLETED. Pemain berikutnya harus divalidasi sesuai TC-55 dan otorisasi Turn Start mengikuti TC-56.
+6. Tidak ada Chain lama yang dibuka kembali atau Turn baru yang dibuat akibat hasil duplikat.
+
+**Perubahan dokumentasi:** TC-23 diperjelas untuk menetapkan batas penyelesaian Parent Turn Chain dan prasyarat handoff. TC-30 diperjelas untuk menyelaraskan arbitration event dengan penetapan COMPLETED dan penolakan event setelah Chain ditutup. Tidak ada decision ID baru yang ditambahkan.
+
+**Batas teknis:** Database transaction, queue, retry, dan mekanisme teknis sequencing tetap TBD.
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -174,5 +193,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #6 | Turn Start Authorization vs Turn Ownership | Approved | TC-56 point 6 updated |
 | #7 | Duplicate Turn Start vs Prepared Turn Lifecycle | Approved | TC-57 point 2 updated |
 | #8 | Player Eligibility vs Disconnect and Turn Handoff | Approved with documentation prerequisite | TC-32, TC-55, and TC-56 updated; Prototype Scope v1.0 revision remains pending |
+| #9 | Turn Completion Commit Boundary vs Late/Concurrent Result | Approved | TC-23 and TC-30 updated; technical sequencing details remain TBD |
 
-**Next step:** Continue consolidated review with Finding #9, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #10, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
