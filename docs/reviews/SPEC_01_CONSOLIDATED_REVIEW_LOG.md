@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #20  
+**Approved findings:** #1 through #21  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -398,6 +398,27 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail pembatalan Initialization yang sedang berjalan, cleanup, dan sequencing operasi atomic tetap mengikuti kontrak terkait dan bagian TBD.
 
+### Finding #21 — Active Player Disconnect During Resolution
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-24, TC-28, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Disconnect pemain aktif selama Resolution diproses sebagai Player Leave/Elimination, bukan otomatis sebagai kegagalan teknis Resolution.
+2. Turn Controller menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
+3. Atomic Operation yang sudah dimulai diselesaikan sampai batas aman sesuai TC-30.
+4. Resolution lanjutan yang belum dimulai dibatalkan.
+5. Setelah Player Leave/Elimination tervalidasi, Parent Turn Chain menjadi ABORTED melalui TC-24 dan TC-28.
+6. State Change atau Resolution Operation yang sudah berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis.
+7. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap ditangani sesuai aturan FAILED yang berlaku; disconnect tidak menghapus jalur kegagalan tersebut.
+8. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-24 poin 13 menegaskan jalur ABORTED ketika Player Leave/Elimination terjadi selama Resolution. TC-28 poin 8, 9, dan 13 diperjelas untuk mengatur penghentian Resolution, batas aman Atomic Operation, persistensi State Change yang telah berhasil, serta pembedaan disconnect dari kegagalan teknis independen. TC-30 poin 12 mengikat penanganan disconnect selama Resolution dengan sequencing server dan aturan FAILED yang berlaku.
+
+**Batas teknis:** Detail deteksi disconnect, penghentian Resolution, penyelesaian Atomic Operation sampai batas aman, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -422,5 +443,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #18 | Active Player Disconnect During Turn Initialization | Approved | TC-28 extended; TC-24, TC-34, TC-58, and TC-59 distinguish Player Leave/Elimination from technical Initialization failure |
 | #19 | Active Player Disconnect After Turn Activation but Before News Phase | Approved | TC-28, TC-24, and TC-60 define ABORTED handling; News Phase and Roll do not start |
 | #20 | Active Player Disconnect During Movement | Approved | TC-17A, TC-18A, TC-24, and TC-28 define safe Movement stop, authoritative safe tile, and ABORTED handling |
+| #21 | Active Player Disconnect During Resolution | Approved | TC-24, TC-28, and TC-30 define safe Atomic Operation boundary, ABORTED handling, and distinction from independent technical failure |
 
-**Next step:** Continue consolidated review with Finding #21, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #22, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
