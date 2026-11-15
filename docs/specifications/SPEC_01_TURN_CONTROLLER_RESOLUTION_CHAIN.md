@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #22 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #23 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -272,6 +272,7 @@ Dice System menghasilkan hasil dadu; Dice System tidak menentukan alur permainan
 7. Landing Resolution baru dimulai setelah Start Detection dan reward relevan selesai.
 8. Start System tidak memulai Landing Resolution atau mengakhiri Turn sendiri.
 9. Jika pemain aktif disconnect sebelum Movement Complete, Start Detection, Start Reward, dan Landing Resolution yang belum dimulai dibatalkan sesuai TC-28.
+10. Jika pemain aktif disconnect setelah Movement Complete ketika Start Detection atau Start Reward berlangsung, penanganannya mengikuti TC-28. Start Detection atau Start Reward yang belum dimulai dibatalkan. Jika Atomic Operation Start Reward sudah dimulai, operasi diselesaikan sampai batas aman sesuai TC-30. Reward yang berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Landing Resolution yang belum dimulai dibatalkan.
 
 Perhitungan menggunakan hasil Movement authoritative server, bukan animasi atau posisi sementara karakter.
 
@@ -363,6 +364,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 11. Jika Player Leave/Elimination terjadi setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, Parent Turn Chain dihentikan sebagai ABORTED setelah eliminasi tervalidasi sesuai TC-28; Turn tidak melanjutkan ke News Phase atau Roll.
 12. Jika Player Leave/Elimination terjadi ketika Movement berlangsung, Movement dihentikan secara aman dan Parent Turn Chain dihentikan sebagai ABORTED setelah eliminasi tervalidasi sesuai TC-28; Start Detection, Start Reward, dan Landing Resolution yang belum dimulai dibatalkan.
 13. Jika Player Leave/Elimination terjadi ketika Resolution berlangsung, Resolution lanjutan yang belum dimulai dibatalkan dan Parent Turn Chain dihentikan sebagai ABORTED setelah eliminasi tervalidasi sesuai TC-28. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai TC-30; State Change yang telah berhasil diproses tetap dipertahankan.
+14. Jika Player Leave/Elimination terjadi setelah Movement Complete ketika Start Detection atau Start Reward berlangsung, Start Detection atau Start Reward yang belum dimulai dan Landing Resolution yang belum dimulai dibatalkan. Atomic Operation Start Reward yang telah dimulai diselesaikan sampai batas aman sesuai TC-30. Setelah eliminasi tervalidasi, Parent Turn Chain dihentikan sebagai ABORTED sesuai TC-28; reward yang telah berhasil diproses tetap dipertahankan.
 
 ### TC-25 — Game End dan Match Shutdown
 
@@ -400,9 +402,9 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 8. Jika Recovery gagal secara teknis, Parent Turn Chain menjadi FAILED tanpa mengakhiri Turn atau memindahkan pemain secara diam-diam.
 9. Detail Recovery harus tetap sesuai Prototype Scope v1.0.
 
-### TC-28 — Active Player Disconnect During Turn Initialization, Before News Phase, During Movement, or During Resolution
+### TC-28 — Active Player Disconnect During Turn Initialization, Before News Phase, During Movement, Start Detection / Start Reward, or During Resolution
 
-1. Jika pemain aktif disconnect setelah Parent Turn Chain dimulai, termasuk ketika Turn Initialization berlangsung sebelum Turn Activation, setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, ketika Movement berlangsung, atau ketika Resolution berlangsung, server menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
+1. Jika pemain aktif disconnect setelah Parent Turn Chain dimulai, termasuk ketika Turn Initialization berlangsung sebelum Turn Activation, setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, ketika Movement berlangsung, setelah Movement Complete selama Start Detection atau Start Reward, atau ketika Resolution berlangsung, server menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
 2. Jika disconnect terjadi sebelum Turn Activation, Turn tidak diaktifkan dan News Phase maupun Roll tidak dimulai.
 3. Jika disconnect terjadi setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, Turn yang sudah aktif tidak melanjutkan ke News Phase atau Roll.
 4. Jika disconnect terjadi ketika Movement berlangsung, Movement dihentikan secara aman. Posisi karakter dikembalikan atau dipertahankan pada tile terakhir yang telah dikonfirmasi server sebagai posisi authoritative dan aman; posisi animasi atau sementara Client tidak menjadi acuan.
@@ -445,6 +447,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 10. Jika urutan atau validitas state tidak dapat dipastikan setelah Parent Turn Chain memasuki lifecycle, Chain menjadi FAILED. Jika ketidakmampuan verifikasi terjadi sebelum Chain dimulai, proses Turn Start dinyatakan gagal tanpa menetapkan status lifecycle Chain sesuai TC-04A, TC-56, dan TC-57.
 11. Detail sequencing, queue, dan arbitration teknis tetap TBD.
 12. Disconnect pemain aktif selama Resolution ditangani sebagai Player Leave/Elimination sesuai TC-28. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai poin 5 sebelum penghentian Resolution lanjutan; kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
+13. Disconnect pemain aktif setelah Movement Complete selama Start Detection atau Start Reward ditangani sebagai Player Leave/Elimination sesuai TC-28. Jika Atomic Operation Start Reward telah dimulai, operasi diselesaikan sampai batas aman sesuai poin 5 sebelum pekerjaan lanjutan dibatalkan. Reward yang berhasil diproses tetap dipertahankan; kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
 
 ### TC-31 — Match Termination When No Active Players Remain
 
