@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #4  
+**Approved findings:** #1 through #5  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -90,6 +90,22 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Perubahan dokumentasi:** TC-59 poin 6 dan TC-60 poin 4 telah diselaraskan dalam Specification 01. Perubahan dicatat pada commit `90c79b16d1629f266f31be5706ba40ee0f0b4133`.
 
+### Finding #5 — Turn Identity, Initialization, and Activation Alignment
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-12A, TC-13A, TC-14A, TC-51, TC-56, TC-59, TC-60
+
+**Keputusan yang disetujui:**
+
+1. TurnID dan ParentTurnChainID dibuat setelah pemain ditentukan, sebelum Turn Initialization. Pembuatan identitas tidak berarti Turn telah aktif atau Initialization telah berhasil.
+2. Setelah pemeriksaan otorisasi Turn Start sesuai TC-56 berhasil, Turn Controller mencatat pemain terpilih sebagai pemilik Turn yang sedang dipersiapkan. Penetapan ini tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
+3. Turn Initialization dilakukan sebelum Turn Activation. Setelah seluruh Initialization berhasil dan diverifikasi, Turn dapat diaktifkan sesuai TC-59.
+4. News Phase hanya dimulai melalui transisi TC-60 setelah Turn berhasil diaktifkan.
+5. TC-51 mencatat lifecycle identitas Turn sejak identitas ditetapkan, bukan sejak Initialization berhasil.
+
+**Perubahan dokumentasi:** TC-13A, TC-14A, dan TC-51 poin 2 telah diselaraskan dalam Specification 01. TC-59 tetap menjadi kontrak Turn Activation dan TC-60 tetap menjadi satu-satunya kontrak transisi menuju News Phase.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -98,5 +114,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #2 | Initialization Atomicity vs Partial State Persistence | Approved | Technical storage/recovery details remain TBD |
 | #3 | Match Termination vs Prototype Scope | Approved with prerequisite | Locked Prototype Scope revision and approval required |
 | #4 | Turn Activation vs News Phase Transition | Approved | TC-59 and TC-60 updated |
+| #5 | Turn Identity, Initialization, and Activation Alignment | Approved | TC-13A, TC-14A, and TC-51 updated |
 
-**Next step:** Continue consolidated review with Finding #5, using the current GitHub version of Specification 01, Master Source of Truth, and Prototype Scope as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #6, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
