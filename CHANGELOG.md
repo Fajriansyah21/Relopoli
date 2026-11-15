@@ -3,6 +3,9 @@
 All notable documentation changes are recorded here.
 
 ## 2026-11-15
+- Approved and incorporated Specification 01 Finding #35: Frozen Turn does not consume pending effects or privileges tied to a player's next normal turn, decrement owner-turn-based Reward duration, use pending Fast Travel, or change attempt-based counters such as Jail Attempt Counter. Pending effects resume when the player's next normal Turn begins; attempt counters change only when their triggering gameplay event actually occurs. Updated TC-23, Master Source of Truth Frozen Turn section, Progress 20 Audit #8 Case 3, review metadata, and development records. Specification 01 remains DRAFT; no implementation or testing is claimed.
+
+## 2026-11-15
 - Approved and incorporated Specification 01 Finding #34: defined Frozen Turn as a Turn Controller-controlled skip of exactly one next eligible player's scheduled turn after the current Turn is fully completed. The skipped slot creates no Turn/Parent Turn Chain and runs no initialization, activation, gameplay phase, turn activity, or turn-based status processing. The player remains ACTIVE with assets intact and in roster order; Game End overrides the skip. Updated TC-23, Master Source of Truth section 3, Progress 20 Audit #8 Case 3, review metadata, and development records. Specification 01 remains DRAFT; no implementation or testing is claimed.
 
 
