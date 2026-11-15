@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #29  
+**Approved findings:** #1 through #30  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -582,9 +582,31 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #27 | Global Victory Check Outside Parent Turn Chain | Approved | TC-21A applies the shared Global Victory Check to relevant State Changes inside and outside Parent Turn Chain and routes external GAME_END results through Turn Controller / TC-25 |
 | #28 | Global Victory Check Before the Next Relevant State Change | Approved | TC-02A and TC-21A require the shared Global Victory Check to finish before the next relevant State Change commits; GAME_END blocks subsequent State Changes |
 | #29 | Global Sequential State Change Across Gameplay Systems | Approved | TC-02A, TC-09A, and TC-30 establish one global server processing order for all gameplay State Changes, atomic completion, and Final Validation against the latest authoritative state; Global Victory Check remains scoped by TC-21A |
+| #30 | Pending Trade / Transaction During Party Disconnect | Approved | TC-26 clarifies cancellation of pending proposals on party disconnect, completion of started atomic operations, and no rollback of completed operations |
 
-**Next step:** Continue consolidated review with Finding #30, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #31, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
+
+
+### Finding #30 — Pending Trade / Transaction During Party Disconnect
+
+**Status:** Approved
+
+**Kontrak terkait:** TC-02A, TC-26, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Jika salah satu pihak dalam Pending Trade atau Pending Transaction disconnect sebelum operasi selesai, proposal tersebut dibatalkan.
+2. Proposal yang dibatalkan tidak dapat diterima, dinegosiasikan, atau dieksekusi kembali.
+3. Jika Atomic Operation Trade atau Transaction telah dimulai sebelum disconnect terdeteksi, operasi tersebut diselesaikan secara utuh sesuai TC-02A dan TC-30.
+4. Proposal yang masih pending dan belum memulai Atomic Operation dibatalkan.
+5. Operasi Trade atau Transaction yang sudah Completed tidak di-rollback akibat disconnect.
+6. Pembatalan proposal dan penyelesaian operasi yang sudah dimulai tidak memberikan authority Turn Controller kepada sistem Trade atau Transaction.
+7. Tidak ada TC atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-26 diperjelas untuk menetapkan pembatalan Pending Trade dan Pending Transaction ketika salah satu pihak disconnect sebelum operasi selesai, larangan menggunakan kembali proposal yang dibatalkan, penyelesaian Atomic Operation yang telah dimulai secara utuh sesuai TC-02A dan TC-30, serta larangan rollback terhadap operasi yang sudah Completed.
+
+**Batas teknis:** Detail deteksi disconnect, koordinasi pembatalan proposal, dan batas dimulainya Atomic Operation tetap mengikuti implementasi serta mekanisme sequencing yang belum ditetapkan. Approval ini merupakan persetujuan desain/dokumentasi, bukan persetujuan implementasi atau pengujian.
 
 ### Finding #29 — Global Sequential State Change Across Gameplay Systems
 
