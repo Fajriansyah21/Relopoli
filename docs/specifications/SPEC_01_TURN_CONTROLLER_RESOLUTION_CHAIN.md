@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #18 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #19 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -358,6 +358,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 8. Eliminasi tidak menghasilkan TURN_END tambahan untuk Chain yang sama.
 9. TC-24 mengatur dampak eliminasi pada Turn Flow, bukan mekanisme penyebab eliminasi atau perhitungan Bankruptcy.
 10. Jika Player Leave/Elimination terjadi ketika Turn Initialization berlangsung sebelum Turn Activation, Parent Turn Chain dihentikan sebagai ABORTED setelah eliminasi tervalidasi sesuai TC-28; kondisi ini bukan kegagalan teknis Initialization.
+11. Jika Player Leave/Elimination terjadi setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, Parent Turn Chain dihentikan sebagai ABORTED setelah eliminasi tervalidasi sesuai TC-28; Turn tidak melanjutkan ke News Phase atau Roll.
 
 ### TC-25 — Game End dan Match Shutdown
 
@@ -395,20 +396,21 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 8. Jika Recovery gagal secara teknis, Parent Turn Chain menjadi FAILED tanpa mengakhiri Turn atau memindahkan pemain secara diam-diam.
 9. Detail Recovery harus tetap sesuai Prototype Scope v1.0.
 
-### TC-28 — Active Player Disconnect During Turn Initialization or Resolution
+### TC-28 — Active Player Disconnect During Turn Initialization, Before News Phase, or During Resolution
 
-1. Jika pemain aktif disconnect setelah Parent Turn Chain dimulai, termasuk ketika Turn Initialization berlangsung sebelum Turn Activation atau ketika Resolution berlangsung, server menghentikan penerimaan aksi baru dari pemain tersebut.
+1. Jika pemain aktif disconnect setelah Parent Turn Chain dimulai, termasuk ketika Turn Initialization berlangsung sebelum Turn Activation, setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, atau ketika Resolution berlangsung, server menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
 2. Jika disconnect terjadi sebelum Turn Activation, Turn tidak diaktifkan dan News Phase maupun Roll tidak dimulai.
-3. Player Leave/Elimination harus divalidasi terlebih dahulu. Setelah tervalidasi, Parent Turn Chain dihentikan dan ditandai ABORTED melalui jalur terminal sesuai TC-24.
-4. Pending Blocking UI dibersihkan.
-5. Initialization atau Resolution yang belum dimulai dibatalkan. Operasi atomic yang sudah dimulai diselesaikan sampai batas aman sesuai TC-30.
-6. State Change atau Initialization Operation yang sudah berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Pekerjaan yang belum dijalankan tidak diteruskan.
-7. Pemain dipastikan berstatus ELIMINATED dan dikeluarkan dari daftar pemain aktif.
-8. Global Victory Check dijalankan menggunakan state terbaru.
-9. Jika Match tetap RUNNING, Turn Controller memilih pemain aktif berikutnya sesuai urutan match dan menjalankan prosedur Turn Start yang berlaku.
-10. Disconnect sebelum Turn Activation merupakan Player Leave/Elimination, bukan kegagalan teknis Initialization yang otomatis membuat Chain FAILED.
-11. Rejoin tidak memulihkan giliran atau status aktif secara otomatis.
-12. Disconnect bukan Character Reset dan tidak menggunakan Movement Recovery.
+3. Jika disconnect terjadi setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, Turn yang sudah aktif tidak melanjutkan ke News Phase atau Roll.
+4. Player Leave/Elimination harus divalidasi terlebih dahulu. Setelah tervalidasi, Parent Turn Chain dihentikan dan ditandai ABORTED melalui jalur terminal sesuai TC-24.
+5. Pending Blocking UI dibersihkan.
+6. Initialization atau Resolution yang belum dimulai dibatalkan. Operasi atomic yang sudah dimulai diselesaikan sampai batas aman sesuai TC-30.
+7. State Change atau Initialization Operation yang sudah berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis. Pekerjaan yang belum dijalankan tidak diteruskan.
+8. Pemain dipastikan berstatus ELIMINATED dan dikeluarkan dari daftar pemain aktif.
+9. Global Victory Check dijalankan menggunakan state terbaru.
+10. Jika Match tetap RUNNING, Turn Controller memilih pemain aktif berikutnya sesuai urutan match dan menjalankan prosedur Turn Start yang berlaku.
+11. Disconnect sebelum Turn Activation maupun setelah Turn Activation tetapi sebelum News Phase dimulai merupakan Player Leave/Elimination, bukan kegagalan teknis Initialization, Activation, atau transisi News Phase yang otomatis membuat Chain FAILED.
+12. Rejoin tidak memulihkan giliran atau status aktif secara otomatis.
+13. Disconnect bukan Character Reset dan tidak menggunakan Movement Recovery.
 
 
 ### TC-29 — Stale Player Action dan Late Response Protection
@@ -843,8 +845,9 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 7. News Phase menggunakan TurnID dan ParentTurnChainID yang sama dengan Turn aktif.
 8. Jika transisi News Phase gagal secara teknis atau status keberhasilannya tidak dapat diverifikasi setelah Parent Turn Chain dimulai, Parent Turn Chain ditetapkan FAILED sesuai TC-04A. Turn Controller tidak mengulang transisi berdasarkan asumsi, tidak menerima aksi gameplay, dan tidak melanjutkan ke Roll.
 9. GAME_END atau PLAYER_ELIMINATED sebelum News Phase dimulai mengalahkan transisi normal.
-10. Setelah News Phase dimulai, kelanjutannya mengikuti TC-14A.
-11. Prototype News Phase tetap otomatis melanjutkan ke Roll karena Stored News belum tersedia dan efek kartu ditunda.
+10. Jika pemain aktif disconnect setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, Player Leave/Elimination diproses sesuai TC-28. Setelah eliminasi tervalidasi, Parent Turn Chain menjadi ABORTED melalui TC-24; News Phase dan Roll tidak dimulai. Kondisi ini bukan kegagalan teknis Activation atau transisi News Phase yang otomatis membuat Chain FAILED.
+11. Setelah News Phase dimulai, kelanjutannya mengikuti TC-14A.
+12. Prototype News Phase tetap otomatis melanjutkan ke Roll karena Stored News belum tersedia dan efek kartu ditunda.
 
 ## 8. Cross-Cutting Invariants
 
