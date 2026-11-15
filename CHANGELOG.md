@@ -3,6 +3,10 @@
 All notable documentation changes are recorded here.
 
 ## 2026-11-15
+- Approved and incorporated Specification 01 Finding #34: defined Frozen Turn as a Turn Controller-controlled skip of exactly one next eligible player's scheduled turn after the current Turn is fully completed. The skipped slot creates no Turn/Parent Turn Chain and runs no initialization, activation, gameplay phase, turn activity, or turn-based status processing. The player remains ACTIVE with assets intact and in roster order; Game End overrides the skip. Updated TC-23, Master Source of Truth section 3, Progress 20 Audit #8 Case 3, review metadata, and development records. Specification 01 remains DRAFT; no implementation or testing is claimed.
+
+
+## 2026-11-15
 - Revised the locked Core Gameplay Prototype Scope v1.0 after explicit approval to reconcile Specification 01 Findings #3 and #8. Clarified that turn order preserves the initial roster and skips ineligible players without rebuilding order; zero active players ends the match with Game State ENDED and no winner. Updated the Acceptance Criteria and review/development records. No implementation or testing is claimed.
 
 ## 2026-11-13
