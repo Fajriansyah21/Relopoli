@@ -173,6 +173,8 @@ Turn Controller memeriksa Game State sebelum melakukan skip. Jika Game State END
 
 Pemain yang dilewati tetap ACTIVE, mempertahankan Balance dan seluruh aset, serta tetap berada pada posisi yang sama dalam urutan roster. Satu Frozen Turn dikonsumsi tepat satu kali setelah satu pemain eligible berhasil dilewati, tidak dibawa ke pemain berikutnya. Setelah itu, handoff normal berlanjut ke pemain eligible berikutnya.
 
+Frozen Turn tidak mengurangi atau mengonsumsi efek, privilege, maupun durasi yang dihitung berdasarkan giliran normal milik pemain yang dilewati. Efek yang menunggu aktivasi pada giliran normal berikutnya tetap pending sampai giliran normal pemain tersebut benar-benar dimulai. Durasi Reward berbasis giliran pemilik tidak berkurang; Fast Travel privilege yang belum digunakan tetap tersedia; dan counter berbasis percobaan, termasuk Jail Attempt Counter, tidak berubah hanya karena Frozen Turn. Counter hanya berubah ketika peristiwa gameplay yang menjadi dasar penghitungannya benar-benar terjadi.
+
 ## Resolution Result
 
 Resolution dapat menghasilkan:
