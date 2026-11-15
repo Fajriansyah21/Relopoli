@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #33  
+**Approved findings:** #1 through #34  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -586,8 +586,9 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #31 | Global Victory Check Scope in Global State Sequencing | Approved | Master Source of Truth sections 18–19 and Progress 20 section 2 clarify that all gameplay State Changes remain globally sequential, while Global Victory Check is required only for State Changes that can affect Win Condition |
 | #32 | Specification 01 Consolidated Review Status Metadata | Approved | Specification 01 header now reflects the approved findings through #32, matching this review log; no gameplay contract or decision ID changed |
 | #33 | Final Bankruptcy with Zero Active Players | Approved | Progress 20 Audit #1 point 10 now distinguishes remaining active players from zero active players; zero active players ends the Match without a winner or a new Turn, consistent with TC-31 |
+| #34 | Forced Break and Frozen Turn Handoff | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 define Frozen Turn as a Turn Controller-controlled skip of exactly one next eligible player's scheduled turn; no Turn/Chain/phase/status processing occurs, the player remains ACTIVE with assets intact, and Game End overrides the skip |
 
-**Next step:** Continue consolidated review with Finding #34, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #35, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
 
 
@@ -709,3 +710,28 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** Progress 20 Audit #1 point 10 diperjelas agar kelanjutan ke pemain aktif berikutnya hanya berlaku jika masih ada pemain aktif. Jika tidak ada pemain aktif tersisa, Match berakhir dengan Game State ENDED tanpa pemenang dan tanpa Turn baru sesuai TC-31.
 
 **Batas:** Perubahan ini merupakan revisi dokumentasi yang disetujui pada dokumen Progress 20 yang berstatus LOCKED. Approval ini bukan persetujuan implementasi atau pengujian.
+
+
+
+### Finding #34 — Forced Break and Frozen Turn Handoff
+
+**Status:** Approved and incorporated into canonical documentation
+
+**Kontrak terkait:** TC-23; Progress 20 Audit #8, Case 3
+
+**Keputusan yang disetujui:**
+
+1. Forced Break menghasilkan `TURN_END` dan membatalkan Extra Roll yang belum dijalankan.
+2. Frozen Turn baru berlaku setelah Turn saat ini benar-benar selesai, termasuk penyelesaian Deferred Turn End jika News Card atau Blocking UI masih wajib diselesaikan.
+3. Frozen Turn adalah mekanisme handoff/skip yang dikendalikan Turn Controller, bukan Resolution normal atau Turn baru yang dijalankan sebagian.
+4. Turn Controller memeriksa Game State terlebih dahulu. Jika Game State ENDED, Game End mengalahkan Frozen Turn.
+5. Jika Match masih RUNNING, satu giliran terjadwal pemain eligible berikutnya dilewati menurut urutan roster dan validasi eligibility TC-55. Kandidat yang tidak lagi eligible dilewati tanpa mengonsumsi Frozen Turn; skip berlaku kepada kandidat eligible berikutnya.
+6. Giliran yang dilewati tidak membuat TurnID atau ParentTurnChainID, tidak memulai Parent Turn Chain, dan tidak menjalankan Turn Initialization, Turn Activation, News Phase, Roll, Dice Resolution, Movement, Fast Travel, aktivitas giliran, atau pemrosesan status berbasis giliran.
+7. Pemain yang dilewati tetap ACTIVE, mempertahankan Balance dan seluruh aset, serta tetap berada pada posisi yang sama dalam urutan roster.
+8. Satu Frozen Turn dikonsumsi tepat satu kali setelah satu pemain eligible berhasil dilewati. Frozen Turn tidak ditumpuk atau dibawa ke pemain berikutnya.
+9. Setelah skip dikonsumsi, Turn Controller melanjutkan handoff normal kepada pemain eligible berikutnya.
+10. Tidak ada TC atau decision ID baru yang ditambahkan. Specification 01 tetap DRAFT; status implementasi tetap Not Implemented / Not Tested.
+
+**Perubahan dokumentasi:** TC-23 diperluas untuk menetapkan timing Frozen Turn setelah Turn End benar-benar committed, prioritas Game End, seleksi pemain eligible menurut TC-55, skip tanpa TurnID/ParentTurnChainID maupun Parent Turn Chain, tidak adanya seluruh fase dan pemrosesan status berbasis giliran, persistensi Player State dan aset, serta konsumsi tepat satu kali. Master Source of Truth bagian 3 dan Progress 20 Audit #8 Case 3 diselaraskan dengan kontrak tersebut. Metadata Specification 01, Review Log, Development Log, dan Changelog diperbarui.
+
+**Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap berstatus LOCKED; revisi terbatas pada Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #34.
