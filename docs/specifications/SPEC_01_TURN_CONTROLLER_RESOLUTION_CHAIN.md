@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #8 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #11 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -339,7 +339,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 5. Parent Turn Chain ditetapkan COMPLETED sebagai batas resmi penyelesaian Turn dan tidak boleh diaktifkan kembali.
 6. Jika hasil terminal dengan prioritas lebih tinggi berlaku sebelum Parent Turn Chain ditetapkan COMPLETED, hasil tersebut mengalahkan handoff normal sesuai Result Priority.
 7. Setelah Parent Turn Chain ditetapkan COMPLETED, hasil atau respons terlambat maupun duplikat dari Chain tersebut ditolak tanpa side effect; Chain lama tidak dibuka kembali.
-8. Handoff normal hanya dilakukan setelah Parent Turn Chain sebelumnya benar-benar COMPLETED. Turn Controller kemudian menentukan kandidat pemain berikutnya sesuai urutan match dan memvalidasi kelayakannya sesuai TC-55. Setelah kandidat dipilih, Turn Controller membuat TurnID dan ParentTurnChainID untuk Turn yang sedang dipersiapkan sesuai TC-13A dan TC-51. Otorisasi Turn Start sesuai TC-56 dilakukan terhadap identitas Turn yang sedang dipersiapkan sebelum pemain dicatat sebagai pemilik Turn dan sebelum Turn Initialization dijalankan. Jika kandidat tidak lagi eligible saat validasi ulang, kandidat tidak dicatat sebagai pemilik Turn dan tidak menjalani Initialization; Turn Controller memeriksa kandidat berikutnya sesuai TC-55. Pembuatan identitas tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
+8. Handoff normal hanya dilakukan setelah Parent Turn Chain sebelumnya benar-benar COMPLETED. Turn Controller kemudian menentukan kandidat pemain berikutnya sesuai urutan match dan memvalidasi kelayakannya sesuai TC-55. Setelah kandidat dipilih, Turn Controller membuat TurnID dan ParentTurnChainID untuk Turn yang sedang dipersiapkan sesuai TC-13A dan TC-51. Otorisasi Turn Start sesuai TC-56 dilakukan terhadap identitas Turn yang sedang dipersiapkan sebelum pemain dicatat sebagai pemilik Turn dan sebelum Turn Initialization dijalankan. Jika kandidat tidak lagi eligible saat validasi ulang, kandidat tidak dicatat sebagai pemilik Turn dan tidak menjalani Initialization; identitas Turn dan Parent Turn Chain yang telah dibuat untuk kandidat tersebut tidak berlaku untuk memulai Turn, tidak boleh diaktifkan atau menjalankan Resolution, dan tidak boleh digunakan kembali. Kondisi ini bukan kegagalan teknis dan tidak otomatis membuat Chain berstatus FAILED. Turn Controller memeriksa kandidat berikutnya sesuai TC-55 dan membuat identitas baru untuk kandidat tersebut. Pembuatan identitas tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
 9. Sistem lain tidak boleh memulai handoff atau Turn berikutnya secara langsung.
 
 ### TC-24 — Player Elimination dan Turn Handoff
@@ -697,17 +697,18 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 
 1. Setiap giliran memiliki satu TurnID unik dalam satu Match.
 2. TurnID dibuat Turn Controller ketika identitas Turn ditetapkan setelah pemilihan pemain dan sebelum Turn Initialization. Pembuatan identitas tidak berarti Turn berhasil diinisialisasi atau aktif.
-3. Satu Turn memiliki satu ParentTurnChainID.
-4. Seluruh Resolution, Follow-up, dan Extra Roll memakai TurnID yang sama.
-5. Suspension dan Resume tidak membuat TurnID baru.
-6. Character Reset/Death Recovery tidak membuat TurnID baru.
-7. TurnID tidak digunakan ulang untuk Turn lain dalam Match yang sama.
-8. Turn normal yang berakhir menutup identitas bersama Parent Turn Chain COMPLETED.
-9. Eliminasi atau Game End menghentikan Turn terkait; identitas tidak digunakan kembali.
-10. Aksi, Result, atau respons dari Turn tertutup ditolak.
-11. Turn Controller memvalidasi hubungan TurnID dan ParentTurnChainID.
-12. Jika hubungan identitas tidak dapat diverifikasi, Chain menjadi FAILED.
-13. Format ID, generator, dan penyimpanan tetap TBD.
+3. Jika kandidat menjadi tidak eligible saat otorisasi Turn Start, identitas Turn dan Parent Turn Chain yang telah dibuat untuk kandidat tersebut tidak berlaku untuk memulai Turn, tidak boleh diaktifkan atau menjalankan Resolution, dan tidak boleh digunakan kembali. Kondisi ini bukan kegagalan teknis dan tidak otomatis membuat Chain berstatus FAILED; kandidat berikutnya harus menggunakan identitas baru.
+5. Satu Turn memiliki satu ParentTurnChainID.
+5. Seluruh Resolution, Follow-up, dan Extra Roll memakai TurnID yang sama.
+6. Suspension dan Resume tidak membuat TurnID baru.
+7. Character Reset/Death Recovery tidak membuat TurnID baru.
+8. TurnID tidak digunakan ulang untuk Turn lain dalam Match yang sama.
+9. Turn normal yang berakhir menutup identitas bersama Parent Turn Chain COMPLETED.
+10. Eliminasi atau Game End menghentikan Turn terkait; identitas tidak digunakan kembali.
+11. Aksi, Result, atau respons dari Turn tertutup ditolak.
+12. Turn Controller memvalidasi hubungan TurnID dan ParentTurnChainID.
+13. Jika hubungan identitas tidak dapat diverifikasi, Chain menjadi FAILED.
+14. Format ID, generator, dan penyimpanan tetap TBD.
 
 ### TC-52 — Match Identity dan Match Scope
 
