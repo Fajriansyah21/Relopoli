@@ -3,6 +3,8 @@
 All notable documentation changes are recorded here.
 
 ## 2026-11-15
+- Approved and incorporated Specification 01 Finding #37: a pending Frozen Turn is cancelled if its triggering Parent Turn Chain ends ABORTED before COMPLETED, and is not carried into the handoff after elimination. Updated TC-23, Master Source of Truth Frozen Turn section, Progress 20 Audit #8 Case 3, review metadata, and development records. Specification 01 remains DRAFT; no implementation or testing is claimed.
+
 - Approved and incorporated Specification 01 Finding #35: Frozen Turn does not consume pending effects or privileges tied to a player's next normal turn, decrement owner-turn-based Reward duration, use pending Fast Travel, or change attempt-based counters such as Jail Attempt Counter. Pending effects resume when the player's next normal Turn begins; attempt counters change only when their triggering gameplay event actually occurs. Updated TC-23, Master Source of Truth Frozen Turn section, Progress 20 Audit #8 Case 3, review metadata, and development records. Specification 01 remains DRAFT; no implementation or testing is claimed.
 
 ## 2026-11-15
