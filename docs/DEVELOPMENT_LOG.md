@@ -67,6 +67,12 @@ Fokus berikutnya:
 
 Tambahkan entri terbaru di bagian paling atas setelah header ini.
 
+### 2026-11-15 — Specification 01 Finding #37: Cancel Pending Frozen Turn on Aborted Chain
+
+- Mengimplementasikan Finding #37 yang disetujui pada TC-23, Master Source of Truth bagian Frozen Turn, dan Progress 20 Audit #8 Case 3.
+- Frozen Turn yang masih pending dibatalkan jika Parent Turn Chain pemicunya berakhir ABORTED sebelum COMPLETED; efek tersebut tidak dibawa ke handoff setelah eliminasi.
+- Specification 01 tetap DRAFT; implementasi dan pengujian tetap Not Implemented / Not Tested. Progress 20 tetap LOCKED dengan revisi terbatas yang disetujui.
+
 ### 2026-11-15 — Specification 01 Finding #35: Frozen Turn and Pending Turn-Based Effects
 
 - Mengimplementasikan Finding #35 yang telah disetujui pada TC-23, Master Source of Truth bagian Frozen Turn, dan Progress 20 Audit #8 Case 3.
