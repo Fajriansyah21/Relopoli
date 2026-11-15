@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #14 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #15 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -429,7 +429,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 7. Event yang tidak relevan akibat perubahan state, eliminasi, Game End, atau Parent Turn Chain yang telah COMPLETED ditolak.
 8. Event duplikat tidak menghasilkan perubahan tambahan.
 9. Penetapan Parent Turn Chain menjadi COMPLETED dan penerimaan event yang dapat memengaruhi Turn harus mengikuti sequencing server yang sama; setelah COMPLETED ditetapkan, tidak ada event dari Chain tersebut yang dapat membuka kembali Chain atau mengubah hasil penyelesaian Turn.
-10. Jika urutan atau validitas state tidak dapat dipastikan, Chain menjadi FAILED.
+10. Jika urutan atau validitas state tidak dapat dipastikan setelah Parent Turn Chain memasuki lifecycle, Chain menjadi FAILED. Jika ketidakmampuan verifikasi terjadi sebelum Chain dimulai, proses Turn Start dinyatakan gagal tanpa menetapkan status lifecycle Chain sesuai TC-04A, TC-56, dan TC-57.
 11. Detail sequencing, queue, dan arbitration teknis tetap TBD.
 
 ### TC-31 — Match Termination When No Active Players Remain
