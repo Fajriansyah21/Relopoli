@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #11  
+**Approved findings:** #1 through #12  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -220,6 +220,26 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Representasi dan persistence identitas yang tidak digunakan tetap TBD.
 
+### Finding #12 — Prepared Identity vs Parent Turn Chain Lifecycle
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-04A, TC-06B, TC-13A, TC-51, TC-56
+
+**Keputusan yang disetujui:**
+
+1. TurnID dan ParentTurnChainID dapat dibuat sebelum otorisasi Turn Start selesai.
+2. Pembuatan identitas saja belum berarti Parent Turn Chain telah dimulai atau memasuki lifecycle status TC-04A.
+3. Jika kandidat menjadi tidak eligible saat otorisasi, identitas terkait dinyatakan tidak berlaku dan tidak memasuki lifecycle Parent Turn Chain karena Chain belum dimulai.
+4. Identitas tersebut tidak boleh diaktifkan, menjalankan Resolution, menerima aksi, atau digunakan kembali.
+5. Kandidat berikutnya harus menggunakan identitas baru.
+6. Kondisi ini bukan kegagalan teknis dan tidak otomatis membuat Chain berstatus FAILED.
+7. Detail representasi, pencatatan, dan penyimpanan identitas yang tidak digunakan tetap TBD.
+
+**Perubahan dokumentasi:** TC-04A diperjelas untuk membedakan pembuatan identitas dari dimulainya Parent Turn Chain. TC-51 diperjelas untuk menetapkan bahwa identitas yang tidak berlaku sebelum Chain dimulai tidak memasuki lifecycle status TC-04A. Penomoran TC-51 juga dirapikan. Tidak ada decision ID baru yang ditambahkan.
+
+**Batas teknis:** Representasi dan persistence identitas yang tidak digunakan tetap TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -235,5 +255,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #9 | Turn Completion Commit Boundary vs Late/Concurrent Result | Approved | TC-23 and TC-30 updated; technical sequencing details remain TBD |
 | #10 | Turn Identity Creation vs Turn Start Authorization | Approved | TC-23 point 8 aligned with TC-13A, TC-51, and TC-56 |
 | #11 | Prepared Turn Identity Invalidated When Candidate Becomes Ineligible | Approved | TC-23 point 8 and TC-51 clarified; identity cannot be reused |
+| #12 | Prepared Identity vs Parent Turn Chain Lifecycle | Approved | TC-04A and TC-51 distinguish identity creation from Chain lifecycle start |
 
-**Next step:** Continue consolidated review with Finding #12, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #13, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
