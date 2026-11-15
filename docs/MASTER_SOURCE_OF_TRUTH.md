@@ -177,6 +177,8 @@ Frozen Turn tidak mengurangi atau mengonsumsi efek, privilege, maupun durasi yan
 
 Jika Parent Turn Chain yang mencatat kewajiban Frozen Turn berakhir ABORTED sebelum ditetapkan COMPLETED, kewajiban Frozen Turn tersebut dibatalkan dan tidak dibawa ke handoff setelah eliminasi. Frozen Turn hanya diterapkan setelah Turn pemicunya benar-benar COMPLETED; hasil terminal yang mengakhiri Chain melalui jalur ABORTED mengalahkan Frozen Turn yang masih pending.
 
+Tepat sebelum pemain dilewati, Turn Controller memvalidasi ulang eligibility berdasarkan state authoritative terbaru. Validasi akhir dan commit skip diproses secara berurutan dalam urutan pemrosesan State Change server global sesuai TC-02A, sehingga Player Leave/Elimination tidak dapat mengubah eligibility di antara keduanya. Kandidat yang tidak lagi eligible dilewati tanpa mengonsumsi Frozen Turn; seleksi dan validasi diulang terhadap kandidat eligible berikutnya. Frozen Turn baru dikonsumsi setelah kandidat yang lolos validasi akhir benar-benar berhasil dilewati.
+
 ## Resolution Result
 
 Resolution dapat menghasilkan:
