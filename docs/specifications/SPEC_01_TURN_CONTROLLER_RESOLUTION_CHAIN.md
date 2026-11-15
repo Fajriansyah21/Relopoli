@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #35 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #36 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -380,6 +380,7 @@ Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang
 20. Durasi Reward yang dihitung berdasarkan jumlah giliran pemilik tidak berkurang selama Frozen Turn. Perhitungan durasi dilanjutkan pada giliran normal pemilik sesuai aturan Reward.
 21. Fast Travel privilege yang menunggu penggunaan tetap tersedia dan tidak dikonsumsi oleh Frozen Turn. Fast Travel UI dan proses penggunaannya baru dijalankan pada giliran normal pemain tersebut.
 22. Jail Attempt Counter dan counter berbasis percobaan tidak berubah karena Frozen Turn; counter hanya berubah ketika peristiwa gameplay yang menjadi dasar penghitungannya benar-benar terjadi. Secara khusus, Jail Attempt Counter hanya bertambah setelah pemain benar-benar melakukan percobaan Double di Jail dan hasilnya Non-Double.
+23. Jika Parent Turn Chain berakhir ABORTED sebelum ditetapkan COMPLETED, kewajiban Frozen Turn yang telah dicatat selama Chain tersebut dibatalkan dan tidak dibawa ke handoff setelah eliminasi. Frozen Turn hanya dapat diterapkan setelah Turn pemicunya benar-benar COMPLETED; hasil terminal yang mengakhiri Chain melalui jalur ABORTED mengalahkan kewajiban Frozen Turn yang masih pending.
 
 ### TC-24 — Player Elimination dan Turn Handoff
 
@@ -961,7 +962,7 @@ Jika implementasi membutuhkan keputusan di luar kontrak atau scope, berhenti dan
 - Testing: not performed.
 
 Next workflow gate:
-1. Continue consolidated review for consistency, missing cases, and prototype boundary. Findings #1 through #29 are approved; next checkpoint is Finding #30.
+1. Continue consolidated review for consistency, missing cases, and prototype boundary. Findings #1 through #36 are approved; next checkpoint is Finding #37.
 2. Resolve or explicitly mark remaining TBD items.
 3. Obtain explicit approval of the complete Specification 01.
 4. Update affected canonical documents through the approved documentation workflow, including the TC-31 change from ABORTED to ENDED for zero active players.
