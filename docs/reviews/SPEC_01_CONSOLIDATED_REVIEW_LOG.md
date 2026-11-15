@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #19  
+**Approved findings:** #1 through #20  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -330,6 +330,30 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail commit dan mekanisme verifikasi transisi tetap TBD.
 
+### Finding #20 — Active Player Disconnect During Movement
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-17A, TC-18A, TC-24, TC-28, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Jika pemain aktif disconnect ketika Movement berlangsung, server menghentikan Movement secara aman.
+2. Posisi karakter dikembalikan atau dipertahankan pada tile terakhir yang telah dikonfirmasi server sebagai posisi authoritative dan aman; posisi animasi atau sementara Client tidak menjadi acuan.
+3. Movement yang dihentikan sebelum Movement Complete tidak dianggap selesai.
+4. Start Detection, Start Reward, dan Landing Resolution yang belum dimulai dibatalkan.
+5. Player Leave/Elimination harus divalidasi terlebih dahulu.
+6. Setelah eliminasi tervalidasi, Parent Turn Chain menjadi ABORTED melalui jalur terminal TC-24 dan TC-28.
+7. Movement yang sudah dihentikan tidak dijalankan ulang.
+8. Global Victory Check menggunakan state authoritative terbaru.
+9. Jika Match tetap RUNNING, pemain berikutnya dipilih sesuai urutan awal.
+10. Disconnect bukan kegagalan teknis Movement yang otomatis menghasilkan FAILED dan tidak menggunakan Character Reset Recovery TC-27.
+11. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-17A dan TC-18A diperjelas untuk membedakan disconnect ketika Movement berlangsung dari kegagalan teknis Movement serta membatalkan proses setelah Movement yang belum dimulai. TC-24 dan TC-28 diperluas untuk mengatur penghentian Movement, posisi authoritative yang aman, dan jalur ABORTED setelah eliminasi tervalidasi.
+
+**Batas teknis:** Detail mekanisme penghentian Movement dan penetapan tile terakhir yang aman tetap mengikuti implementasi Movement Engine serta bagian TBD; tidak ditambahkan mekanisme Recovery baru.
+
 ### Finding #19 — Active Player Disconnect After Turn Activation but Before News Phase
 
 **Status:** Approved and incorporated into Specification 01
@@ -397,5 +421,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #17 | News Phase Transition State Unverifiable | Approved | TC-60 point 8 aligned with TC-04A failure handling; no assumed retry or gameplay continuation |
 | #18 | Active Player Disconnect During Turn Initialization | Approved | TC-28 extended; TC-24, TC-34, TC-58, and TC-59 distinguish Player Leave/Elimination from technical Initialization failure |
 | #19 | Active Player Disconnect After Turn Activation but Before News Phase | Approved | TC-28, TC-24, and TC-60 define ABORTED handling; News Phase and Roll do not start |
+| #20 | Active Player Disconnect During Movement | Approved | TC-17A, TC-18A, TC-24, and TC-28 define safe Movement stop, authoritative safe tile, and ABORTED handling |
 
-**Next step:** Continue consolidated review with Finding #20, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #21, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
