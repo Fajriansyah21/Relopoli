@@ -477,7 +477,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 5. Match Outcome dan alasan berakhirnya Match dicatat terpisah dari Game State.
 6. Jika tidak ada pemain aktif, tidak ada Turn baru.
 7. Seluruh konsekuensi Game End mengikuti TC-25.
-8. **Scope reconciliation required:** Prototype Scope v1.0 saat ini menyebut Game State ABORTED untuk nol pemain aktif. Keputusan TC-31 menyetujui perubahan menjadi ENDED tanpa pemenang. Prototype Scope dan dokumen terkait wajib direvisi melalui workflow dokumentasi dan approval sebelum implementasi; perubahan tidak boleh dilakukan diam-diam.
+8. **Scope reconciliation completed:** Prototype Scope v1.0 bagian 2.10 dan Acceptance Criteria bagian 5 telah direvisi melalui workflow dokumentasi setelah approval eksplisit. Nol pemain aktif kini menghasilkan Game State ENDED tanpa pemenang. Dependency dokumentasi Finding #3 selesai.
 
 ### TC-32 — Player Order Consistency After Elimination
 
