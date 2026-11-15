@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #21 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #22 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -266,8 +266,8 @@ Dice System menghasilkan hasil dadu; Dice System tidak menentukan alur permainan
 4. Start System memproses reward sesuai Prototype Scope:
    - Pass Start: 20K.
    - Landing Start: 30K.
-   - First Lap: 100K total, termasuk reward Start.
-5. First Lap hanya diproses satu kali per pemain.
+   - First Lap: 100K total untuk Movement yang menyelesaikan First Lap; reward ini menggantikan reward Pass Start atau Landing Start pada Movement yang sama dan tidak ditumpuk.
+5. First Lap hanya diproses satu kali per pemain. Setelah First Lap selesai, reward Pass Start dan Landing Start kembali mengikuti aturan normal.
 6. Start System mengembalikan hasil penyelesaian kepada Turn Controller.
 7. Landing Resolution baru dimulai setelah Start Detection dan reward relevan selesai.
 8. Start System tidak memulai Landing Resolution atau mengakhiri Turn sendiri.
