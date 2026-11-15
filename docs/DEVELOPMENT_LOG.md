@@ -67,6 +67,15 @@ Fokus berikutnya:
 
 Tambahkan entri terbaru di bagian paling atas setelah header ini.
 
+### 2026-11-15 — Specification 01 Finding #34: Frozen Turn
+
+- Mengimplementasikan Finding #34 yang telah disetujui pada TC-23, Master Source of Truth bagian 3, dan Progress 20 Audit #8 Case 3.
+- Frozen Turn ditetapkan sebagai handoff/skip Turn Controller atas satu giliran terjadwal pemain eligible berikutnya, bukan Resolution atau Turn normal.
+- Giliran yang dilewati tidak membuat TurnID/ParentTurnChainID, tidak menjalankan Initialization, Activation, fase gameplay, aktivitas giliran, atau pemrosesan status berbasis giliran.
+- Pemain yang dilewati tetap ACTIVE, mempertahankan Balance dan aset, serta tetap dalam urutan roster. Game End mengalahkan Frozen Turn.
+- Review Log dan Changelog diperbarui. Specification 01 tetap DRAFT; implementasi dan pengujian tetap Not Implemented / Not Tested. Progress 20 tetap LOCKED dengan revisi terbatas yang disetujui.
+
+
 ### 2026-11-15 — Prototype Scope v1.0 reconciliation
 
 - Merevisi Prototype Scope v1.0 setelah persetujuan eksplisit untuk menyelesaikan dependency Finding #3 dan #8 pada Consolidated Review Specification 01.
