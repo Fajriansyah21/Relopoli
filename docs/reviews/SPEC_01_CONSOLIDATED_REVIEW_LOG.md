@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #22  
+**Approved findings:** #1 through #23  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -438,6 +438,29 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Mekanisme pencatatan First Lap dan pemrosesan reward tetap mengikuti kontrak Start System serta detail implementasi yang belum ditetapkan.
 
+### Finding #23 — Active Player Disconnect During Start Detection / Start Reward
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-18A, TC-24, TC-28, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Jika pemain disconnect ketika Start Detection atau Start Reward belum dimulai setelah Movement Complete, pekerjaan yang belum dimulai dibatalkan.
+2. Jika Atomic Operation Start Reward sudah dimulai, operasi diselesaikan sampai batas aman sesuai TC-30.
+3. Reward yang berhasil diproses tetap dipertahankan dan tidak diberikan ulang atau di-rollback secara otomatis.
+4. Landing Resolution yang belum dimulai dibatalkan.
+5. Player Leave/Elimination divalidasi terlebih dahulu.
+6. Setelah eliminasi tervalidasi, Parent Turn Chain menjadi ABORTED sesuai TC-24 dan TC-28.
+7. Global Victory Check menggunakan state authoritative terbaru.
+8. Disconnect bukan kegagalan teknis Start System yang otomatis menghasilkan FAILED.
+9. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
+10. Tidak ada status Chain atau decision ID baru.
+
+**Perubahan dokumentasi:** TC-18A diperluas untuk mengatur disconnect setelah Movement Complete selama Start Detection atau Start Reward. TC-24 menambahkan konsekuensi ABORTED setelah eliminasi tervalidasi. TC-28 memperluas cakupan disconnect dan menetapkan pembatalan pekerjaan yang belum dimulai, penyelesaian Atomic Operation Start Reward sampai batas aman, persistensi reward yang berhasil, serta pembatalan Landing Resolution yang belum dimulai. TC-30 menyelaraskan sequencing dan batas aman Atomic Operation dengan aturan tersebut.
+
+**Batas teknis:** Detail deteksi disconnect, pembatalan Start Detection, penyelesaian Atomic Operation Start Reward, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -464,5 +487,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #20 | Active Player Disconnect During Movement | Approved | TC-17A, TC-18A, TC-24, and TC-28 define safe Movement stop, authoritative safe tile, and ABORTED handling |
 | #21 | Active Player Disconnect During Resolution | Approved | TC-24, TC-28, and TC-30 define safe Atomic Operation boundary, ABORTED handling, and distinction from independent technical failure |
 | #22 | First Lap Reward vs Normal Start Reward | Approved | TC-18A clarifies that the 100K First Lap reward replaces, rather than stacks with, the normal Start reward |
+| #23 | Active Player Disconnect During Start Detection / Start Reward | Approved | TC-18A, TC-24, TC-28, and TC-30 define safe reward completion, reward retention, ABORTED handling, and cancellation of unstarted Landing Resolution |
 
-**Next step:** Continue consolidated review with Finding #23, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #24, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
