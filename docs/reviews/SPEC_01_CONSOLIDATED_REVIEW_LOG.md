@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #15  
+**Approved findings:** #1 through #16  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -296,6 +296,23 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail sequencing, queue, dan arbitration teknis tetap TBD.
 
+### Finding #16 — Turn Activation State Unverifiable vs Chain Failure
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-04A, TC-11A, TC-13A, TC-59, TC-60
+
+**Keputusan yang disetujui:**
+
+1. Jika status aktivasi tidak dapat diverifikasi setelah Parent Turn Chain dimulai, Turn Controller tidak menerima aksi gameplay.
+2. Parent Turn Chain ditetapkan FAILED sesuai TC-04A.
+3. Turn tidak dianggap aktif dan tidak melanjutkan ke News Phase atau Roll.
+4. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-59 poin 10 diperjelas untuk menetapkan konsekuensi kegagalan verifikasi status aktivasi setelah Parent Turn Chain memasuki lifecycle.
+
+**Batas teknis:** Detail commit, penyimpanan, dan atomic publication tetap TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -315,5 +332,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #13 | Parent Turn Chain Lifecycle During Turn Initialization | Approved | TC-04A, TC-06B, and TC-13A define lifecycle start after successful authorization and before Initialization |
 | #14 | Turn Start Authorization Failure Before Parent Turn Chain Lifecycle | Approved | TC-04A, TC-51, TC-56, and TC-57 distinguish pre-lifecycle process failure from Chain FAILED |
 | #15 | Concurrent Event Arbitration vs Pre-Lifecycle Failure | Approved | TC-30 point 10 aligned with the pre-lifecycle failure boundary in TC-04A, TC-56, and TC-57 |
+| #16 | Turn Activation State Unverifiable vs Chain Failure | Approved | TC-59 point 10 aligned with TC-04A failure handling after Chain lifecycle start |
 
-**Next step:** Continue consolidated review with Finding #16, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #17, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
