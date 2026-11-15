@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #18  
+**Approved findings:** #1 through #19  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -330,6 +330,27 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail commit dan mekanisme verifikasi transisi tetap TBD.
 
+### Finding #19 — Active Player Disconnect After Turn Activation but Before News Phase
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-24, TC-28, TC-59, TC-60
+
+**Keputusan yang disetujui:**
+
+1. Jika pemain aktif disconnect setelah Turn Activation berhasil tetapi sebelum News Phase dimulai, Turn Controller menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
+2. Server menjalankan Player Leave/Elimination dan memvalidasi status pemain.
+3. Setelah eliminasi tervalidasi, Parent Turn Chain ditetapkan ABORTED melalui jalur terminal TC-24 dan TC-28.
+4. News Phase dan Roll tidak boleh dimulai.
+5. Global Victory Check dijalankan menggunakan state authoritative terbaru.
+6. Jika Match tetap RUNNING, Turn Controller memilih pemain berikutnya sesuai urutan awal dan menjalankan prosedur Turn Start normal.
+7. Kondisi ini bukan kegagalan teknis Turn Activation atau transisi News Phase dan tidak otomatis menghasilkan FAILED.
+8. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-28 diperluas untuk mencakup disconnect setelah Turn Activation berhasil tetapi sebelum News Phase dimulai. TC-24 menetapkan penghentian Chain sebagai ABORTED setelah eliminasi tervalidasi. TC-60 menegaskan bahwa News Phase dan Roll tidak dimulai pada kondisi tersebut.
+
+**Batas teknis:** Detail deteksi disconnect, validasi Player Leave/Elimination, dan sequencing transisi tetap mengikuti kontrak terkait serta bagian TBD.
+
 ### Finding #18 — Active Player Disconnect During Turn Initialization
 
 **Status:** Approved and incorporated into Specification 01
@@ -375,5 +396,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #16 | Turn Activation State Unverifiable vs Chain Failure | Approved | TC-59 point 10 aligned with TC-04A failure handling after Chain lifecycle start |
 | #17 | News Phase Transition State Unverifiable | Approved | TC-60 point 8 aligned with TC-04A failure handling; no assumed retry or gameplay continuation |
 | #18 | Active Player Disconnect During Turn Initialization | Approved | TC-28 extended; TC-24, TC-34, TC-58, and TC-59 distinguish Player Leave/Elimination from technical Initialization failure |
+| #19 | Active Player Disconnect After Turn Activation but Before News Phase | Approved | TC-28, TC-24, and TC-60 define ABORTED handling; News Phase and Roll do not start |
 
-**Next step:** Continue consolidated review with Finding #19, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #20, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
