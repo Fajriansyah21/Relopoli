@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** Pending (TC-01 through TC-60)  
+**Consolidated review:** In progress — Findings #1 through #4 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -27,6 +27,7 @@ Dokumen ini melengkapi, bukan menggantikan:
 - [Progress 19 — Master Flow](../progress/PROGRESS_19_MASTER_FLOW.md)
 - [Progress 20 — Edge Case & Exploit Audit](../audit/PROGRESS_20_EDGE_CASE_EXPLOIT_AUDIT.md)
 - [Core Gameplay Prototype Scope v1.0](../CORE_GAMEPLAY_PROTOTYPE_SCOPE.md)
+- [Specification 01 Consolidated Review Log](../reviews/SPEC_01_CONSOLIDATED_REVIEW_LOG.md)
 
 Jika ditemukan konflik, aturan gameplay dan source hierarchy pada dokumen kanonis tetap berlaku. Setiap konflik atau kebutuhan perubahan harus dibahas, bukan diselesaikan dengan asumsi implementasi.
 
@@ -808,7 +809,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 3. Sebelum aktivasi berhasil, pemain belum memiliki hak melakukan aksi gameplay untuk Turn tersebut.
 4. Turn Controller menetapkan Turn aktif hanya setelah seluruh hasil Initialization diverifikasi.
 5. Aktivasi menjadi batas resmi dimulainya hak pemain menjalankan giliran.
-6. Setelah aktivasi berhasil, Turn Controller memulai News Phase.
+6. TC-59 hanya mengatur keberhasilan dan status Turn Activation; transisi menuju News Phase diatur secara eksklusif oleh TC-60.
 7. Jika aktivasi gagal, Parent Turn Chain menjadi FAILED.
 8. Turn gagal aktivasi tidak dianggap aktif dan tidak berlanjut ke Roll.
 9. Aktivasi duplikat tidak mengulang Turn Start atau Initialization.
@@ -820,7 +821,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 1. Setelah Turn berhasil diaktifkan sesuai TC-59, Turn Controller memulai News Phase.
 2. News Phase adalah fase gameplay pertama setiap Turn normal.
 3. Tidak ada Roll atau aksi gameplay berikutnya sebelum transisi News Phase berhasil ditetapkan.
-4. Hanya Turn Controller yang melakukan transisi Turn Activation menuju News Phase.
+4. TC-60 adalah satu-satunya kontrak yang mengatur transisi Turn Activation menuju News Phase; hanya Turn Controller yang mengeksekusi transisi tersebut.
 5. Transisi hanya dilakukan satu kali untuk setiap Turn.
 6. Permintaan transisi duplikat tidak mengulang News Phase atau membuat Resolution tambahan.
 7. News Phase menggunakan TurnID dan ParentTurnChainID yang sama dengan Turn aktif.
