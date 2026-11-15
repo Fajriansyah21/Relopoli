@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #13  
+**Approved findings:** #1 through #14  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -260,6 +260,25 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail implementasi status dan sequencing tetap mengikuti bagian TBD Specification 01.
 
+### Finding #14 — Turn Start Authorization Failure Before Parent Turn Chain Lifecycle
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-04A, TC-13A, TC-51, TC-56, TC-57, TC-58, TC-59
+
+**Keputusan yang disetujui:**
+
+1. Jika kegagalan teknis atau ketidakmampuan memverifikasi state terjadi sebelum otorisasi Turn Start berhasil dan sebelum Parent Turn Chain dimulai, proses Turn Start dinyatakan gagal.
+2. Kegagalan sebelum Chain dimulai tidak menetapkan status lifecycle Parent Turn Chain, karena Chain belum memasuki lifecycle.
+3. Jika kegagalan terjadi setelah otorisasi berhasil dan Parent Turn Chain resmi dimulai, Chain ditetapkan FAILED.
+4. Ketidakpastian pada proses Turn Start sebelum Chain dimulai tidak boleh disamakan dengan kegagalan Chain yang telah memasuki lifecycle.
+5. Kegagalan sebelum Chain dimulai tidak boleh mengaktifkan Turn, menjalankan Initialization, atau memberikan hak gameplay.
+6. Tidak ada status Chain atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-04A memperjelas perlakuan kegagalan sebelum dan sesudah lifecycle dimulai. TC-51 poin 14, TC-56 poin 8, dan TC-57 poin 8 diselaraskan agar status FAILED hanya diterapkan kepada Parent Turn Chain yang telah memasuki lifecycle.
+
+**Batas teknis:** Representasi status proses Turn Start yang gagal sebelum Chain dimulai tetap TBD; tidak ditambahkan status lifecycle Chain baru.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -277,5 +296,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #11 | Prepared Turn Identity Invalidated When Candidate Becomes Ineligible | Approved | TC-23 point 8 and TC-51 clarified; identity cannot be reused |
 | #12 | Prepared Identity vs Parent Turn Chain Lifecycle | Approved | TC-04A and TC-51 distinguish identity creation from Chain lifecycle start |
 | #13 | Parent Turn Chain Lifecycle During Turn Initialization | Approved | TC-04A, TC-06B, and TC-13A define lifecycle start after successful authorization and before Initialization |
+| #14 | Turn Start Authorization Failure Before Parent Turn Chain Lifecycle | Approved | TC-04A, TC-51, TC-56, and TC-57 distinguish pre-lifecycle process failure from Chain FAILED |
 
-**Next step:** Continue consolidated review with Finding #14, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #15, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
