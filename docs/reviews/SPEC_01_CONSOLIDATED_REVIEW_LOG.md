@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #6  
+**Approved findings:** #1 through #7  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -124,6 +124,26 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Perubahan dokumentasi:** TC-56 poin 6 diselaraskan dengan TC-13A, TC-59, dan TC-60. Tidak ada decision ID baru yang ditambahkan.
 
+
+### Finding #7 — Duplicate Turn Start vs Prepared Turn Lifecycle
+
+**Status:** Approved and incorporated into Specification 01
+
+**Kontrak terkait:** TC-13A, TC-56, TC-57, TC-58, TC-59
+
+**Keputusan yang disetujui:**
+
+1. Satu giliran hanya memiliki satu proses Turn Start yang sah.
+2. Sebelum menerima proses Turn Start baru, Turn Controller wajib memvalidasi apakah masih ada proses Turn Start atau Turn yang sedang dipersiapkan, menjalani Initialization, telah aktif, atau telah selesai untuk identitas Turn terkait.
+3. Permintaan Turn Start duplikat tidak membuat TurnID atau ParentTurnChainID tambahan.
+4. Initialization hanya boleh berhasil satu kali untuk setiap Turn.
+5. Reset Double Counter dan Initialization lainnya tidak boleh diulang akibat permintaan duplikat.
+6. Turn Start yang berhasil tidak boleh diaktifkan kembali.
+7. Permintaan dari Chain atau Match yang tidak berlaku ditolak tanpa side effect.
+8. Jika status proses sebelumnya tidak dapat dipastikan, proses tidak boleh diulang berdasarkan asumsi. Chain menjadi FAILED jika keamanan State tidak dapat diverifikasi.
+9. Mekanisme teknis pencegahan duplikasi tetap TBD.
+
+**Perubahan dokumentasi:** TC-57 poin 2 diperjelas untuk mencakup proses Turn Start dan Turn yang masih dipersiapkan, sedang menjalani Initialization, telah aktif, maupun telah selesai. Tidak ada decision ID baru yang ditambahkan.
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -134,5 +154,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #4 | Turn Activation vs News Phase Transition | Approved | TC-59 and TC-60 updated |
 | #5 | Turn Identity, Initialization, and Activation Alignment | Approved | TC-13A, TC-14A, and TC-51 updated |
 | #6 | Turn Start Authorization vs Turn Ownership | Approved | TC-56 point 6 updated |
+| #7 | Duplicate Turn Start vs Prepared Turn Lifecycle | Approved | TC-57 point 2 updated |
 
-**Next step:** Continue consolidated review with Finding #7, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #8, using the current GitHub version of Specification 01, Master Source of Truth, Prototype Scope, and Progress 20 as source documents. Do not introduce new decision IDs.
