@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #35  
+**Approved findings:** #1 through #36  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -757,3 +757,21 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** TC-23 diperluas untuk menetapkan persistensi efek dan privilege yang menunggu, tidak berkurangnya durasi Reward berbasis giliran pemilik, penundaan aktivasi efek sampai giliran normal pemain, serta tidak berubahnya counter berbasis percobaan selama Frozen Turn. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan. Metadata Specification 01, Review Log, Development Log, dan Changelog diperbarui.
 
 **Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap berstatus LOCKED; revisi terbatas pada Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #35.
+
+### Finding #37 — Cancel Pending Frozen Turn When Parent Turn Chain Aborts
+
+**Status:** Approved and incorporated into canonical documentation
+
+**Kontrak terkait:** TC-23; TC-24; TC-06A; Master Source of Truth Frozen Turn section; Progress 20 Audit #8, Case 3
+
+**Keputusan yang disetujui:**
+
+1. Frozen Turn yang telah dicatat sebagai konsekuensi Forced Break hanya dapat diterapkan setelah Parent Turn Chain pemicunya benar-benar ditetapkan COMPLETED.
+2. Jika Parent Turn Chain berakhir ABORTED sebelum mencapai COMPLETED, kewajiban Frozen Turn yang masih pending dibatalkan.
+3. Frozen Turn tidak dibawa ke handoff setelah Player Elimination atau hasil terminal lain yang mengakhiri Chain melalui jalur ABORTED.
+4. Hasil terminal yang mengakhiri Chain melalui ABORTED mengalahkan kewajiban Frozen Turn yang masih pending. Aturan ini tidak mengubah prioritas Game End atau kontrak Frozen Turn setelah Turn berhasil COMPLETED.
+5. Tidak ada TC atau decision ID baru yang ditambahkan. Specification 01 tetap DRAFT; status implementasi tetap Not Implemented / Not Tested.
+
+**Perubahan dokumentasi:** TC-23 diperjelas untuk membatalkan Frozen Turn pending ketika Parent Turn Chain berakhir ABORTED sebelum COMPLETED. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan.
+
+**Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap LOCKED; revisi terbatas pada aturan Frozen Turn di Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #37.
