@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #4 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #7 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -779,13 +779,13 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 ### TC-57 — Duplicate Turn Start Protection
 
 1. Satu giliran hanya memiliki satu proses Turn Start yang sah.
-2. Turn Controller memvalidasi apakah pemain sudah memiliki Turn aktif sebelum memulai Turn baru.
+2. Sebelum menerima proses Turn Start baru, Turn Controller wajib memvalidasi apakah masih ada proses Turn Start atau Turn yang sedang dipersiapkan, menjalani Initialization, telah aktif, atau telah selesai untuk identitas Turn terkait.
 3. Permintaan Turn Start duplikat tidak membuat TurnID atau ParentTurnChainID tambahan.
 4. Inisialisasi aturan per-turn hanya berhasil satu kali untuk setiap Turn.
 5. Reset Double Counter dan inisialisasi lain tidak diulang akibat Turn Start duplikat.
 6. Turn Start yang berhasil tidak diaktifkan kembali.
-7. Permintaan dari Chain atau Match tidak berlaku ditolak tanpa side effect.
-8. Jika status keberhasilan Turn Start sebelumnya tidak dapat dipastikan, proses tidak diulang berdasarkan asumsi; Chain menjadi FAILED jika keamanan State tidak dapat diverifikasi.
+7. Permintaan dari Chain atau Match yang tidak berlaku ditolak tanpa side effect.
+8. Jika status proses sebelumnya tidak dapat dipastikan, proses tidak diulang berdasarkan asumsi; Chain menjadi FAILED jika keamanan State tidak dapat diverifikasi.
 9. Mekanisme teknis pencegahan duplikasi tetap TBD.
 
 ### TC-58 — Turn Start Failure After Partial Initialization
