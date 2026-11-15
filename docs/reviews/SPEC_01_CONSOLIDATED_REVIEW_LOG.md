@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #37  
+**Approved findings:** #1 through #38  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -588,8 +588,10 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #33 | Final Bankruptcy with Zero Active Players | Approved | Progress 20 Audit #1 point 10 now distinguishes remaining active players from zero active players; zero active players ends the Match without a winner or a new Turn, consistent with TC-31 |
 | #34 | Forced Break and Frozen Turn Handoff | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 define Frozen Turn as a Turn Controller-controlled skip of exactly one next eligible player's scheduled turn; no Turn/Chain/phase/status processing occurs, the player remains ACTIVE with assets intact, and Game End overrides the skip |
 | #35 | Frozen Turn and Pending Turn-Based Effects | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 clarify that Frozen Turn does not consume pending next-normal-turn effects, decrement owner-turn-based durations, use pending Fast Travel, or change attempt-based counters such as Jail Attempt Counter |
+| #37 | Cancel Pending Frozen Turn When Parent Turn Chain Aborts | Approved | TC-23, Master Source of Truth Frozen Turn section, and Progress 20 Audit #8 Case 3 cancel a pending Frozen Turn when its triggering Chain ends ABORTED before COMPLETED |
+| #38 | Frozen Turn Eligibility Validation at Skip Boundary | Approved | TC-23, Master Source of Truth Frozen Turn section, and Progress 20 Audit #8 Case 3 require final authoritative eligibility revalidation immediately before skip, sequentially ordered with skip commit against Player Leave/Elimination, without consuming Frozen Turn for an ineligible candidate |
 
-**Next step:** Continue consolidated review with Finding #36, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #39, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
 
 
@@ -775,3 +777,22 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** TC-23 diperjelas untuk membatalkan Frozen Turn pending ketika Parent Turn Chain berakhir ABORTED sebelum COMPLETED. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan.
 
 **Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap LOCKED; revisi terbatas pada aturan Frozen Turn di Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #37.
+
+
+### Finding #38 — Frozen Turn Eligibility Validation at Skip Boundary
+
+**Status:** Approved and incorporated into canonical documentation
+
+**Kontrak terkait:** TC-02A; TC-23; TC-55; Master Source of Truth Frozen Turn section; Progress 20 Audit #8, Case 3
+
+**Keputusan yang disetujui:**
+
+1. Tepat sebelum pemain dilewati dalam Frozen Turn, Turn Controller wajib memvalidasi ulang eligibility kandidat menggunakan state authoritative server terbaru.
+2. Validasi akhir eligibility dan commit skip diproses secara berurutan dalam urutan pemrosesan State Change server global sesuai TC-02A. Player Leave/Elimination tidak boleh mengubah eligibility di antara validasi akhir dan commit skip.
+3. Jika kandidat tidak lagi eligible, kandidat dilewati tanpa mengonsumsi Frozen Turn. Turn Controller mengulangi seleksi dan validasi terhadap kandidat berikutnya menurut TC-55.
+4. Frozen Turn baru dikonsumsi setelah satu kandidat yang lolos validasi akhir benar-benar berhasil dilewati.
+5. Tidak ada TC atau decision ID baru yang ditambahkan. Specification 01 tetap DRAFT; status implementasi tetap Not Implemented / Not Tested.
+
+**Perubahan dokumentasi:** TC-23 poin 13 dan 16 diperjelas mengenai final eligibility revalidation, urutan pemrosesan server global pada batas validasi dan skip, serta konsumsi Frozen Turn hanya setelah skip yang sah. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan.
+
+**Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap LOCKED; revisi terbatas pada aturan Frozen Turn di Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #38.
