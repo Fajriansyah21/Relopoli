@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #38  
+**Approved findings:** #1 through #39  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -796,3 +796,24 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** TC-23 poin 13 dan 16 diperjelas mengenai final eligibility revalidation, urutan pemrosesan server global pada batas validasi dan skip, serta konsumsi Frozen Turn hanya setelah skip yang sah. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan.
 
 **Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap LOCKED; revisi terbatas pada aturan Frozen Turn di Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #38.
+
+
+### Finding #39 — Game End Validation at Frozen Turn Skip Boundary
+
+**Status:** Approved and incorporated into canonical documentation
+
+**Kontrak terkait:** TC-02A; TC-21A; TC-23; TC-25; Master Source of Truth Frozen Turn section; Progress 20 Audit #8, Case 3
+
+**Keputusan yang disetujui:**
+
+1. Pemeriksaan Game State setelah Parent Turn Chain pemicu COMPLETED tetap dilakukan sebelum proses Frozen Turn, tetapi pemeriksaan awal tersebut tidak menggantikan validasi ulang pada batas commit skip.
+2. Tepat sebelum Frozen Turn skip di-commit, Turn Controller wajib memvalidasi ulang Game State dan eligibility kandidat menggunakan state authoritative server terbaru.
+3. Validasi akhir Game State, validasi akhir eligibility, dan commit skip diproses secara berurutan dalam urutan pemrosesan State Change server global sesuai TC-02A.
+4. Jika Game State telah ENDED, Frozen Turn tidak dijalankan atau dikonsumsi dan tidak ada pemain yang dilewati.
+5. Jika Game State masih RUNNING tetapi kandidat tidak lagi eligible, kandidat dilewati tanpa mengonsumsi Frozen Turn. Seleksi dan validasi diulang terhadap kandidat berikutnya sesuai TC-55.
+6. Skip hanya di-commit setelah Game State masih RUNNING dan kandidat lolos validasi akhir. Frozen Turn dikonsumsi tepat satu kali setelah skip berhasil di-commit.
+7. Tidak ada TC atau decision ID baru yang ditambahkan. Specification 01 tetap DRAFT; status implementasi tetap Not Implemented / Not Tested.
+
+**Perubahan dokumentasi:** TC-23 poin 12, 13, dan 16 diperjelas untuk membedakan pemeriksaan awal Game State dari validasi ulang pada batas commit skip. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan. Metadata Specification 01, Review Log, Development Log, dan Changelog diperbarui.
+
+**Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap berstatus LOCKED; revisi terbatas pada aturan Frozen Turn di Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #39.
