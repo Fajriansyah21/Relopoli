@@ -2,6 +2,9 @@
 
 All notable documentation changes are recorded here.
 
+## 2026-11-15
+- Revised the locked Core Gameplay Prototype Scope v1.0 after explicit approval to reconcile Specification 01 Findings #3 and #8. Clarified that turn order preserves the initial roster and skips ineligible players without rebuilding order; zero active players ends the match with Game State ENDED and no winner. Updated the Acceptance Criteria and review/development records. No implementation or testing is claimed.
+
 ## 2026-11-13
 - Initialized the repository documentation structure.
 - Added the consolidated Master Source of Truth.
