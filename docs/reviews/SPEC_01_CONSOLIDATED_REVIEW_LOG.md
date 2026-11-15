@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #24  
+**Approved findings:** #1 through #25  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -485,6 +485,30 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail pembatalan Physical Dice, validasi hasil Roll, penyelesaian Dice Resolution, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
 
+### Finding #25 — Active Player Disconnect During News Phase / News Card
+
+**Status:** Approved
+
+**Kontrak terkait:** TC-14A, TC-24, TC-28, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Jika pemain aktif disconnect selama News Phase, Turn Controller menghentikan penerimaan aksi gameplay baru dari pemain tersebut.
+2. News Card yang sedang terbuka segera dibersihkan tanpa menunggu respons OK.
+3. News effect yang telah berhasil diproses tetap dipertahankan dan tidak dijalankan ulang atau di-rollback secara otomatis.
+4. News Resolution atau pekerjaan lanjutan yang belum dimulai dibatalkan.
+5. Atomic Operation yang telah dimulai diselesaikan sampai batas aman sesuai TC-30.
+6. Player Leave/Elimination harus divalidasi terlebih dahulu. Setelah tervalidasi, Parent Turn Chain menjadi ABORTED melalui TC-24 dan TC-28.
+7. Global Victory Check menggunakan state authoritative terbaru.
+8. Jika Match tetap RUNNING, Turn Controller melanjutkan ke pemain aktif berikutnya sesuai urutan match.
+9. Jika pemain nonaktif disconnect, News Card dan News Resolution milik pemain aktif tetap berjalan tanpa interupsi, kecuali disconnect menyebabkan GAME_END.
+10. Disconnect bukan kegagalan teknis News System yang otomatis menghasilkan FAILED. Kegagalan teknis independen atau state yang tidak dapat diverifikasi tetap mengikuti aturan FAILED.
+11. Tidak ada status Chain atau decision ID baru.
+
+**Perubahan dokumentasi:** TC-14A menambahkan penanganan disconnect selama News Phase, cleanup News Card, persistensi News effect, pembatalan pekerjaan yang belum dimulai, serta perlindungan ketika pemain nonaktif disconnect. TC-24 menambahkan jalur ABORTED setelah Player Leave/Elimination tervalidasi selama News Phase. TC-28 memperluas cakupan disconnect dan menetapkan cleanup News Card tanpa menunggu OK, penyelesaian Atomic Operation sampai batas aman, serta pembedaan disconnect pemain aktif dan nonaktif. TC-30 menyelaraskan sequencing dan batas aman Atomic Operation serta mempertahankan jalur FAILED untuk kegagalan teknis independen.
+
+**Batas teknis:** Detail deteksi disconnect, cleanup News Card, validasi Player Leave/Elimination, penyelesaian Atomic Operation, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -513,5 +537,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #22 | First Lap Reward vs Normal Start Reward | Approved | TC-18A clarifies that the 100K First Lap reward replaces, rather than stacks with, the normal Start reward |
 | #23 | Active Player Disconnect During Start Detection / Start Reward | Approved | TC-18A, TC-24, TC-28, and TC-30 define safe reward completion, reward retention, ABORTED handling, and cancellation of unstarted Landing Resolution |
 | #24 | Active Player Disconnect During Roll / Dice Resolution | Approved | TC-15A, TC-16A, TC-24, TC-28, and TC-30 define cancellation before valid Roll, safe Dice Resolution completion, Double Counter retention, and ABORTED handling |
+| #25 | Active Player Disconnect During News Phase / News Card | Approved | TC-14A, TC-24, TC-28, and TC-30 define News Card cleanup, retention of processed effects, cancellation of unstarted work, and active vs non-active disconnect handling |
 
-**Next step:** Continue consolidated review with Finding #25, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #26, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
