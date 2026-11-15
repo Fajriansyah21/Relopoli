@@ -194,20 +194,20 @@ TurnID mengidentifikasi giliran. ParentTurnChainID mengidentifikasi rangkaian Re
 
 ### TC-13A — Turn Initialization
 
-1. Setelah pemain aktif ditentukan, Turn Controller membuat TurnID dan ParentTurnChainID.
-2. Turn Controller menetapkan pemain tersebut sebagai pemilik giliran aktif.
-3. Inisialisasi aturan per-turn dilakukan sebelum fase gameplay pertama.
+1. Setelah pemain ditentukan, Turn Controller membuat TurnID dan ParentTurnChainID untuk Turn yang sedang dipersiapkan. Pembuatan identitas tidak berarti Turn telah aktif.
+2. Setelah seluruh pemeriksaan otorisasi Turn Start sesuai TC-56 berhasil, Turn Controller mencatat pemain terpilih sebagai pemilik Turn yang sedang dipersiapkan. Penetapan ini tidak mengaktifkan Turn dan tidak memberikan hak gameplay.
+3. Inisialisasi aturan per-turn dilakukan sebelum Turn Activation dan fase gameplay pertama.
 4. Double Counter di-reset pada awal giliran baru.
 5. Batas penggunaan aksi per-turn, termasuk Stored News, mengikuti aturan sistem terkait.
-6. Setelah inisialisasi berhasil, Turn Controller masuk ke News Phase.
+6. Setelah seluruh Initialization berhasil dan diverifikasi, Turn dapat diaktifkan sesuai TC-59. Transisi menuju News Phase hanya dilakukan melalui TC-60.
 7. Jika inisialisasi gagal, giliran tidak boleh dimulai setengah jalan. Chain masuk FAILED dan tidak boleh diam-diam berpindah ke pemain berikutnya.
 
 Turn Controller mengatur kapan inisialisasi berlangsung. Detail reset setiap mekanik tetap menjadi tanggung jawab sistem terkait.
 
 ### TC-14A — News Phase Contract
 
-1. News Phase dimulai setelah Turn Initialization berhasil.
-2. Turn Controller menentukan kapan News Phase dimulai dan selesai.
+1. News Phase hanya dimulai melalui transisi TC-60 setelah Turn berhasil diaktifkan sesuai TC-59.
+2. Turn Controller mengatur jalannya News Phase setelah transisi TC-60 berhasil, termasuk kapan fase dinyatakan selesai.
 3. Pemain dapat memilih Roll atau menggunakan Stored News jika tersedia dan memenuhi aturan.
 4. Jika Stored News digunakan, News Resolution harus selesai sebelum Roll normal dimulai.
 5. News System mengembalikan Resolution Result kepada Turn Controller.
@@ -693,7 +693,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 ### TC-51 — Turn Identity Lifecycle
 
 1. Setiap giliran memiliki satu TurnID unik dalam satu Match.
-2. TurnID dibuat Turn Controller ketika Turn baru berhasil diinisialisasi.
+2. TurnID dibuat Turn Controller ketika identitas Turn ditetapkan setelah pemilihan pemain dan sebelum Turn Initialization. Pembuatan identitas tidak berarti Turn berhasil diinisialisasi atau aktif.
 3. Satu Turn memiliki satu ParentTurnChainID.
 4. Seluruh Resolution, Follow-up, dan Extra Roll memakai TurnID yang sama.
 5. Suspension dan Resume tidak membuat TurnID baru.
