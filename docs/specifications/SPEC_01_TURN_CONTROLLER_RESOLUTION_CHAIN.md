@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #11 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #12 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -67,7 +67,9 @@ Batas ini hanya berlaku untuk Parent Turn Resolution Chain. Operasi asynchronous
 
 ### TC-04A — Parent Turn Chain Lifecycle dan Technical Failure
 
-Lifecycle Parent Turn Chain menggunakan status berikut:
+Identitas Turn dan ParentTurnChainID dapat dibuat sebelum otorisasi Turn Start selesai. Pembuatan identitas saja belum berarti Parent Turn Chain telah dimulai atau memasuki lifecycle status di bawah ini. Jika kandidat menjadi tidak eligible saat otorisasi, identitas terkait dinyatakan tidak berlaku sesuai TC-51 dan tidak memasuki lifecycle Parent Turn Chain.
+
+Lifecycle Parent Turn Chain yang telah dimulai menggunakan status berikut:
 
 | Status | Makna |
 |---|---|
@@ -697,18 +699,19 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 
 1. Setiap giliran memiliki satu TurnID unik dalam satu Match.
 2. TurnID dibuat Turn Controller ketika identitas Turn ditetapkan setelah pemilihan pemain dan sebelum Turn Initialization. Pembuatan identitas tidak berarti Turn berhasil diinisialisasi atau aktif.
-3. Jika kandidat menjadi tidak eligible saat otorisasi Turn Start, identitas Turn dan Parent Turn Chain yang telah dibuat untuk kandidat tersebut tidak berlaku untuk memulai Turn, tidak boleh diaktifkan atau menjalankan Resolution, dan tidak boleh digunakan kembali. Kondisi ini bukan kegagalan teknis dan tidak otomatis membuat Chain berstatus FAILED; kandidat berikutnya harus menggunakan identitas baru.
+3. Jika kandidat menjadi tidak eligible saat otorisasi Turn Start, identitas Turn dan Parent Turn Chain yang telah dibuat untuk kandidat tersebut dinyatakan tidak berlaku untuk memulai Turn. Identitas tersebut tidak boleh diaktifkan, menjalankan Resolution, menerima aksi, atau digunakan kembali. Kondisi ini bukan kegagalan teknis dan tidak otomatis membuat Chain berstatus FAILED; kandidat berikutnya harus menggunakan identitas baru.
+4. Identitas yang dinyatakan tidak berlaku karena kandidat tidak eligible tidak memasuki lifecycle Parent Turn Chain pada TC-04A, karena Chain belum dimulai.
 5. Satu Turn memiliki satu ParentTurnChainID.
-5. Seluruh Resolution, Follow-up, dan Extra Roll memakai TurnID yang sama.
-6. Suspension dan Resume tidak membuat TurnID baru.
-7. Character Reset/Death Recovery tidak membuat TurnID baru.
-8. TurnID tidak digunakan ulang untuk Turn lain dalam Match yang sama.
-9. Turn normal yang berakhir menutup identitas bersama Parent Turn Chain COMPLETED.
-10. Eliminasi atau Game End menghentikan Turn terkait; identitas tidak digunakan kembali.
-11. Aksi, Result, atau respons dari Turn tertutup ditolak.
-12. Turn Controller memvalidasi hubungan TurnID dan ParentTurnChainID.
-13. Jika hubungan identitas tidak dapat diverifikasi, Chain menjadi FAILED.
-14. Format ID, generator, dan penyimpanan tetap TBD.
+6. Seluruh Resolution, Follow-up, dan Extra Roll memakai TurnID yang sama.
+7. Suspension dan Resume tidak membuat TurnID baru.
+8. Character Reset/Death Recovery tidak membuat TurnID baru.
+9. TurnID tidak digunakan ulang untuk Turn lain dalam Match yang sama.
+10. Turn normal yang berakhir menutup identitas bersama Parent Turn Chain COMPLETED.
+11. Eliminasi atau Game End menghentikan Turn terkait; identitas tidak digunakan kembali.
+12. Aksi, Result, atau respons dari Turn tertutup ditolak.
+13. Turn Controller memvalidasi hubungan TurnID dan ParentTurnChainID.
+14. Jika hubungan identitas tidak dapat diverifikasi, Chain menjadi FAILED.
+15. Format ID, generator, dan penyimpanan tetap TBD.
 
 ### TC-52 — Match Identity dan Match Scope
 
