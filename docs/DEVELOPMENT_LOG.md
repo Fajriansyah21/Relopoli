@@ -67,6 +67,13 @@ Fokus berikutnya:
 
 Tambahkan entri terbaru di bagian paling atas setelah header ini.
 
+### 2026-11-15 — Specification 01 Finding #35: Frozen Turn and Pending Turn-Based Effects
+
+- Mengimplementasikan Finding #35 yang telah disetujui pada TC-23, Master Source of Truth bagian Frozen Turn, dan Progress 20 Audit #8 Case 3.
+- Frozen Turn tidak mengonsumsi efek atau privilege yang menunggu giliran normal pemain, tidak mengurangi durasi Reward berbasis giliran pemilik, dan tidak mengubah counter berbasis percobaan.
+- Fast Travel privilege tetap tersedia; efek yang menunggu aktivasi tetap pending sampai giliran normal pemain dimulai; Jail Attempt Counter hanya bertambah setelah percobaan Double aktual menghasilkan Non-Double.
+- Review Log dan Changelog diperbarui. Specification 01 tetap DRAFT; implementasi dan pengujian tetap Not Implemented / Not Tested. Progress 20 tetap LOCKED dengan revisi terbatas yang disetujui.
+
 ### 2026-11-15 — Specification 01 Finding #34: Frozen Turn
 
 - Mengimplementasikan Finding #34 yang telah disetujui pada TC-23, Master Source of Truth bagian 3, dan Progress 20 Audit #8 Case 3.
