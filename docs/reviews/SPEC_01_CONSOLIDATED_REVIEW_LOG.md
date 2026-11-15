@@ -581,4 +581,22 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #26 | Game End vs Winner State Finalization | Approved | TC-21A and TC-31 define validated winner identity, Player State WINNER assignment for Last Player Standing, no winner assignment when zero active players remain, and finalization before UI handoff |
 | #27 | Global Victory Check Outside Parent Turn Chain | Approved | TC-21A applies the shared Global Victory Check to relevant State Changes inside and outside Parent Turn Chain and routes external GAME_END results through Turn Controller / TC-25 |
 
-**Next step:** Continue consolidated review with Finding #28, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #29, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+
+### Finding #28 — Global Victory Check Before the Next Relevant State Change
+
+**Status:** Approved
+
+**Kontrak terkait:** TC-02A, TC-21A, TC-30
+
+**Keputusan yang disetujui:**
+
+1. Gameplay State Change yang dapat memengaruhi Win Condition diproses secara berurutan, termasuk operasi asynchronous di luar Parent Turn Chain.
+2. Setelah Atomic Operation selesai, Global Victory Check untuk State Change tersebut harus selesai sebelum State Change relevan berikutnya boleh melakukan commit.
+3. Jika Global Victory Check menghasilkan CONTINUE, State Change relevan berikutnya dapat diproses setelah validasi terhadap state authoritative terbaru.
+4. Jika Global Victory Check menghasilkan GAME_END, State Change berikutnya ditolak dan konsekuensi Game End dijalankan melalui Turn Controller sesuai TC-25.
+5. Atomic Operation tetap diselesaikan secara utuh sebelum Global Victory Check dijalankan.
+6. Seluruh sistem menggunakan satu mekanisme Global Victory Check; tidak ada pemeriksaan lokal sebagai pengganti pemeriksaan global.
+7. Tidak ada TC atau decision ID baru yang ditambahkan.
+
+**Perubahan dokumentasi:** TC-02A dan TC-21A diperjelas untuk mewajibkan penyelesaian Global Victory Check sebelum commit State Change relevan berikutnya. Hasil CONTINUE mengizinkan proses berikutnya setelah validasi state terbaru; GAME_END menolak State Change berikutnya dan diteruskan melalui Turn Controller / TC-25.
