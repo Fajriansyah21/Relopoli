@@ -408,8 +408,11 @@ Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang
 4. Pemain ELIMINATED tidak dipilih untuk Turn berikutnya.
 5. Global Victory Check dilakukan setelah perubahan status selesai.
 6. Jika GAME_END terjadi, TC-25 berlaku; jika tetap RUNNING, pemain aktif melanjutkan tanpa mengulang Resolution yang selesai.
-7. Trade/Transaction pending pemain tersebut mengikuti kontrak sistem Trade/Transaction dan tidak mengambil alih Turn Controller.
-8. Pemain yang bergabung kembali tidak otomatis masuk ke Match aktif.
+7. Trade/Transaction pending pemain yang disconnect mengikuti kontrak sistem Trade/Transaction dan tidak mengambil alih Turn Controller.
+8. Jika salah satu pihak dalam Pending Trade atau Pending Transaction disconnect sebelum operasi selesai, proposal tersebut dibatalkan dan tidak dapat diterima, dinegosiasikan, atau dieksekusi kembali.
+9. Jika Atomic Operation Trade atau Transaction telah dimulai sebelum disconnect terdeteksi, operasi tersebut diselesaikan secara utuh sesuai TC-02A dan TC-30. Proposal yang masih pending dan belum memulai Atomic Operation tetap dibatalkan.
+10. Trade atau Transaction yang sudah Completed tidak di-rollback akibat disconnect.
+11. Pemain yang bergabung kembali tidak otomatis masuk ke Match aktif.
 
 ### TC-27 — Character Reset / Death During Active Turn
 
