@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #16 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #17 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -834,7 +834,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 5. Transisi hanya dilakukan satu kali untuk setiap Turn.
 6. Permintaan transisi duplikat tidak mengulang News Phase atau membuat Resolution tambahan.
 7. News Phase menggunakan TurnID dan ParentTurnChainID yang sama dengan Turn aktif.
-8. Jika transisi News Phase gagal secara teknis, Parent Turn Chain menjadi FAILED.
+8. Jika transisi News Phase gagal secara teknis atau status keberhasilannya tidak dapat diverifikasi setelah Parent Turn Chain dimulai, Parent Turn Chain ditetapkan FAILED sesuai TC-04A. Turn Controller tidak mengulang transisi berdasarkan asumsi, tidak menerima aksi gameplay, dan tidak melanjutkan ke Roll.
 9. GAME_END atau PLAYER_ELIMINATED sebelum News Phase dimulai mengalahkan transisi normal.
 10. Setelah News Phase dimulai, kelanjutannya mengikuti TC-14A.
 11. Prototype News Phase tetap otomatis melanjutkan ke Roll karena Stored News belum tersedia dan efek kartu ditunda.
