@@ -20,7 +20,9 @@ Prototype berfokus pada pembuktian alur gameplay dan kestabilan multiplayer, buk
 - Match dimulai dengan empat pemain.
 - Urutan pemain ditentukan berdasarkan urutan bergabung sebelum match dimulai.
 - Pemain yang bergabung setelah match dimulai tidak masuk ke match aktif.
-- Turn berjalan otomatis: Player 1 → Player 2 → Player 3 → Player 4 → Player 1.
+- Urutan giliran mengikuti urutan pemain yang ditetapkan sebelum Match dimulai.
+- Contoh urutan empat pemain adalah Player 1 → Player 2 → Player 3 → Player 4 → Player 1.
+- Pemain yang tidak eligible dilewati tanpa mengubah urutan awal.
 - Setiap pemain harus dapat menyelesaikan satu giliran penuh.
 
 ### 2.2 Board
@@ -137,16 +139,22 @@ Temporary Handler tidak boleh mengubah Balance, Ownership, Property Level, Crown
 ### 2.10 Disconnect Handling
 Jika pemain disconnect:
 - Pemain dihapus dari daftar pemain aktif dan tidak menerima giliran berikutnya.
+- Urutan awal pemain yang ditetapkan sebelum Match dimulai tetap menjadi dasar urutan giliran.
+- Disconnect atau eliminasi tidak mengubah, mengacak, maupun membangun ulang urutan awal pemain.
+- Turn Controller melewati pemain yang sudah ELIMINATED atau tidak eligible, kemudian memilih pemain eligible berikutnya berdasarkan urutan awal.
+- Pemain yang disconnect tidak menerima giliran berikutnya.
+- Rejoin tidak secara otomatis mengembalikan status aktif maupun hak gameplay pemain.
 - Jika pemain yang sedang aktif disconnect, Resolution yang sedang berjalan dihentikan dengan aman.
 - Pending UI dibersihkan.
-- Turn Order dibangun kembali berdasarkan pemain aktif.
 - Global Victory Check dijalankan.
 
 | Pemain aktif | Hasil |
 |---|---|
 | 2 atau lebih | Game berlanjut |
 | 1 | Game State menjadi ENDED, pemain tersisa menang |
-| 0 | Game State menjadi ABORTED, tidak ada pemenang |
+| 0 | Game State menjadi ENDED, tanpa pemenang |
+
+Game State hanya menggunakan RUNNING dan ENDED. Kondisi tidak adanya pemain aktif menghasilkan Game State ENDED tanpa pemenang. Match Outcome dan alasan berakhirnya Match dicatat terpisah dari Game State. Jika tidak ada pemain aktif, tidak ada Turn baru.
 
 Kemenangan satu pemain dalam prototype hanya menggunakan aturan Last Player Standing.
 
@@ -243,7 +251,7 @@ Turn tetap menjadi milik pemain yang sama. Server tetap menjadi sumber kebenaran
 - Reward dan Landing Resolution tidak terduplikasi.
 - Disconnect tidak membuat Turn Controller macet.
 - Last Player Standing menghasilkan Game State ENDED.
-- Tidak ada pemain aktif menghasilkan Game State ABORTED.
+- Tidak ada pemain aktif menghasilkan Game State ENDED tanpa pemenang.
 
 ## 6. Codex Implementation Guardrails
 
