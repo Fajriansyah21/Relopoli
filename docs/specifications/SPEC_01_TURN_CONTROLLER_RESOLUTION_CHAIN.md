@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #15 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #16 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -822,7 +822,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 7. Jika aktivasi gagal, Parent Turn Chain menjadi FAILED.
 8. Turn gagal aktivasi tidak dianggap aktif dan tidak berlanjut ke Roll.
 9. Aktivasi duplikat tidak mengulang Turn Start atau Initialization.
-10. Jika status aktivasi tidak dapat diverifikasi, aksi gameplay tidak diterima berdasarkan asumsi.
+10. Jika status aktivasi tidak dapat diverifikasi setelah Parent Turn Chain dimulai, Turn Controller tidak menerima aksi gameplay dan Parent Turn Chain ditetapkan FAILED sesuai TC-04A. Turn tidak dianggap aktif dan tidak melanjutkan ke News Phase atau Roll.
 11. Detail commit, penyimpanan, dan atomic publication tetap TBD.
 
 ### TC-60 — Turn Activation dan First Phase Transition
