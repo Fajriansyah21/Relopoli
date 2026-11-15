@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #25 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #26 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -329,8 +329,9 @@ Kategori handler:
 6. Jika tidak ada Victory, Turn Controller dapat melanjutkan Resolution berikutnya.
 7. State Change yang berpotensi menghasilkan Victory tidak boleh melewati Global Victory Check.
 8. Global Victory Check tidak mengubah urutan pemain atau mengakhiri giliran secara independen.
+9. Jika hasilnya GAME_END, Global Victory Check menyertakan identitas pemenang atau himpunan pemenang yang telah divalidasi berdasarkan Win Condition yang terpenuhi. Turn Controller menggunakan hasil tersebut dan tidak menyimpulkan atau menebak identitas pemenang sendiri.
 
-Global Victory Check menentukan apakah permainan berakhir. Turn Controller menjalankan konsekuensinya terhadap alur giliran.
+Global Victory Check menentukan apakah permainan berakhir dan mengembalikan hasil pemenang yang telah divalidasi. Turn Controller menjalankan konsekuensinya terhadap alur giliran.
 
 ### TC-22A — Extra Roll Contract
 
@@ -478,6 +479,9 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 6. Jika tidak ada pemain aktif, tidak ada Turn baru.
 7. Seluruh konsekuensi Game End mengikuti TC-25.
 8. **Scope reconciliation completed:** Prototype Scope v1.0 bagian 2.10 dan Acceptance Criteria bagian 5 telah direvisi melalui workflow dokumentasi setelah approval eksplisit. Nol pemain aktif kini menghasilkan Game State ENDED tanpa pemenang. Dependency dokumentasi Finding #3 selesai.
+9. Jika tepat satu pemain aktif tersisa, pemain tersebut ditetapkan memiliki Player State WINNER sebagai hasil Last Player Standing.
+10. Jika tidak ada pemain aktif tersisa, Match berakhir tanpa pemenang dan tidak ada pemain yang ditetapkan memiliki Player State WINNER.
+11. Penetapan identitas pemenang dan Player State WINNER, jika ada, harus selesai berdasarkan hasil Global Victory Check yang telah divalidasi sebelum Turn Controller menyerahkan informasi hasil Match kepada UI sesuai TC-25.
 
 ### TC-32 — Player Order Consistency After Elimination
 
