@@ -128,3 +128,12 @@ Tambahkan entri terbaru di bagian paling atas setelah header ini.
 - Menambahkan `docs/WORKFLOW.md` sebagai acuan proses kerja.
 - README diarahkan ke workflow agar mudah ditemukan.
 - Status implementasi dan testing wajib dipisahkan dari status keputusan/rancangan.
+
+
+### 2026-11-15 — Specification 01 Finding #39
+
+- Menambahkan validasi ulang Game State pada batas commit Frozen Turn skip, selain pemeriksaan awal setelah Parent Turn Chain pemicu COMPLETED.
+- Validasi akhir Game State, validasi akhir eligibility kandidat, dan commit skip kini diproses berurutan dalam urutan State Change server global sesuai TC-02A.
+- Jika Game State sudah ENDED, Frozen Turn tidak dijalankan atau dikonsumsi dan tidak ada pemain yang dilewati. Jika kandidat tidak eligible, seleksi berlanjut tanpa mengonsumsi Frozen Turn.
+- Memperbarui TC-23, Master Source of Truth Frozen Turn section, Progress 20 Audit #8 Case 3, Review Log, dan Changelog.
+- Specification 01 tetap DRAFT; implementasi dan pengujian tetap Not Implemented / Not Tested. Progress 20 tetap LOCKED dengan revisi terbatas yang disetujui.
