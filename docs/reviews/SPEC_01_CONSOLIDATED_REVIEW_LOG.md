@@ -587,8 +587,9 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #32 | Specification 01 Consolidated Review Status Metadata | Approved | Specification 01 header now reflects the approved findings through #32, matching this review log; no gameplay contract or decision ID changed |
 | #33 | Final Bankruptcy with Zero Active Players | Approved | Progress 20 Audit #1 point 10 now distinguishes remaining active players from zero active players; zero active players ends the Match without a winner or a new Turn, consistent with TC-31 |
 | #34 | Forced Break and Frozen Turn Handoff | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 define Frozen Turn as a Turn Controller-controlled skip of exactly one next eligible player's scheduled turn; no Turn/Chain/phase/status processing occurs, the player remains ACTIVE with assets intact, and Game End overrides the skip |
+| #35 | Frozen Turn and Pending Turn-Based Effects | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 clarify that Frozen Turn does not consume pending next-normal-turn effects, decrement owner-turn-based durations, use pending Fast Travel, or change attempt-based counters such as Jail Attempt Counter |
 
-**Next step:** Continue consolidated review with Finding #35, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #36, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
 
 
@@ -735,3 +736,24 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 **Perubahan dokumentasi:** TC-23 diperluas untuk menetapkan timing Frozen Turn setelah Turn End benar-benar committed, prioritas Game End, seleksi pemain eligible menurut TC-55, skip tanpa TurnID/ParentTurnChainID maupun Parent Turn Chain, tidak adanya seluruh fase dan pemrosesan status berbasis giliran, persistensi Player State dan aset, serta konsumsi tepat satu kali. Master Source of Truth bagian 3 dan Progress 20 Audit #8 Case 3 diselaraskan dengan kontrak tersebut. Metadata Specification 01, Review Log, Development Log, dan Changelog diperbarui.
 
 **Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap berstatus LOCKED; revisi terbatas pada Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #34.
+
+### Finding #35 — Frozen Turn and Pending Turn-Based Effects
+
+**Status:** Approved and incorporated into canonical documentation
+
+**Kontrak terkait:** TC-23; Master Source of Truth section 3; Progress 20 Audit #8, Case 3
+
+**Keputusan yang disetujui:**
+
+1. Frozen Turn merupakan giliran terjadwal yang dilewati, bukan giliran normal pemain yang dijalankan.
+2. Efek, privilege, atau durasi yang dihitung berdasarkan giliran normal milik pemain yang dilewati tidak berkurang dan tidak dikonsumsi oleh Frozen Turn.
+3. Efek atau privilege yang dijadwalkan aktif pada giliran normal pemain berikutnya tetap pending selama Frozen Turn dan baru diproses ketika giliran normal pemain tersebut benar-benar dimulai.
+4. Durasi Reward yang dihitung berdasarkan jumlah giliran pemilik tidak berkurang selama Frozen Turn; penghitungannya berlanjut pada giliran normal pemilik sesuai aturan Reward.
+5. Fast Travel privilege yang masih menunggu penggunaan tetap tersedia. Fast Travel UI dan penggunaannya tidak dijalankan selama Frozen Turn, tetapi dilanjutkan pada giliran normal pemain tersebut.
+6. Jail Attempt Counter dan counter berbasis percobaan lainnya tidak berubah hanya karena Frozen Turn. Counter hanya berubah ketika peristiwa gameplay yang menjadi dasar penghitungannya benar-benar terjadi. Jail Attempt Counter bertambah hanya setelah pemain benar-benar melakukan percobaan Double di Jail dan hasilnya Non-Double.
+7. Setelah Frozen Turn selesai, efek, privilege, durasi, dan counter dilanjutkan menurut aturan sistem masing-masing pada giliran normal pemain.
+8. Tidak ada TC atau decision ID baru yang ditambahkan. Specification 01 tetap DRAFT; status implementasi tetap Not Implemented / Not Tested.
+
+**Perubahan dokumentasi:** TC-23 diperluas untuk menetapkan persistensi efek dan privilege yang menunggu, tidak berkurangnya durasi Reward berbasis giliran pemilik, penundaan aktivasi efek sampai giliran normal pemain, serta tidak berubahnya counter berbasis percobaan selama Frozen Turn. Master Source of Truth bagian Frozen Turn dan Progress 20 Audit #8 Case 3 diselaraskan. Metadata Specification 01, Review Log, Development Log, dan Changelog diperbarui.
+
+**Batas:** Approval ini merupakan persetujuan desain dan dokumentasi, bukan persetujuan implementasi atau pengujian. Progress 20 tetap berstatus LOCKED; revisi terbatas pada Audit #8 Case 3 yang secara eksplisit disetujui melalui Finding #35.
