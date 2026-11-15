@@ -175,6 +175,8 @@ Pemain yang dilewati tetap ACTIVE, mempertahankan Balance dan seluruh aset, sert
 
 Frozen Turn tidak mengurangi atau mengonsumsi efek, privilege, maupun durasi yang dihitung berdasarkan giliran normal milik pemain yang dilewati. Efek yang menunggu aktivasi pada giliran normal berikutnya tetap pending sampai giliran normal pemain tersebut benar-benar dimulai. Durasi Reward berbasis giliran pemilik tidak berkurang; Fast Travel privilege yang belum digunakan tetap tersedia; dan counter berbasis percobaan, termasuk Jail Attempt Counter, tidak berubah hanya karena Frozen Turn. Counter hanya berubah ketika peristiwa gameplay yang menjadi dasar penghitungannya benar-benar terjadi.
 
+Jika Parent Turn Chain yang mencatat kewajiban Frozen Turn berakhir ABORTED sebelum ditetapkan COMPLETED, kewajiban Frozen Turn tersebut dibatalkan dan tidak dibawa ke handoff setelah eliminasi. Frozen Turn hanya diterapkan setelah Turn pemicunya benar-benar COMPLETED; hasil terminal yang mengakhiri Chain melalui jalur ABORTED mengalahkan Frozen Turn yang masih pending.
+
 ## Resolution Result
 
 Resolution dapat menghasilkan:
