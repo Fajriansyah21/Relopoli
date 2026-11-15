@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #12 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #14 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -68,6 +68,8 @@ Batas ini hanya berlaku untuk Parent Turn Resolution Chain. Operasi asynchronous
 ### TC-04A — Parent Turn Chain Lifecycle dan Technical Failure
 
 Identitas Turn dan ParentTurnChainID dapat dibuat sebelum otorisasi Turn Start selesai. Pembuatan identitas saja belum berarti Parent Turn Chain telah dimulai atau memasuki lifecycle status di bawah ini. Jika kandidat menjadi tidak eligible saat otorisasi, identitas terkait dinyatakan tidak berlaku sesuai TC-51 dan tidak memasuki lifecycle Parent Turn Chain.
+
+Jika kegagalan teknis atau ketidakmampuan memverifikasi state terjadi sebelum otorisasi Turn Start berhasil dan sebelum Parent Turn Chain dimulai, proses Turn Start dinyatakan gagal, tetapi tidak ada status lifecycle Parent Turn Chain yang ditetapkan karena Chain belum memasuki lifecycle. Jika kegagalan terjadi setelah Chain dimulai, kegagalan tersebut ditangani sebagai Chain FAILED.
 
 Lifecycle Parent Turn Chain yang telah dimulai menggunakan status berikut:
 
@@ -710,7 +712,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 11. Eliminasi atau Game End menghentikan Turn terkait; identitas tidak digunakan kembali.
 12. Aksi, Result, atau respons dari Turn tertutup ditolak.
 13. Turn Controller memvalidasi hubungan TurnID dan ParentTurnChainID.
-14. Jika hubungan identitas tidak dapat diverifikasi, Chain menjadi FAILED.
+14. Jika hubungan identitas tidak dapat diverifikasi setelah Parent Turn Chain memasuki lifecycle, Chain menjadi FAILED. Jika ketidakmampuan verifikasi terjadi sebelum Chain dimulai, proses Turn Start dinyatakan gagal tanpa menetapkan status lifecycle Chain.
 15. Format ID, generator, dan penyimpanan tetap TBD.
 
 ### TC-52 — Match Identity dan Match Scope
@@ -778,7 +780,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 5. MatchID, TurnID baru, dan ParentTurnChainID baru harus memiliki hubungan identitas valid.
 6. Seluruh pemeriksaan diselesaikan sebelum pemain dicatat sebagai pemilik Turn yang sedang dipersiapkan. Penetapan ini tidak berarti Turn telah aktif dan tidak memberikan hak gameplay.
 7. Jika pemain tidak lagi eligible, pemain tersebut tidak dicatat sebagai pemilik Turn yang sedang dipersiapkan; Turn Controller melewatinya dan kembali ke validasi pemain berikutnya sesuai TC-55. Jika pemeriksaan lain gagal, Turn baru tidak dimulai.
-8. Kegagalan otorisasi teknis atau ketidakmampuan memverifikasi state membuat proses FAILED, bukan melewati validasi.
+8. Kegagalan otorisasi teknis atau ketidakmampuan memverifikasi state sebelum otorisasi berhasil membuat proses Turn Start dinyatakan gagal dan tidak memulai Parent Turn Chain; tidak ada status lifecycle Chain yang ditetapkan. Validasi tidak boleh dilewati.
 9. Tidak ada dua Turn aktif dalam satu Match.
 10. Jika Game End terjadi sebelum otorisasi selesai, proses Turn Start dibatalkan.
 11. Detail teknis pembuatan ID dan scheduling tetap TBD.
@@ -792,7 +794,7 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 5. Reset Double Counter dan inisialisasi lain tidak diulang akibat Turn Start duplikat.
 6. Turn Start yang berhasil tidak diaktifkan kembali.
 7. Permintaan dari Chain atau Match yang tidak berlaku ditolak tanpa side effect.
-8. Jika status proses sebelumnya tidak dapat dipastikan, proses tidak diulang berdasarkan asumsi; Chain menjadi FAILED jika keamanan State tidak dapat diverifikasi.
+8. Jika status proses sebelumnya tidak dapat dipastikan, proses tidak diulang berdasarkan asumsi. Jika Parent Turn Chain telah memasuki lifecycle, ketidakmampuan memverifikasi keamanan State membuat Chain menjadi FAILED. Jika Chain belum dimulai, proses Turn Start dinyatakan gagal tanpa menetapkan status lifecycle Chain.
 9. Mekanisme teknis pencegahan duplikasi tetap TBD.
 
 ### TC-58 — Turn Start Failure After Partial Initialization
