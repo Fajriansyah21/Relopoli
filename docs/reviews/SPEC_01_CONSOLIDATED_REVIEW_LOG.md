@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #25  
+**Approved findings:** #1 through #26  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -509,6 +509,26 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 
 **Batas teknis:** Detail deteksi disconnect, cleanup News Card, validasi Player Leave/Elimination, penyelesaian Atomic Operation, dan sequencing tetap mengikuti kontrak terkait serta bagian TBD.
 
+
+### Finding #26 — Game End vs Winner State Finalization
+
+**Status:** Approved
+
+**Kontrak terkait:** TC-21A, TC-25, TC-31
+
+**Keputusan yang disetujui:**
+
+1. Jika Global Victory Check menghasilkan GAME_END, hasilnya harus menyertakan identitas pemenang atau himpunan pemenang yang telah divalidasi berdasarkan Win Condition yang terpenuhi.
+2. Turn Controller menggunakan identitas pemenang dari hasil Global Victory Check dan tidak menyimpulkan atau menebak pemenang sendiri.
+3. Jika tepat satu pemain aktif tersisa, pemain tersebut ditetapkan memiliki Player State WINNER sebagai hasil Last Player Standing.
+4. Jika tidak ada pemain aktif tersisa, Match berakhir tanpa pemenang dan tidak ada pemain yang ditetapkan memiliki Player State WINNER.
+5. Penetapan pemenang dan Player State WINNER, jika ada, harus selesai sebelum informasi hasil Match diserahkan kepada UI.
+6. Tidak ada perubahan Game State, Win Condition, atau decision ID baru.
+
+**Perubahan dokumentasi:** TC-21A menegaskan bahwa hasil GAME_END membawa identitas pemenang atau himpunan pemenang yang telah divalidasi. TC-31 menetapkan transisi Player State WINNER untuk Last Player Standing, menegaskan bahwa hasil tanpa pemenang tidak menetapkan Player State WINNER kepada siapa pun, dan mengharuskan finalisasi hasil pemenang sebelum informasi Match diserahkan kepada UI sesuai TC-25.
+
+**Batas teknis:** Mekanisme penyimpanan dan publikasi hasil pemenang tetap mengikuti implementasi Global Victory Check dan detail teknis yang belum ditetapkan.
+
 ## Review Progress
 
 | Finding | Topic | Decision | Documentation note |
@@ -538,5 +558,6 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #23 | Active Player Disconnect During Start Detection / Start Reward | Approved | TC-18A, TC-24, TC-28, and TC-30 define safe reward completion, reward retention, ABORTED handling, and cancellation of unstarted Landing Resolution |
 | #24 | Active Player Disconnect During Roll / Dice Resolution | Approved | TC-15A, TC-16A, TC-24, TC-28, and TC-30 define cancellation before valid Roll, safe Dice Resolution completion, Double Counter retention, and ABORTED handling |
 | #25 | Active Player Disconnect During News Phase / News Card | Approved | TC-14A, TC-24, TC-28, and TC-30 define News Card cleanup, retention of processed effects, cancellation of unstarted work, and active vs non-active disconnect handling |
+| #26 | Game End vs Winner State Finalization | Approved | TC-21A and TC-31 define validated winner identity, Player State WINNER assignment for Last Player Standing, no winner assignment when zero active players remain, and finalization before UI handoff |
 
-**Next step:** Continue consolidated review with Finding #26, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #27, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
