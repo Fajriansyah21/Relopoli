@@ -4,7 +4,7 @@
 **Specification:** [Turn Controller & Resolution Chain](../specifications/SPEC_01_TURN_CONTROLLER_RESOLUTION_CHAIN.md)  
 **Review scope:** TC-01 through TC-60 only  
 **Review status:** In progress  
-**Approved findings:** #1 through #27  
+**Approved findings:** #1 through #28  
 **Specification status:** DRAFT  
 **Implementation status:** Not Implemented / Not Tested
 
@@ -580,6 +580,7 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #25 | Active Player Disconnect During News Phase / News Card | Approved | TC-14A, TC-24, TC-28, and TC-30 define News Card cleanup, retention of processed effects, cancellation of unstarted work, and active vs non-active disconnect handling |
 | #26 | Game End vs Winner State Finalization | Approved | TC-21A and TC-31 define validated winner identity, Player State WINNER assignment for Last Player Standing, no winner assignment when zero active players remain, and finalization before UI handoff |
 | #27 | Global Victory Check Outside Parent Turn Chain | Approved | TC-21A applies the shared Global Victory Check to relevant State Changes inside and outside Parent Turn Chain and routes external GAME_END results through Turn Controller / TC-25 |
+| #28 | Global Victory Check Before the Next Relevant State Change | Approved | TC-02A and TC-21A require the shared Global Victory Check to finish before the next relevant State Change commits; GAME_END blocks subsequent State Changes |
 
 **Next step:** Continue consolidated review with Finding #29, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
