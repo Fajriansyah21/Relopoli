@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #7 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #8 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -439,8 +439,8 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 ### TC-32 — Player Order Consistency After Elimination
 
 1. Urutan awal Match tetap menjadi dasar urutan giliran.
-2. Eliminasi tidak mengacak atau membangun ulang urutan pemain.
-3. Turn Controller melewati pemain ELIMINATED dan memilih pemain eligible berikutnya.
+2. Eliminasi atau disconnect tidak mengacak atau membangun ulang urutan pemain.
+3. Turn Controller melewati pemain yang ELIMINATED atau tidak eligible dan memilih pemain eligible berikutnya berdasarkan urutan awal.
 4. Contoh: P1 → P2 → P3 → P4 menjadi P1 → P3 → P4 → P1 setelah P2 tereliminasi.
 
 ### TC-33 — Late Join dan Rejoin During Active Match
@@ -750,16 +750,16 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 
 ### TC-55 — Active Player Eligibility Validation
 
-1. Sebelum Turn baru, Turn Controller memvalidasi kelayakan pemain.
+1. Sebelum Turn baru, Turn Controller memvalidasi kelayakan pemain menggunakan state authoritative server terbaru, baik saat seleksi pemain maupun tepat sebelum otorisasi Turn Start.
 2. Pemain harus terdaftar dalam roster Match aktif.
 3. Pemain harus aktif dan belum ELIMINATED.
 4. Pemain harus masih terhubung dengan sesi Match yang berlaku.
 5. Pemain yang tidak memenuhi syarat tidak menerima Turn.
-6. Jika pemain terpilih tidak eligible, Turn Controller melewatinya dan memeriksa pemain berikutnya menurut urutan awal.
+6. Jika pemain terpilih menjadi tidak eligible sebelum otorisasi Turn Start, Turn Controller melewatinya dan memvalidasi pemain berikutnya menurut urutan awal.
 7. Urutan roster tidak berubah.
 8. Jika tidak ada pemain eligible, Turn Controller menjalankan Global Victory Check.
 9. Jika tidak ada pemain aktif tersisa, Game State menjadi ENDED tanpa pemenang sesuai TC-31.
-10. Jika kelayakan tidak dapat diverifikasi, Turn baru tidak dipaksakan dan kegagalan ditangani sesuai kontrak.
+10. Jika kelayakan pemain atau integritas roster tidak dapat diverifikasi, Turn baru tidak dipaksakan dan kegagalan ditangani sesuai kontrak.
 11. Detail deteksi koneksi dan penyimpanan status pemain tetap TBD.
 
 ### TC-56 — Turn Start Authorization
@@ -767,11 +767,11 @@ Global Victory Check menentukan apakah permainan berakhir. Turn Controller menja
 1. Turn baru hanya dimulai jika Game State RUNNING.
 2. Tidak boleh ada Parent Turn Chain lain yang masih ACTIVE atau SUSPENDED.
 3. Turn sebelumnya harus COMPLETED atau dihentikan secara sah melalui jalur terminal.
-4. Pemain penerima Turn harus lolos validasi TC-55.
+4. Tepat sebelum otorisasi Turn Start diselesaikan, Turn Controller wajib memvalidasi ulang bahwa pemain penerima Turn masih eligible sesuai TC-55 dan menggunakan state authoritative server terbaru.
 5. MatchID, TurnID baru, dan ParentTurnChainID baru harus memiliki hubungan identitas valid.
 6. Seluruh pemeriksaan diselesaikan sebelum pemain dicatat sebagai pemilik Turn yang sedang dipersiapkan. Penetapan ini tidak berarti Turn telah aktif dan tidak memberikan hak gameplay.
-7. Jika pemeriksaan gagal, Turn baru tidak dimulai.
-8. Kegagalan otorisasi teknis membuat proses FAILED, bukan melewati validasi.
+7. Jika pemain tidak lagi eligible, pemain tersebut tidak dicatat sebagai pemilik Turn yang sedang dipersiapkan; Turn Controller melewatinya dan kembali ke validasi pemain berikutnya sesuai TC-55. Jika pemeriksaan lain gagal, Turn baru tidak dimulai.
+8. Kegagalan otorisasi teknis atau ketidakmampuan memverifikasi state membuat proses FAILED, bukan melewati validasi.
 9. Tidak ada dua Turn aktif dalam satu Match.
 10. Jika Game End terjadi sebelum otorisasi selesai, proses Turn Start dibatalkan.
 11. Detail teknis pembuatan ID dan scheduling tetap TBD.
