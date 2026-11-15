@@ -588,10 +588,12 @@ Identitas Turn, otorisasi pemain, dan hak gameplay adalah konsep yang berbeda da
 | #33 | Final Bankruptcy with Zero Active Players | Approved | Progress 20 Audit #1 point 10 now distinguishes remaining active players from zero active players; zero active players ends the Match without a winner or a new Turn, consistent with TC-31 |
 | #34 | Forced Break and Frozen Turn Handoff | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 define Frozen Turn as a Turn Controller-controlled skip of exactly one next eligible player's scheduled turn; no Turn/Chain/phase/status processing occurs, the player remains ACTIVE with assets intact, and Game End overrides the skip |
 | #35 | Frozen Turn and Pending Turn-Based Effects | Approved | TC-23, Master Source of Truth section 3, and Progress 20 Audit #8 Case 3 clarify that Frozen Turn does not consume pending next-normal-turn effects, decrement owner-turn-based durations, use pending Fast Travel, or change attempt-based counters such as Jail Attempt Counter |
+| #36 | Review Log Metadata Tertinggal | Approved | Review Log metadata was aligned with the approved finding count; no gameplay contract or decision ID changed |
 | #37 | Cancel Pending Frozen Turn When Parent Turn Chain Aborts | Approved | TC-23, Master Source of Truth Frozen Turn section, and Progress 20 Audit #8 Case 3 cancel a pending Frozen Turn when its triggering Chain ends ABORTED before COMPLETED |
 | #38 | Frozen Turn Eligibility Validation at Skip Boundary | Approved | TC-23, Master Source of Truth Frozen Turn section, and Progress 20 Audit #8 Case 3 require final authoritative eligibility revalidation immediately before skip, sequentially ordered with skip commit against Player Leave/Elimination, without consuming Frozen Turn for an ineligible candidate |
+| #39 | Game End Validation at Frozen Turn Skip Boundary | Approved | TC-23, Master Source of Truth Frozen Turn section, and Progress 20 Audit #8 Case 3 require final Game State and eligibility validation immediately before Frozen Turn skip commit, sequentially ordered with commit; Game End prevents the skip and an ineligible candidate is bypassed without consuming Frozen Turn |
 
-**Next step:** Continue consolidated review with Finding #39, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
+**Next step:** Continue consolidated review with Finding #40, using the current GitHub version of Specification 01 and relevant canonical source documents. Do not introduce new decision IDs.
 
 
 
