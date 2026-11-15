@@ -4,7 +4,7 @@
 **Status:** DRAFT — SPECIFICATION IN PROGRESS  
 **Decision record:** TC-01 through TC-60  
 **Individual decision approvals:** TC-01 through TC-60 discussed and approved one by one in the project conversation  
-**Consolidated review:** In progress — Findings #1 through #26 approved; remaining findings pending  
+**Consolidated review:** In progress — Findings #1 through #27 approved; remaining findings pending  
 **Implementation status:** Not Implemented / Not Tested  
 **Scope:** Core Gameplay Prototype, Turn Controller and Resolution Chain contracts
 
@@ -321,17 +321,20 @@ Kategori handler:
 
 ### TC-21A — Global Victory Check Contract
 
-1. Turn Controller mengatur kapan Global Victory Check dipanggil dalam Parent Turn Chain.
+1. Di dalam Parent Turn Chain, Turn Controller mengatur kapan Global Victory Check dipanggil.
 2. Global Victory Check menggunakan kondisi game authoritative terbaru dari server.
 3. Pemeriksaan dilakukan setelah State Change relevan selesai secara atomic.
 4. Jika Victory terpenuhi, hasilnya GAME_END.
 5. Jika GAME_END terjadi, seluruh Resolution Chain dihentikan.
-6. Jika tidak ada Victory, Turn Controller dapat melanjutkan Resolution berikutnya.
-7. State Change yang berpotensi menghasilkan Victory tidak boleh melewati Global Victory Check.
+6. Jika tidak ada Victory di dalam Parent Turn Chain, Turn Controller dapat melanjutkan Resolution berikutnya.
+7. State Change yang berpotensi menghasilkan Victory tidak boleh melewati Global Victory Check, baik State Change terjadi di dalam maupun di luar Parent Turn Chain.
 8. Global Victory Check tidak mengubah urutan pemain atau mengakhiri giliran secara independen.
 9. Jika hasilnya GAME_END, Global Victory Check menyertakan identitas pemenang atau himpunan pemenang yang telah divalidasi berdasarkan Win Condition yang terpenuhi. Turn Controller menggunakan hasil tersebut dan tidak menyimpulkan atau menebak identitas pemenang sendiri.
+10. Sistem yang menyelesaikan State Change di luar Parent Turn Chain wajib meminta Global Victory Check setelah Atomic Operation terkait selesai. Permintaan ini tidak memberikan sistem pemanggil authority untuk menetapkan hasil Victory atau mengakhiri Match.
+11. Semua sistem menggunakan mekanisme Global Victory Check yang sama dan tidak membuat pemeriksaan Victory terpisah atau lokal sebagai pengganti pemeriksaan global.
+12. Jika Global Victory Check yang diminta dari luar Parent Turn Chain menghasilkan GAME_END, hasil tersebut diteruskan kepada Turn Controller untuk menjalankan konsekuensi Game End sesuai TC-25. Sistem peminta tidak boleh menghentikan Match atau mengambil alih Turn Controller secara independen.
 
-Global Victory Check menentukan apakah permainan berakhir dan mengembalikan hasil pemenang yang telah divalidasi. Turn Controller menjalankan konsekuensinya terhadap alur giliran.
+Global Victory Check merupakan mekanisme bersama untuk seluruh State Change yang dapat memengaruhi Win Condition, baik di dalam maupun di luar Parent Turn Chain. Global Victory Check menggunakan state authoritative terbaru dan mengembalikan hasil Victory yang telah divalidasi. Turn Controller tetap menjalankan konsekuensi GAME_END terhadap Turn Flow dan Match sesuai kontrak yang berlaku.
 
 ### TC-22A — Extra Roll Contract
 
